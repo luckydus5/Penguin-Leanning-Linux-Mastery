@@ -1,103 +1,65 @@
-# 🐧 Linux Mastery: The Complete Guide
+# 🐧 Linux Mastery & Cybersecurity: The Complete Guide
 
-> *From Zero to Hero: Your ultimate companion for mastering Linux, DevOps, and Cybersecurity*
+> *From Zero to Hero: Your ultimate companion for mastering Linux, Windows, Offensive Security, Defensive Security, and Ethical Hacking*
+
+---
+
+## 🎯 Learning Roadmap
+
+**Phase 1: Foundations** → **Phase 2: Networking** → **Phase 3: Offensive Security** → **Phase 4: Defensive Security** → **Phase 5: Penetration Testing**
 
 ---
 
 ## 📚 Table of Contents
 
-### 🚀 [Getting Started](#getting-started)
-- [What is Linux?](#what-is-linux)
-- [Linux Distributions](#linux-distributions)
-- [Installation Guide](#installation-guide)
-- [First Boot Setup](#first-boot-setup)
+### � [Phase 1: Foundations - OS Mastery](#phase-1-foundations---os-mastery)
+- [🐧 Linux Fundamentals](#-linux-fundamentals)
+  - [File Management](#file-management)
+  - [User & Permissions](#user--permissions)
+  - [Process Management](#process-management)
+  - [Package Management](#package-management)
+  - [Shell Scripting](#shell-scripting)
+- [🪟 Windows Fundamentals](#-windows-fundamentals)
+  - [Command Prompt (CMD)](#command-prompt-cmd)
+  - [PowerShell](#powershell)
+  - [Registry Management](#registry-management)
+  - [Services & Event Logs](#services--event-logs)
 
-### 🏗️ [Foundation Concepts](#foundation-concepts)
-- [Filesystem Hierarchy](#filesystem-hierarchy)
-- [Terminal Basics](#terminal-basics)
-- [Package Managers](#package-managers)
-- [Environment Variables](#environment-variables)
-
-### 📁 [Essential Commands](#essential-commands)
-- [Navigation Commands](#navigation-commands)
-- [File & Directory Operations](#file--directory-operations)
-- [Text Processing](#text-processing)
-- [Searching & Finding](#searching--finding)
-
-### 👥 [Users & Permissions](#users--permissions)
-- [User Management](#user-management)
-- [Group Management](#group-management)
-- [File Permissions (rwx)](#file-permissions-rwx)
-- [sudo & Privileges](#sudo--privileges)
-
-### ⚙️ [Process Management](#process-management)
-- [Understanding Processes](#understanding-processes)
-- [Background/Foreground Jobs](#backgroundforeground-jobs)
-- [Signals & Process Control](#signals--process-control)
-- [Process Monitoring](#process-monitoring)
-
-### 📊 [System Monitoring](#system-monitoring)
-- [Resource Monitoring](#resource-monitoring)
-- [Log Management](#log-management)
-- [Performance Tools](#performance-tools)
-- [Disk Management](#disk-management)
-
-### 🌐 [Networking](#networking)
+### 🌐 [Phase 2: Networking Knowledge](#phase-2-networking-knowledge)
+- [TCP/IP Fundamentals](#tcpip-fundamentals)
+- [Network Protocols](#network-protocols)
+- [Network Tools & Analysis](#network-tools--analysis)
 - [Network Configuration](#network-configuration)
-- [Network Diagnostics](#network-diagnostics)
-- [Remote Access (SSH)](#remote-access-ssh)
-- [File Transfer](#file-transfer)
 
-### 📦 [File Management & Compression](#file-management--compression)
-- [Archive & Compression](#archive--compression)
-- [Mounting & Filesystems](#mounting--filesystems)
-- [Backup Strategies](#backup-strategies)
+### ⚔️ [Phase 3: Offensive Security (Red Team)](#phase-3-offensive-security-red-team)
+- [Reconnaissance & Information Gathering](#reconnaissance--information-gathering)
+- [Vulnerability Discovery](#vulnerability-discovery)
+- [Exploitation Techniques](#exploitation-techniques)
+- [Post-Exploitation](#post-exploitation)
+- [Web Application Security](#web-application-security)
+- [Password Attacks](#password-attacks)
 
-### 📜 [Shell Scripting](#shell-scripting)
-- [Bash Fundamentals](#bash-fundamentals)
-- [Variables & Parameters](#variables--parameters)
-- [Control Structures](#control-structures)
-- [Functions & Libraries](#functions--libraries)
-- [Cron Jobs & Automation](#cron-jobs--automation)
+### �️ [Phase 4: Defensive Security (Blue Team)](#phase-4-defensive-security-blue-team)
+- [System Hardening](#system-hardening)
+- [Firewall Management](#firewall-management)
+- [Intrusion Detection Systems](#intrusion-detection-systems)
+- [Log Monitoring & Analysis](#log-monitoring--analysis)
+- [Incident Response](#incident-response)
+- [Threat Modeling](#threat-modeling)
 
-### 📥 [Package & Software Management](#package--software-management)
-- [Debian/Ubuntu (APT)](#debianubuntu-apt)
-- [RHEL/CentOS (YUM/DNF)](#rhelcentos-yumdnf)
-- [Universal Packages](#universal-packages)
-- [Source Compilation](#source-compilation)
+### 🎯 [Phase 5: Penetration Testing & Ethical Hacking](#phase-5-penetration-testing--ethical-hacking)
+- [Penetration Testing Methodologies](#penetration-testing-methodologies)
+- [Professional Tools & Frameworks](#professional-tools--frameworks)
+- [Reporting & Documentation](#reporting--documentation)
+- [Legal & Ethical Considerations](#legal--ethical-considerations)
 
-### 🔧 [System Services](#system-services)
-- [Systemd Management](#systemd-management)
-- [Service Configuration](#service-configuration)
-- [Runlevels & Targets](#runlevels--targets)
-
-### 🚀 [DevOps Essentials](#devops-essentials)
-- [Containerization (Docker)](#containerization-docker)
-- [Orchestration (Kubernetes)](#orchestration-kubernetes)
-- [CI/CD Pipelines](#cicd-pipelines)
-- [Configuration Management](#configuration-management)
-- [Infrastructure as Code](#infrastructure-as-code)
-
-### 🔒 [Cybersecurity & Ethical Hacking](#cybersecurity--ethical-hacking)
-- [Security Fundamentals](#security-fundamentals)
-- [Reconnaissance Tools](#reconnaissance-tools)
-- [Vulnerability Assessment](#vulnerability-assessment)
-- [Penetration Testing](#penetration-testing)
+### � [Advanced Topics](#advanced-topics)
 - [Digital Forensics](#digital-forensics)
+- [Malware Analysis](#malware-analysis)
+- [Cloud Security](#cloud-security)
+- [DevSecOps](#devsecops)
 
-### 🛡️ [System Hardening](#system-hardening)
-- [Firewall Configuration](#firewall-configuration)
-- [Access Control](#access-control)
-- [Intrusion Detection](#intrusion-detection)
-- [Security Auditing](#security-auditing)
-
-### 🔬 [Advanced Topics](#advanced-topics)
-- [Kernel & Modules](#kernel--modules)
-- [System Calls](#system-calls)
-- [Memory Management](#memory-management)
-- [Custom Compilation](#custom-compilation)
-
-### 🎯 [Practical Projects](#practical-projects)
+### 🎯 [Hands-On Labs & Projects](#hands-on-labs--projects)
 - [Lab Environment Setup](#lab-environment-setup)
 - [Server Administration](#server-administration)
 - [Security Challenges](#security-challenges)
