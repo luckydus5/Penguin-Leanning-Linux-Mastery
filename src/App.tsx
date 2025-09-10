@@ -14,7 +14,7 @@ import NetworkingMastery from "@/pages/NetworkingMastery";
 import OffensiveSecurity from "@/pages/OffensiveSecurity";
 import DefensiveSecurity from "@/pages/DefensiveSecurity";
 import PenetrationTesting from "@/pages/PenetrationTesting";
-import WindowsMastery from "@/pages/WindowsMastery";
+import LinuxMastery from "@/pages/LinuxMastery";
 import PracticalLabs from "@/pages/PracticalLabs";
 import Certifications from "@/pages/Certifications";
 import FinalChallenges from "@/pages/FinalChallenges";
@@ -37,8 +37,8 @@ const App = () => (
             <Route path="networking" element={<NetworkingMastery />} />
             <Route path="offensive-security" element={<OffensiveSecurity />} />
             <Route path="defensive-security" element={<DefensiveSecurity />} />
-            <Route path="penetration-testing" element={<PenetrationTesting />} />
-            <Route path="windows" element={<WindowsMastery />} />
+            <Route path="pentesting" element={<PenetrationTesting />} />
+            <Route path="linux" element={<LinuxMastery />} />
             <Route path="labs" element={<PracticalLabs />} />
             <Route path="certifications" element={<Certifications />} />
             <Route path="challenges" element={<FinalChallenges />} />
