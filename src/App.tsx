@@ -10,6 +10,8 @@ import MainLayout from "@/components/MainLayout";
 import GettingStarted from "@/pages/GettingStarted";
 import FoundationConcepts from "@/pages/FoundationConcepts";
 import EssentialCommands from "@/pages/EssentialCommands";
+import SystemAdministration from "@/pages/SystemAdministration";
+import NetworkingCommands from "@/pages/NetworkingCommands";
 import NetworkingMastery from "@/pages/NetworkingMastery";
 import OffensiveSecurity from "@/pages/OffensiveSecurity";
 import DefensiveSecurity from "@/pages/DefensiveSecurity";
@@ -34,6 +36,8 @@ const App = () => (
             <Route path="getting-started" element={<GettingStarted />} />
             <Route path="foundation" element={<FoundationConcepts />} />
             <Route path="commands" element={<EssentialCommands />} />
+            <Route path="system-admin" element={<SystemAdministration />} />
+            <Route path="networking-commands" element={<NetworkingCommands />} />
             <Route path="networking" element={<NetworkingMastery />} />
             <Route path="offensive-security" element={<OffensiveSecurity />} />
             <Route path="defensive-security" element={<DefensiveSecurity />} />
