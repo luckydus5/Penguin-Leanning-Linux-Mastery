@@ -20,6 +20,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { FullscreenToggle } from "@/components/ui/fullscreen-toggle";
 
 const TableOfContents = () => {
   const chapters = [
@@ -225,9 +226,11 @@ const TableOfContents = () => {
   const totalTopics = chapters.reduce((acc, chapter) => acc + chapter.topics.length, 0);
 
   return (
-    <div className="max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="text-center mb-12">
+    <div className="py-8 px-4">
+      <FullscreenToggle />
+      <div className="w-full">
+        {/* Header */}
+        <div className="text-center mb-12">
         <div className="flex items-center justify-center gap-3 mb-6">
           <div className="p-3 bg-primary rounded-xl">
             <BookOpen className="w-8 h-8 text-white" />
@@ -391,6 +394,7 @@ const TableOfContents = () => {
           <p>💡 <strong>Pro Tip:</strong> Bookmark this page to track your progress through the complete guide.</p>
         </div>
       </div>
+    </div>
     </div>
   );
 };

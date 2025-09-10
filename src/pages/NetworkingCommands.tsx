@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Wifi, Globe, Shield, Copy, Terminal, Activity } from "lucide-react";
+import { FullscreenToggle } from "@/components/ui/fullscreen-toggle";
 
 const NetworkCommandSection = ({ title, commands, icon, bgColor }: { 
   title: string; 
@@ -380,11 +381,13 @@ Service detection performed. Please report any incorrect results at https://nmap
   ];
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
-          🌐 Complete Network Command Arsenal
-        </h1>
+    <div className="py-8 px-4">
+      <FullscreenToggle />
+      <div className="w-full">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
+            🌐 Complete Network Command Arsenal
+          </h1>
         <p className="text-lg text-muted-foreground">
           Master network troubleshooting, monitoring, and configuration with comprehensive examples
         </p>
@@ -478,6 +481,7 @@ Service detection performed. Please report any incorrect results at https://nmap
           Security & Hardening →
         </Link>
       </div>
+    </div>
     </div>
   );
 }

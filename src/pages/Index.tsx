@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { FullscreenToggle } from "@/components/ui/fullscreen-toggle";
 
 const Index = () => {
   const chapters = [
@@ -257,9 +258,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      <FullscreenToggle />
       {/* Hero Section */}
       <section className="hero-bg text-white py-20 px-8">
-        <div className="max-w-6xl mx-auto text-center">
+        <div className="w-full text-center">
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="p-3 bg-primary rounded-xl glow">
               <Terminal className="w-8 h-8" />
@@ -298,23 +300,9 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 px-8 bg-muted/30">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-primary mb-2">{stat.value}</div>
-                <div className="text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Table of Contents Section */}
       <section className="py-20 px-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="w-full">
           {/* Header */}
           <div className="text-center mb-12">
             <div className="flex items-center justify-center gap-3 mb-6">
@@ -334,26 +322,6 @@ const Index = () => {
               Follow this structured learning path from complete beginner to expert-level 
               system administrator and security professional.
             </p>
-
-            {/* Summary Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 max-w-2xl mx-auto">
-              <div className="text-center p-4 bg-muted/30 rounded-lg">
-                <div className="text-2xl font-bold text-primary">{chapters.length}</div>
-                <div className="text-sm text-muted-foreground">Chapters</div>
-              </div>
-              <div className="text-center p-4 bg-muted/30 rounded-lg">
-                <div className="text-2xl font-bold text-primary">{totalTopics}</div>
-                <div className="text-sm text-muted-foreground">Topics</div>
-              </div>
-              <div className="text-center p-4 bg-muted/30 rounded-lg">
-                <div className="text-2xl font-bold text-primary">{totalEstimatedTime}</div>
-                <div className="text-sm text-muted-foreground">Est. Time</div>
-              </div>
-              <div className="text-center p-4 bg-muted/30 rounded-lg">
-                <div className="text-2xl font-bold text-primary">200+</div>
-                <div className="text-sm text-muted-foreground">Commands</div>
-              </div>
-            </div>
           </div>
 
           {/* Learning Path */}
@@ -455,8 +423,8 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-8">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-20 px-8 bg-muted/20">
+        <div className="w-full">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Linux Mastery?</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -489,7 +457,7 @@ const Index = () => {
 
       {/* Learning Path Preview */}
       <section className="py-20 px-8 bg-muted/30">
-        <div className="max-w-6xl mx-auto">
+        <div className="w-full">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Your Learning Path</h2>
             <p className="text-xl text-muted-foreground">

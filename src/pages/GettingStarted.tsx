@@ -1,10 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FullscreenToggle } from "@/components/ui/fullscreen-toggle";
 
 export default function GettingStarted() {
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-6">🚀 Getting Started</h1>
+    <div className="py-8 px-4">
+      <FullscreenToggle />
+      <div className="w-full">
+        <h1 className="text-4xl font-bold mb-6">🚀 Getting Started</h1>
       
       <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
         <h2 className="text-3xl font-semibold mb-4">What is Linux?</h2>
@@ -104,6 +107,7 @@ export default function GettingStarted() {
           Next: Foundation Concepts →
         </Link>
       </div>
+    </div>
     </div>
   );
 }

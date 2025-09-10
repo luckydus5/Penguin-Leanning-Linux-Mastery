@@ -1,10 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FullscreenToggle } from "@/components/ui/fullscreen-toggle";
 
 export default function OffensiveSecurity() {
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-6">🔒 Offensive Security (Ethical Hacking)</h1>
+    <div className="py-8 px-4">
+      <FullscreenToggle />
+      <div className="w-full">
+        <h1 className="text-4xl font-bold mb-6">🔒 Offensive Security (Ethical Hacking)</h1>
       
       <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-8">
         <h2 className="text-lg font-semibold mb-2">⚠️ Ethical Hacking Guidelines</h2>
@@ -211,6 +214,7 @@ export default function OffensiveSecurity() {
           Next: Defensive Security →
         </Link>
       </div>
+    </div>
     </div>
   );
 }

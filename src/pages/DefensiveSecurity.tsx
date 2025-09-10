@@ -1,10 +1,13 @@
 import React from "react";
+import { FullscreenToggle } from "@/components/ui/fullscreen-toggle";
 import { Link } from "react-router-dom";
 
 export default function DefensiveSecurity() {
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-6">🛡️ Defensive Security (Blue Team)</h1>
+    <div className="py-8 px-4">
+      <FullscreenToggle />
+      <div className="w-full">
+        <h1 className="text-4xl font-bold mb-6">🛡️ Defensive Security (Blue Team)</h1>
       
       <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
         <h2 className="text-lg font-semibold mb-2">🛡️ Blue Team Mission</h2>
@@ -237,6 +240,7 @@ export default function DefensiveSecurity() {
           Next: Penetration Testing →
         </Link>
       </div>
+    </div>
     </div>
   );
 }

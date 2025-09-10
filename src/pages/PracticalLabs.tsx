@@ -1,9 +1,10 @@
 import React from "react";
+import { FullscreenToggle } from "@/components/ui/fullscreen-toggle";
 import { Link } from "react-router-dom";
 
 export default function PracticalLabs() {
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="w-full">
       <h1 className="text-4xl font-bold mb-6">🏆 Practical Projects & Hands-On Labs</h1>
       
       <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-8">

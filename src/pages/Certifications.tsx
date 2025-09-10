@@ -1,10 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FullscreenToggle } from "@/components/ui/fullscreen-toggle";
 
 export default function Certifications() {
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-6">📚 Certification Roadmap</h1>
+    <div className="py-8 px-4">
+      <FullscreenToggle />
+      <div className="w-full">
+        <h1 className="text-4xl font-bold mb-6">📚 Certification Roadmap</h1>
       
       <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
         <h2 className="text-lg font-semibold mb-2">🎯 Professional Validation</h2>
@@ -301,6 +304,7 @@ export default function Certifications() {
           Next: Final Challenges →
         </Link>
       </div>
+    </div>
     </div>
   );
 }

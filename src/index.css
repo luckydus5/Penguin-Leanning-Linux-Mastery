@@ -217,4 +217,30 @@
   .glow {
     box-shadow: var(--shadow-glow);
   }
+
+  /* Default window-fit behavior - content uses full window width */
+  .max-w-4xl,
+  .max-w-6xl,
+  .max-w-7xl,
+  .max-w-screen-xl {
+    max-width: none;
+  }
+  
+  .mx-auto {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /* Fullscreen Mode - Force full width and remove side margins */
+  .fullscreen-mode .max-w-4xl,
+  .fullscreen-mode .max-w-6xl,
+  .fullscreen-mode .max-w-7xl,
+  .fullscreen-mode .max-w-screen-xl {
+    max-width: none !important;
+  }
+  
+  .fullscreen-mode .mx-auto {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
 }

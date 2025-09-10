@@ -1,9 +1,10 @@
 import React from "react";
+import { FullscreenToggle } from "@/components/ui/fullscreen-toggle";
 import { Link } from "react-router-dom";
 
 export default function NetworkingMastery() {
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="w-full">
       <h1 className="text-4xl font-bold mb-6">🌐 Networking Mastery</h1>
       
       <div className="bg-white rounded-lg shadow-lg p-8 mb-8">

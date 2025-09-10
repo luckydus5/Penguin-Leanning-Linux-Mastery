@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Terminal, Copy, BookOpen, Play } from "lucide-react";
+import { FullscreenToggle } from "@/components/ui/fullscreen-toggle";
 
 interface CommandVariant {
   cmd: string;
@@ -866,22 +867,24 @@ Archive:  documents.zip
   ];
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-          🐧 Complete Linux Command Mastery
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-          Master every essential Linux command with comprehensive examples, variants, and real-world use cases. 
-          From basic navigation to advanced system administration - your complete reference guide.
-        </p>
-        <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm">
-          <span className="bg-primary/10 text-primary px-3 py-1 rounded-full">350+ Commands</span>
-          <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full">Real Examples</span>
-          <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Interactive Labs</span>
-          <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Progressive Learning</span>
+    <div className="py-12 px-8">
+      <FullscreenToggle />
+      <div className="w-full">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            🐧 Complete Linux Command Mastery
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            Master every essential Linux command with comprehensive examples, variants, and real-world use cases. 
+            From basic navigation to advanced system administration - your complete reference guide.
+          </p>
+          <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm">
+            <span className="bg-primary/10 text-primary px-3 py-1 rounded-full">350+ Commands</span>
+            <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full">Real Examples</span>
+            <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Interactive Labs</span>
+            <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Progressive Learning</span>
+          </div>
         </div>
-      </div>
 
       <div className="bg-muted/30 rounded-lg p-6 mb-8 border border-border/50">
         <div className="flex items-center gap-3 mb-4">
@@ -1113,5 +1116,6 @@ sudo netstat -tlnp | grep :22`}
         </div>
       </div>
     </div>
+  </div>
   );
 }
