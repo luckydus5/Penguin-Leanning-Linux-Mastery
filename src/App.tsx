@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import MainLayout from "@/components/MainLayout";
+import TableOfContents from "@/pages/TableOfContents";
 import GettingStarted from "@/pages/GettingStarted";
 import FoundationConcepts from "@/pages/FoundationConcepts";
 import EssentialCommands from "@/pages/EssentialCommands";
@@ -33,6 +34,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Index />} />
+            <Route path="table-of-contents" element={<TableOfContents />} />
             <Route path="getting-started" element={<GettingStarted />} />
             <Route path="foundation" element={<FoundationConcepts />} />
             <Route path="commands" element={<EssentialCommands />} />

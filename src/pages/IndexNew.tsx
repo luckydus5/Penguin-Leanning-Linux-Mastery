@@ -284,7 +284,7 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button asChild size="lg" className="text-lg px-8 py-4 glow">
               <Link to="/getting-started">
-                � Start Your Journey
+                🚀 Start Your Journey
                 <ChevronRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>
@@ -455,7 +455,7 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-8">
+      <section className="py-20 px-8 bg-muted/20">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Linux Mastery?</h2>
@@ -464,106 +464,23 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                  <CardHeader className="pb-4">
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                      <Icon className="w-6 h-6 text-primary" />
+                <Card key={index} className="text-center border-0 shadow-lg hover:shadow-xl transition-shadow">
+                  <CardHeader>
+                    <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full flex items-center justify-center">
+                      <Icon className="w-8 h-8 text-primary" />
                     </div>
-                    <CardTitle className="text-xl">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-base">
+                    <CardTitle className="text-lg">{feature.title}</CardTitle>
+                    <CardDescription className="text-sm">
                       {feature.description}
                     </CardDescription>
-                  </CardContent>
+                  </CardHeader>
                 </Card>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      {/* Learning Path Preview */}
-      <section className="py-20 px-8 bg-muted/30">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Your Learning Path</h2>
-            <p className="text-xl text-muted-foreground">
-              Follow our structured curriculum designed by Linux experts
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <Badge className="bg-green-100 text-green-800">Beginner</Badge>
-                  <span className="text-sm text-muted-foreground">Chapters 1-4</span>
-                </div>
-                <CardTitle>Foundation</CardTitle>
-                <CardDescription>
-                  Linux basics, file system, essential commands, and user management
-                </CardDescription>
-              </CardHeader>
-            </Card>
-            
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <Badge className="bg-yellow-100 text-yellow-800">Intermediate</Badge>
-                  <span className="text-sm text-muted-foreground">Chapters 5-8</span>
-                </div>
-                <CardTitle>System Administration</CardTitle>
-                <CardDescription>
-                  Process management, networking, services, and shell scripting
-                </CardDescription>
-              </CardHeader>
-            </Card>
-            
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <Badge className="bg-red-100 text-red-800">Advanced</Badge>
-                  <span className="text-sm text-muted-foreground">Chapters 9-12</span>
-                </div>
-                <CardTitle>DevOps & Security</CardTitle>
-                <CardDescription>
-                  DevOps tools, cybersecurity, penetration testing, and advanced topics
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
-          
-          <div className="text-center mt-12">
-            <p className="text-lg text-muted-foreground mb-6">
-              Ready to start your Linux mastery journey? Choose your path:
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="text-lg px-8 py-4">
-                <Link to="/linux-basics">
-                  🐧 Start with Linux Basics
-                  <ChevronRight className="w-5 h-5 ml-2" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="text-lg px-8 py-4">
-                <Link to="/commands">
-                  📖 Jump to Essential Commands
-                  <ChevronRight className="w-5 h-5 ml-2" />
-                </Link>
-              </Button>
-            </div>
-            <p className="text-sm text-muted-foreground mt-6">
-              Or explore specific topics: 
-              <Link to="/networking" className="text-primary hover:underline ml-1">Networking</Link>
-              {" • "}
-              <Link to="/scripting" className="text-primary hover:underline">Shell Scripting</Link>
-              {" • "}
-              <Link to="/security" className="text-primary hover:underline">Cybersecurity</Link>
-            </p>
           </div>
         </div>
       </section>

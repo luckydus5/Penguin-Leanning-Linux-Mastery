@@ -1,7 +1,8 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { Terminal, BookOpen, Shield, Network, Code, Server, Trophy, FileText } from "lucide-react";
+import { Terminal, BookOpen, Shield, Network, Code, Server, Trophy, FileText, List } from "lucide-react";
 
 const sections = [
+  { name: "Table of Contents", path: "/table-of-contents", icon: List, description: "Complete learning roadmap", featured: true },
   { name: "Getting Started", path: "/getting-started", icon: Terminal, description: "Linux basics and installation" },
   { name: "Foundation Concepts", path: "/foundation", icon: BookOpen, description: "Core Linux concepts" },
   { name: "Essential Commands", path: "/commands", icon: Code, description: "Command line mastery" },
@@ -36,20 +37,32 @@ export default function MainLayout() {
           {sections.map((section) => {
             const Icon = section.icon;
             const isActive = location.pathname === section.path;
+            const isFeatured = section.featured;
             
             return (
               <Link
                 key={section.path}
                 to={section.path}
                 className={`group flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all duration-200 ${
-                  isActive 
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-md" 
-                    : "hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+                  isFeatured 
+                    ? "bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 hover:from-primary/20 hover:to-secondary/20"
+                    : isActive 
+                      ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-md" 
+                      : "hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
                 }`}
               >
-                <Icon className={`w-5 h-5 ${isActive ? "text-primary" : "text-sidebar-foreground/70"}`} />
+                <Icon className={`w-5 h-5 ${
+                  isFeatured 
+                    ? "text-primary" 
+                    : isActive 
+                      ? "text-primary" 
+                      : "text-sidebar-foreground/70"
+                }`} />
                 <div className="flex-1">
-                  <div className="font-medium">{section.name}</div>
+                  <div className={`font-medium ${isFeatured ? "text-primary" : ""}`}>
+                    {section.name}
+                    {isFeatured && <span className="ml-2 text-xs bg-primary text-primary-foreground px-2 py-0.5 rounded-full">📚</span>}
+                  </div>
                   <div className="text-xs text-sidebar-foreground/60">{section.description}</div>
                 </div>
               </Link>
