@@ -3,9 +3,29 @@ import { Link } from "react-router-dom";
 import { Wifi, Globe, Shield, Copy, Terminal, Activity } from "lucide-react";
 import { FullscreenToggle } from "@/components/ui/fullscreen-toggle";
 
+interface CommandVariant {
+  cmd: string;
+  desc: string;
+  security?: string;
+}
+
+interface CommandExample {
+  command: string;
+  output: string;
+  explanation: string;
+}
+
+interface NetworkCommand {
+  command: string;
+  description: string;
+  variants?: CommandVariant[];
+  examples?: CommandExample[];
+  useCases?: string[];
+}
+
 const NetworkCommandSection = ({ title, commands, icon, bgColor }: { 
   title: string; 
-  commands: any[]; 
+  commands: NetworkCommand[]; 
   icon: React.ReactNode;
   bgColor: string;
 }) => {
@@ -44,7 +64,7 @@ const NetworkCommandSection = ({ title, commands, icon, bgColor }: {
               <div className="mb-4">
                 <h4 className="font-semibold text-sm text-foreground mb-3">🌐 Network Command Variants:</h4>
                 <div className="grid gap-2">
-                  {cmd.variants.map((variant: any, vIndex: number) => (
+                  {cmd.variants.map((variant: CommandVariant, vIndex: number) => (
                     <div key={vIndex} className="bg-background rounded border p-3 hover:bg-muted/20 transition-colors group">
                       <div className="flex items-center justify-between mb-1">
                         <code className="text-primary font-mono text-sm font-medium">{variant.cmd}</code>
@@ -71,7 +91,7 @@ const NetworkCommandSection = ({ title, commands, icon, bgColor }: {
             {cmd.examples && (
               <div className="space-y-3">
                 <h4 className="font-semibold text-sm text-foreground mb-2">📡 Real Network Examples:</h4>
-                {cmd.examples.map((example: any, eIndex: number) => (
+                {cmd.examples.map((example: CommandExample, eIndex: number) => (
                   <div key={eIndex} className="bg-background rounded border overflow-hidden">
                     <div className="bg-terminal text-terminal-foreground p-4 border-b font-mono text-sm">
                       <div className="flex items-center gap-2 mb-2">
