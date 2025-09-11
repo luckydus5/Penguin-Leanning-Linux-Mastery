@@ -22,6 +22,9 @@ import PracticalLabs from "@/pages/PracticalLabs";
 import Certifications from "@/pages/Certifications";
 import FinalChallenges from "@/pages/FinalChallenges";
 import YourJourney from "@/pages/YourJourney";
+import BeginnerPath from "@/pages/BeginnerPath";
+import IntermediatePath from "@/pages/IntermediatePath";
+import AdvancedPath from "@/pages/AdvancedPath";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +52,9 @@ const App = () => (
             <Route path="certifications" element={<Certifications />} />
             <Route path="challenges" element={<FinalChallenges />} />
             <Route path="journey" element={<YourJourney />} />
+            <Route path="beginner-path" element={<BeginnerPath />} />
+            <Route path="intermediate-path" element={<IntermediatePath />} />
+            <Route path="advanced-path" element={<AdvancedPath />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
