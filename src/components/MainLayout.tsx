@@ -1,19 +1,14 @@
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
-import { Terminal, BookOpen, Shield, Network, Code, Server, Trophy, FileText, List, ChevronLeft, ChevronRight, Target, Flame, Settings } from "lucide-react";
+import { Terminal, BookOpen, Shield, Network, Code, Server, Trophy, FileText, List, ChevronLeft, ChevronRight, Maximize, Minimize } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 
 const sections = [
-  { name: "🌱 Beginner Path", path: "/beginner-path", icon: BookOpen, description: "Perfect for complete beginners", featured: true, skillLevel: "beginner" },
-  { name: "🎯 Intermediate Path", path: "/intermediate-path", icon: Target, description: "Build professional skills", featured: true, skillLevel: "intermediate" },
-  { name: "🔥 Advanced Path", path: "/advanced-path", icon: Flame, description: "Master expert-level topics", featured: true, skillLevel: "advanced" },
-  { name: "📚 Table of Contents", path: "/table-of-contents", icon: List, description: "Complete learning roadmap" },
+  { name: "Table of Contents", path: "/table-of-contents", icon: List, description: "Complete learning roadmap", featured: true },
   { name: "Getting Started", path: "/getting-started", icon: Terminal, description: "Linux basics and installation" },
   { name: "Foundation Concepts", path: "/foundation", icon: BookOpen, description: "Core Linux concepts" },
   { name: "Essential Commands", path: "/commands", icon: Code, description: "Command line mastery" },
-  { name: "System Administration", path: "/system-admin", icon: Settings, description: "User and system management" },
-  { name: "Networking Commands", path: "/networking-commands", icon: Network, description: "Network tools and protocols" },
-  { name: "Networking Mastery", path: "/networking", icon: Network, description: "Advanced networking" },
+  { name: "Networking Mastery", path: "/networking", icon: Network, description: "Network tools and protocols" },
   { name: "Offensive Security", path: "/offensive-security", icon: Shield, description: "Penetration testing tools" },
   { name: "Defensive Security", path: "/defensive-security", icon: Shield, description: "System hardening and defense" },
   { name: "Penetration Testing", path: "/pentesting", icon: Shield, description: "Advanced pen-testing" },
@@ -88,18 +83,6 @@ export default function MainLayout() {
             const Icon = section.icon;
             const isActive = location.pathname === section.path;
             const isFeatured = section.featured;
-            const skillLevel = section.skillLevel;
-            
-            // Skill level specific styling
-            const getSkillLevelStyle = () => {
-              if (!skillLevel) return "";
-              switch (skillLevel) {
-                case "beginner": return "border-green-200 bg-gradient-to-r from-green-50/50 to-blue-50/50 hover:from-green-100/50 hover:to-blue-100/50";
-                case "intermediate": return "border-orange-200 bg-gradient-to-r from-orange-50/50 to-red-50/50 hover:from-orange-100/50 hover:to-red-100/50";
-                case "advanced": return "border-purple-200 bg-gradient-to-r from-purple-50/50 to-red-50/50 hover:from-purple-100/50 hover:to-red-100/50";
-                default: return "";
-              }
-            };
             
             return (
               <Link
@@ -107,7 +90,7 @@ export default function MainLayout() {
                 to={section.path}
                 className={`group flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all duration-200 ${
                   isFeatured 
-                    ? `border ${getSkillLevelStyle()}`
+                    ? "bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 hover:from-primary/20 hover:to-secondary/20"
                     : isActive 
                       ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-md" 
                       : "hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
@@ -123,6 +106,7 @@ export default function MainLayout() {
                 <div className="flex-1">
                   <div className={`font-medium ${isFeatured ? "text-primary" : ""}`}>
                     {section.name}
+                    {isFeatured && <span className="ml-2 text-xs bg-primary text-primary-foreground px-2 py-0.5 rounded-full">📚</span>}
                   </div>
                   <div className="text-xs text-sidebar-foreground/60">{section.description}</div>
                 </div>
