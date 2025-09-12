@@ -15,7 +15,8 @@ import {
   ChevronRight,
   Clock,
   Star,
-  Award
+  Award,
+  GraduationCap
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -23,207 +24,237 @@ import { Button } from "@/components/ui/button";
 import { FullscreenToggle } from "@/components/ui/fullscreen-toggle";
 
 const TableOfContents = () => {
-  const chapters = [
+  const skillLevels = [
     {
-      chapter: "Chapter 1",
-      title: "Getting Started",
-      path: "/getting-started",
+      level: "Beginner",
       icon: BookOpen,
-      difficulty: "Beginner",
-      estimatedTime: "30 min",
-      description: "Your introduction to Linux - what it is, why it matters, and how to get started",
-      topics: [
-        "What is Linux?",
-        "Linux Distributions", 
-        "Installation Guide",
-        "First Boot Setup"
-      ],
-      color: "bg-green-500"
+      color: "from-green-500 to-emerald-600",
+      description: "Perfect starting point for Linux newcomers",
+      chapters: [
+        {
+          chapter: "Chapter 1",
+          title: "Getting Started",
+          path: "/getting-started",
+          icon: BookOpen,
+          estimatedTime: "45 min",
+          description: "Your introduction to Linux - what it is, why it matters, and how to get started",
+          topics: [
+            "What is Linux?",
+            "Linux Distributions", 
+            "Installation Guide",
+            "First Boot Setup",
+            "Basic Terminal Setup"
+          ]
+        },
+        {
+          chapter: "Chapter 2", 
+          title: "Foundation Concepts",
+          path: "/foundation",
+          icon: Layers,
+          estimatedTime: "1 hour",
+          description: "Core concepts every Linux user must understand",
+          topics: [
+            "Filesystem Hierarchy",
+            "Terminal Basics",
+            "Package Managers", 
+            "Environment Variables",
+            "File Permissions"
+          ]
+        },
+        {
+          chapter: "Chapter 3",
+          title: "Essential Commands",
+          path: "/commands", 
+          icon: Terminal,
+          estimatedTime: "2.5 hours",
+          description: "Master 200+ essential Linux commands with practical examples",
+          topics: [
+            "Navigation Commands",
+            "File Operations",
+            "Text Processing",
+            "Process Management",
+            "System Monitoring"
+          ]
+        }
+      ]
     },
     {
-      chapter: "Chapter 2", 
-      title: "Foundation Concepts",
-      path: "/foundation",
-      icon: Layers,
-      difficulty: "Beginner",
-      estimatedTime: "45 min",
-      description: "Core concepts every Linux user must understand",
-      topics: [
-        "Filesystem Hierarchy",
-        "Terminal Basics",
-        "Package Managers", 
-        "Environment Variables"
-      ],
-      color: "bg-blue-500"
-    },
-    {
-      chapter: "Chapter 3",
-      title: "Essential Commands",
-      path: "/commands", 
-      icon: Terminal,
-      difficulty: "Beginner",
-      estimatedTime: "2 hours",
-      description: "Master 200+ essential Linux commands with practical examples",
-      topics: [
-        "Navigation Commands",
-        "File Operations",
-        "Text Processing",
-        "Process Management",
-        "System Monitoring"
-      ],
-      color: "bg-purple-500"
-    },
-    {
-      chapter: "Chapter 4",
-      title: "System Administration", 
-      path: "/system-admin",
-      icon: Settings,
-      difficulty: "Intermediate",
-      estimatedTime: "1.5 hours",
-      description: "Learn to manage and maintain Linux systems effectively",
-      topics: [
-        "User Management",
-        "Service Control", 
-        "Cron Jobs",
-        "Log Management",
-        "System Performance"
-      ],
-      color: "bg-orange-500"
-    },
-    {
-      chapter: "Chapter 5",
-      title: "Networking Mastery",
-      path: "/networking",
-      icon: Network, 
-      difficulty: "Intermediate",
-      estimatedTime: "2 hours",
-      description: "Comprehensive networking concepts and troubleshooting",
-      topics: [
-        "TCP/IP Fundamentals",
-        "Network Diagnostics",
-        "Firewall Configuration",
-        "SSH & Remote Access",
-        "Network Tools"
-      ],
-      color: "bg-cyan-500"
-    },
-    {
-      chapter: "Chapter 6",
-      title: "Shell Scripting & Automation",
-      path: "/linux",
+      level: "Intermediate",
       icon: Code,
-      difficulty: "Intermediate", 
-      estimatedTime: "2.5 hours",
-      description: "Automate tasks and create powerful scripts",
-      topics: [
-        "Bash Fundamentals",
-        "Variables & Parameters",
-        "Control Structures", 
-        "Functions & Libraries",
-        "Advanced Techniques"
-      ],
-      color: "bg-indigo-500"
+      color: "from-blue-500 to-cyan-600",
+      description: "Build advanced system administration skills",
+      chapters: [
+        {
+          chapter: "Chapter 4",
+          title: "System Administration", 
+          path: "/system-admin",
+          icon: Settings,
+          estimatedTime: "2 hours",
+          description: "Learn to manage and maintain Linux systems effectively",
+          topics: [
+            "User Management",
+            "Service Control", 
+            "Cron Jobs",
+            "Log Management",
+            "System Performance",
+            "Backup Strategies"
+          ]
+        },
+        {
+          chapter: "Chapter 5",
+          title: "Networking Commands",
+          path: "/networking-commands",
+          icon: Network, 
+          estimatedTime: "1.5 hours",
+          description: "Master networking tools and troubleshooting",
+          topics: [
+            "Network Configuration",
+            "Diagnostic Tools",
+            "Firewall Management",
+            "SSH & Remote Access",
+            "Network Monitoring"
+          ]
+        },
+        {
+          chapter: "Chapter 6",
+          title: "Shell Scripting & Automation",
+          path: "/linux",
+          icon: Code,
+          estimatedTime: "3 hours",
+          description: "Automate tasks and create powerful scripts",
+          topics: [
+            "Bash Fundamentals",
+            "Variables & Parameters",
+            "Control Structures", 
+            "Functions & Libraries",
+            "Advanced Scripting"
+          ]
+        }
+      ]
     },
     {
-      chapter: "Chapter 7",
-      title: "Offensive Security",
-      path: "/offensive-security",
-      icon: Target,
-      difficulty: "Advanced",
-      estimatedTime: "3 hours", 
-      description: "Ethical hacking and penetration testing fundamentals",
-      topics: [
-        "Reconnaissance",
-        "Vulnerability Assessment",
-        "Exploitation Techniques",
-        "Post-Exploitation",
-        "Reporting"
-      ],
-      color: "bg-red-500"
-    },
-    {
-      chapter: "Chapter 8", 
-      title: "Defensive Security",
-      path: "/defensive-security",
+      level: "Advanced",
       icon: Shield,
-      difficulty: "Advanced",
-      estimatedTime: "2.5 hours",
-      description: "Protect systems and detect threats effectively", 
-      topics: [
-        "System Hardening",
-        "Intrusion Detection",
-        "Log Analysis",
-        "Incident Response",
-        "Security Monitoring"
-      ],
-      color: "bg-emerald-500"
+      color: "from-purple-500 to-violet-600",
+      description: "Master security and advanced system topics",
+      chapters: [
+        {
+          chapter: "Chapter 7",
+          title: "Offensive Security",
+          path: "/offensive-security",
+          icon: Target,
+          estimatedTime: "3 hours", 
+          description: "Ethical hacking and penetration testing fundamentals",
+          topics: [
+            "Reconnaissance",
+            "Vulnerability Assessment",
+            "Exploitation Techniques",
+            "Post-Exploitation",
+            "Reporting & Documentation"
+          ]
+        },
+        {
+          chapter: "Chapter 8", 
+          title: "Defensive Security",
+          path: "/defensive-security",
+          icon: Shield,
+          estimatedTime: "2.5 hours",
+          description: "Protect systems and detect threats effectively", 
+          topics: [
+            "System Hardening",
+            "Intrusion Detection",
+            "Log Analysis",
+            "Incident Response",
+            "Security Monitoring"
+          ]
+        },
+        {
+          chapter: "Chapter 9",
+          title: "Linux Mastery",
+          path: "/linux",
+          icon: Terminal,
+          estimatedTime: "4 hours",
+          description: "Advanced Linux topics for power users",
+          topics: [
+            "Kernel Management",
+            "Advanced File Systems",
+            "Performance Tuning",
+            "Container Technologies",
+            "System Optimization"
+          ]
+        }
+      ]
     },
     {
-      chapter: "Chapter 9",
-      title: "Practical Labs",
-      path: "/labs", 
-      icon: Zap,
-      difficulty: "All Levels",
-      estimatedTime: "5+ hours",
-      description: "Hands-on projects to cement your knowledge",
-      topics: [
-        "Web Server Setup",
-        "Database Administration", 
-        "Container Management",
-        "Security Scenarios",
-        "Real-world Projects"
-      ],
-      color: "bg-yellow-500"
-    },
-    {
-      chapter: "Chapter 10",
-      title: "Certifications & Career",
-      path: "/certifications",
-      icon: Award,
-      difficulty: "Expert", 
-      estimatedTime: "1 hour",
-      description: "Professional certifications and career development",
-      topics: [
-        "Linux+ Certification",
-        "RHCSA/RHCE",
-        "Security Certifications",
-        "Career Paths",
-        "Study Strategies"
-      ],
-      color: "bg-pink-500"
-    },
-    {
-      chapter: "Final Challenge",
-      title: "Master Challenges", 
-      path: "/challenges",
+      level: "Expert", 
       icon: Trophy,
-      difficulty: "Expert",
-      estimatedTime: "3+ hours",
-      description: "Ultimate tests of your Linux mastery",
-      topics: [
-        "Comprehensive Scenarios",
-        "Time-based Challenges",
-        "Real-world Problems", 
-        "Capstone Projects",
-        "Certification Prep"
-      ],
-      color: "bg-violet-500"
+      color: "from-orange-500 to-red-600",
+      description: "Professional certifications and mastery challenges",
+      chapters: [
+        {
+          chapter: "Chapter 10",
+          title: "Practical Labs",
+          path: "/labs", 
+          icon: Zap,
+          estimatedTime: "8+ hours",
+          description: "Hands-on projects to cement your knowledge",
+          topics: [
+            "Web Server Setup",
+            "Database Administration", 
+            "Container Deployment",
+            "Security Scenarios",
+            "Real-world Projects"
+          ]
+        },
+        {
+          chapter: "Chapter 11",
+          title: "Certifications & Career",
+          path: "/certifications",
+          icon: Award,
+          estimatedTime: "2 hours",
+          description: "Professional certifications and career development",
+          topics: [
+            "Linux+ Certification",
+            "RHCSA/RHCE",
+            "Security Certifications",
+            "Career Paths",
+            "Study Strategies"
+          ]
+        },
+        {
+          chapter: "Final Challenge",
+          title: "Master Challenges", 
+          path: "/challenges",
+          icon: Trophy,
+          estimatedTime: "5+ hours",
+          description: "Ultimate tests of your Linux mastery",
+          topics: [
+            "Comprehensive Scenarios",
+            "Time-based Challenges",
+            "Real-world Problems", 
+            "Capstone Projects",
+            "Certification Prep"
+          ]
+        }
+      ]
     }
   ];
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
+  const getDifficultyColor = (level: string) => {
+    switch (level) {
       case "Beginner": return "bg-green-100 text-green-800";
-      case "Intermediate": return "bg-yellow-100 text-yellow-800"; 
-      case "Advanced": return "bg-orange-100 text-orange-800";
-      case "Expert": return "bg-red-100 text-red-800";
-      case "All Levels": return "bg-blue-100 text-blue-800";
+      case "Intermediate": return "bg-blue-100 text-blue-800"; 
+      case "Advanced": return "bg-purple-100 text-purple-800";
+      case "Expert": return "bg-orange-100 text-orange-800";
       default: return "bg-gray-100 text-gray-800";
     }
   };
 
-  const totalEstimatedTime = "20+ hours";
-  const totalTopics = chapters.reduce((acc, chapter) => acc + chapter.topics.length, 0);
+  const totalEstimatedTime = "25+ hours";
+  const totalChapters = skillLevels.reduce((acc, level) => acc + level.chapters.length, 0);
+  const totalTopics = skillLevels.reduce((acc, level) => 
+    acc + level.chapters.reduce((chapterAcc, chapter) => chapterAcc + chapter.topics.length, 0), 0
+  );
 
   return (
     <div className="py-8 px-4">
@@ -252,7 +283,7 @@ const TableOfContents = () => {
         {/* Summary Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 max-w-2xl mx-auto">
           <div className="text-center p-4 bg-muted/30 rounded-lg">
-            <div className="text-2xl font-bold text-primary">{chapters.length}</div>
+            <div className="text-2xl font-bold text-primary">{totalChapters}</div>
             <div className="text-sm text-muted-foreground">Chapters</div>
           </div>
           <div className="text-center p-4 bg-muted/30 rounded-lg">
@@ -270,62 +301,82 @@ const TableOfContents = () => {
         </div>
       </div>
 
-      {/* Learning Path */}
+      {/* Learning Path by Skill Level */}
       <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-6 text-center">🎯 Your Learning Journey</h2>
-        <div className="grid gap-6">
-          {chapters.map((chapter, index) => {
-            const IconComponent = chapter.icon;
-            return (
-              <Card key={index} className="group hover:shadow-lg transition-all duration-300 border-l-4 border-l-transparent hover:border-l-primary cursor-pointer">
-                <Link to={chapter.path} className="block">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className={`p-3 rounded-xl ${chapter.color} text-white group-hover:scale-110 transition-transform`}>
-                          <IconComponent className="w-6 h-6" />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-3 mb-2">
-                            <Badge variant="outline" className="text-xs">
-                              {chapter.chapter}
-                            </Badge>
-                            <Badge className={getDifficultyColor(chapter.difficulty)}>
-                              {chapter.difficulty}
-                            </Badge>
-                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <Clock className="w-3 h-3" />
-                              {chapter.estimatedTime}
+        <h2 className="text-3xl font-bold mb-8 text-center">🎯 Structured Learning by Skill Level</h2>
+        
+        {skillLevels.map((skillLevel, levelIndex) => {
+          const LevelIcon = skillLevel.icon;
+          return (
+            <div key={levelIndex} className="mb-12">
+              {/* Skill Level Header */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className={`w-16 h-16 bg-gradient-to-r ${skillLevel.color} rounded-2xl flex items-center justify-center`}>
+                  <LevelIcon className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-1">{skillLevel.level}</h3>
+                  <p className="text-muted-foreground">{skillLevel.description}</p>
+                </div>
+                <Badge className={getDifficultyColor(skillLevel.level)} variant="secondary">
+                  {skillLevel.chapters.length} Chapters
+                </Badge>
+              </div>
+
+              {/* Chapters in this skill level */}
+              <div className="grid gap-4 ml-6 border-l-2 border-muted pl-6">
+                {skillLevel.chapters.map((chapter, chapterIndex) => {
+                  const ChapterIcon = chapter.icon;
+                  return (
+                    <Card key={chapterIndex} className="group hover:shadow-lg transition-all duration-300 border-l-4 border-l-transparent hover:border-l-primary cursor-pointer">
+                      <Link to={chapter.path} className="block">
+                        <CardHeader className="pb-4">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-center gap-4">
+                              <div className={`p-3 rounded-xl bg-gradient-to-r ${skillLevel.color} text-white group-hover:scale-110 transition-transform`}>
+                                <ChapterIcon className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-3 mb-2">
+                                  <Badge variant="outline" className="text-xs">
+                                    {chapter.chapter}
+                                  </Badge>
+                                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                    <Clock className="w-3 h-3" />
+                                    {chapter.estimatedTime}
+                                  </div>
+                                </div>
+                                <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                                  {chapter.title}
+                                </CardTitle>
+                                <CardDescription className="mt-1 text-sm">
+                                  {chapter.description}
+                                </CardDescription>
+                              </div>
                             </div>
+                            <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
                           </div>
-                          <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                            {chapter.title}
-                          </CardTitle>
-                          <CardDescription className="mt-2 text-sm">
-                            {chapter.description}
-                          </CardDescription>
-                        </div>
-                      </div>
-                      <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
-                      {chapter.topics.map((topic, topicIndex) => (
-                        <div 
-                          key={topicIndex}
-                          className="text-xs bg-muted/50 rounded-full px-3 py-1 text-center text-muted-foreground"
-                        >
-                          {topic}
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Link>
-              </Card>
-            );
-          })}
-        </div>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+                            {chapter.topics.map((topic, topicIndex) => (
+                              <div 
+                                key={topicIndex}
+                                className="text-xs bg-muted/50 rounded-full px-3 py-1 text-center text-muted-foreground"
+                              >
+                                {topic}
+                              </div>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Link>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Quick Start Guide */}
@@ -336,15 +387,15 @@ const TableOfContents = () => {
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold mt-1">1</div>
               <div>
-                <strong className="text-blue-900">Follow the Order</strong>
-                <p className="text-sm text-blue-700 mt-1">Each chapter builds on previous knowledge. Start from Chapter 1 for best results.</p>
+                <strong className="text-blue-900">Start with Your Level</strong>
+                <p className="text-sm text-blue-700 mt-1">Choose the appropriate skill level and follow the structured path.</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold mt-1">2</div>
               <div>
                 <strong className="text-blue-900">Practice Everything</strong>
-                <p className="text-sm text-blue-700 mt-1">Every command and concept includes hands-on examples. Practice as you learn.</p>
+                <p className="text-sm text-blue-700 mt-1">Every command includes hands-on examples. Practice as you learn.</p>
               </div>
             </div>
           </div>
@@ -359,7 +410,7 @@ const TableOfContents = () => {
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold mt-1">4</div>
               <div>
-                <strong className="text-blue-900">Test Yourself</strong>
+                <strong className="text-blue-900">Challenge Yourself</strong>
                 <p className="text-sm text-blue-700 mt-1">Use challenges and assessments to validate your progress.</p>
               </div>
             </div>
