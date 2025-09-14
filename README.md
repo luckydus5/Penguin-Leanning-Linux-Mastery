@@ -922,66 +922,295 @@ tune2fs -c 50 /dev/sdb1   # Set max mount count
 
 #### Users & Permissions
 
-Linux is a multi-user system, and managing permissions is critical for security.
+Linux is a multi-user, multi-group system with sophisticated permission management for security and access control.
+
+**Core Commands**
 
 | Command | Description | Example | Notes |
 |---|---|---|---|
-| `chmod` | **Ch**ange **Mod**e (permissions) | `chmod 755 script.sh` | Sets read/write/execute for owner, read/execute for others. |
-| `chown` | **Ch**ange **Own**er | `chown www-data:www-data file` | Changes the user and group that owns a file. |
-| `sudo` | **S**uper**u**ser **Do** | `sudo apt update` | Executes a command with root privileges. |
-| `su` | **S**witch **U**ser | `su - john` | Switches to another user's session (`-` provides a login shell). |
+| `whoami` | Display current username | `whoami` | Shows currently logged-in user |
+| `id` | Show user/group IDs | `id john` | UID, GID, and group memberships |
+| `users` | List logged-in users | `users` | All currently logged-in users |
+| `w` | Show user activities | `w` | Detailed user activities and load |
+| `last` | Show login history | `last -n 10` | Recent login records |
+| `useradd` | Add new user | `sudo useradd -m -s /bin/bash john` | `-m` creates home, `-s` sets shell |
+| `userdel` | Delete user | `sudo userdel -r john` | `-r` removes home directory |
+| `usermod` | Modify user | `sudo usermod -aG sudo john` | Add user to group |
+| `passwd` | Change password | `passwd` or `sudo passwd john` | Change password |
+| `su` | Switch user | `su - john` | Switch to another user |
+| `sudo` | Execute as superuser | `sudo apt update` | Run with elevated privileges |
+| `groups` | Show user groups | `groups john` | List user's groups |
+| `groupadd` | Create group | `sudo groupadd developers` | Create new group |
+| `gpasswd` | Manage group | `sudo gpasswd -a john developers` | Add user to group |
 
-**Deep Dive: `chmod`**
+**Advanced User Management**
 
-Permissions can be set using numbers (octal) or letters (symbolic).
+| Command | Description | Example | Notes |
+|---|---|---|---|
+| `chage` | Password aging | `sudo chage -M 90 john` | Set password expiry |
+| `finger` | User information | `finger john` | Detailed user info |
+| `getent` | Get entries | `getent passwd john` | Query user database |
+| `vigr` | Edit group file | `sudo vigr` | Safely edit /etc/group |
+| `newgrp` | Switch primary group | `newgrp developers` | Change active group |
 
-*   **Numeric:** `r=4`, `w=2`, `x=1`. Sum them up for each entity (User, Group, Other).
-    *   `chmod 755`: `rwx` for User, `r-x` for Group, `r-x` for Other.
-    *   `chmod 644`: `rw-` for User, `r--` for Group, `r--` for Other.
-*   **Symbolic:** `u` (user), `g` (group), `o` (other), `a` (all). `+` (add), `-` (remove), `=` (set).
-    *   `chmod u+x script.sh`: Adds execute permission for the user.
-    *   `chmod g-w data.txt`: Removes write permission for the group.
-    *   `chmod a=r config.yml`: Sets read-only permission for everyone.
+**File Permissions Deep Dive**
 
-**Exercises: Permissions**
+**Permission Structure:**
+```
+-rwxr-xr--  1 john developers 1024 Oct 15 14:30 script.sh
+│││││││││  │ │    │         │    │            │
+│││││││││  │ │    │         │    │            └─ filename
+│││││││││  │ │    │         │    └─ modification time
+│││││││││  │ │    │         └─ file size
+│││││││││  │ │    └─ group owner
+│││││││││  │ └─ user owner
+│││││││││  └─ link count
+│└─┬─┴─┬─┴─ others permissions (r--)
+│  │   └─── group permissions (r-x)  
+│  └─────── user permissions (rwx)
+└───────── file type (- = file, d = directory)
+```
 
-1.  Create a file named `secret.txt`.
-2.  Set its permissions so that only the owner can read and write to it.
-3.  Create a script `hello.sh` and give only the owner execute permissions.
-4.  Create a shared directory where members of your group can add and modify files, but others can only read.
+**Numeric Permissions:**
+| Number | Binary | Permission | Description |
+|--------|--------|------------|-------------|
+| 0 | 000 | --- | No permissions |
+| 1 | 001 | --x | Execute only |
+| 2 | 010 | -w- | Write only |
+| 3 | 011 | -wx | Write and execute |
+| 4 | 100 | r-- | Read only |
+| 5 | 101 | r-x | Read and execute |
+| 6 | 110 | rw- | Read and write |
+| 7 | 111 | rwx | Full permissions |
+
+**Permission Management Commands**
+
+| Command | Description | Example | Notes |
+|---|---|---|---|
+| `chmod` | Change permissions | `chmod 755 script.sh` | rwxr-xr-x permissions |
+| `chown` | Change ownership | `sudo chown john:developers file.txt` | Change owner and group |
+| `chgrp` | Change group | `sudo chgrp developers file.txt` | Change group only |
+| `umask` | Set default permissions | `umask 022` | Default permissions for new files |
+| `lsattr` | List attributes | `lsattr file.txt` | Extended file attributes |
+| `chattr` | Change attributes | `sudo chattr +i file.txt` | Make file immutable |
+| `getfacl` | Get ACLs | `getfacl file.txt` | Access Control Lists |
+| `setfacl` | Set ACLs | `setfacl -m u:john:rw file.txt` | Fine-grained permissions |
+
+**Common Permission Patterns:**
+- **644**: Regular files (owner rw-, others r--)
+- **755**: Executables/directories (owner rwx, others r-x)
+- **600**: Private files (owner rw-, others ---)
+- **700**: Private directories (owner rwx, others ---)
+
+**Advanced chmod Examples:**
+```bash
+# Symbolic notation
+chmod u+rwx,g+rx,o+r file.txt        # Specific permissions
+chmod u-w,g+w file.txt                # Remove/add permissions
+chmod a+x script.sh                   # Add execute for all
+
+# Recursive permissions
+chmod -R 755 /var/www/html            # Apply to all contents
+find /path -type f -exec chmod 644 {} \;  # Files only
+find /path -type d -exec chmod 755 {} \;  # Directories only
+
+# Special permissions
+chmod +t /tmp                         # Sticky bit
+chmod u+s /usr/bin/passwd             # SUID bit
+chmod g+s /var/shared                 # SGID bit
+```
+
+**sudo Configuration & Security**
+
+| Command | Description | Example | Notes |
+|---|---|---|---|
+| `sudo -l` | List privileges | `sudo -l` | Show allowed commands |
+| `sudo -u` | Run as user | `sudo -u john ls /home/john` | Execute as specific user |
+| `sudo -i` | Interactive root shell | `sudo -i` | Full root environment |
+| `sudo -s` | Shell as root | `sudo -s` | Root shell, current env |
+| `visudo` | Edit sudoers | `sudo visudo` | Safely edit /etc/sudoers |
+| `sudo -v` | Refresh timestamp | `sudo -v` | Extend sudo session |
+| `sudo -k` | Invalidate timestamp | `sudo -k` | Force password prompt |
+
+**Practical Exercises:**
+
+1. **User Management:**
+   ```bash
+   # Create a new user with home directory
+   sudo useradd -m -s /bin/bash testuser
+   sudo passwd testuser
+   
+   # Add user to multiple groups
+   sudo usermod -aG sudo,developers testuser
+   
+   # Check user information
+   id testuser
+   groups testuser
+   ```
+
+2. **Permission Practice:**
+   ```bash
+   # Create test files and directories
+   mkdir -p /tmp/permission-test/{public,private,shared}
+   touch /tmp/permission-test/{public,private,shared}/test.txt
+   
+   # Set different permission levels
+   chmod 644 /tmp/permission-test/public/test.txt      # Public read
+   chmod 600 /tmp/permission-test/private/test.txt     # Owner only
+   chmod 664 /tmp/permission-test/shared/test.txt      # Group write
+   
+   # Verify permissions
+   ls -la /tmp/permission-test/*/test.txt
+   ```
+
+3. **Advanced Security:**
+   ```bash
+   # Create a shared directory with sticky bit
+   sudo mkdir /tmp/shared-folder
+   sudo chmod 1777 /tmp/shared-folder
+   
+   # Set up a service user
+   sudo useradd -r -s /bin/false -d /var/lib/myservice myservice
+   sudo chown myservice:myservice /var/lib/myservice
+   ```
 
 ---
 
 #### Process Management
 
-View, manage, and terminate running programs.
+Master process control, monitoring, and system resource management.
+
+**Core Process Commands**
 
 | Command | Description | Example | Notes |
-|---|---|---|---|
-| `ps` | **P**rocess **S**tatus | `ps aux` | Shows a snapshot of all running processes. |
-| `top` | Real-time process monitor | `top` | An interactive dashboard of system resource usage. |
-| `htop` | Interactive process viewer | `htop` | A more user-friendly and powerful version of `top`. |
-| `kill` | Send a signal to a process | `kill -9 1234` | `-9` (SIGKILL) is a force-kill signal. |
-| `systemctl` | **System**d **C**on**t**ro**l** | `sudo systemctl status nginx` | The primary tool for managing system services (daemons). |
+|---------|-------------|---------|-------|
+| `ps` | Process status snapshot | `ps aux --forest` | Show all processes with tree view |
+| `pstree` | Process tree visualization | `pstree -p` | Visual process hierarchy with PIDs |
+| `top` | Real-time process monitor | `top -u john` | Interactive resource dashboard |
+| `htop` | Enhanced process viewer | `htop` | Better version of top with colors |
+| `atop` | Advanced system monitor | `atop -a` | Comprehensive system monitoring |
+| `iotop` | I/O usage monitor | `iotop -o` | Monitor disk I/O by process |
+| `pidof` | Find process IDs | `pidof nginx` | Get PIDs by process name |
+| `pgrep` | Process grep | `pgrep -f "python.*script"` | Find processes by pattern |
+| `pkill` | Kill processes by pattern | `pkill -f "python.*script"` | Kill processes matching pattern |
 
-**Deep Dive: `ps` Command Variants**
+**Process States and Information**
 
-The `ps` command provides information about running processes.
+| State | Description | Symbol |
+|-------|-------------|--------|
+| Running | Currently executing | R |
+| Sleeping | Waiting for event | S |
+| Disk Sleep | Uninterruptible sleep | D |
+| Zombie | Terminated but not reaped | Z |
+| Stopped | Stopped by signal | T |
 
-| Command | Description |
-|---|---|
-| `ps` | Show processes for the current shell. |
-| `ps -e` | Show all processes running on the system. |
-| `ps -f` | Full-format listing: UID, PID, PPID, C, STIME, TTY, TIME, CMD. |
-| `ps aux` | Detailed listing for all users. |
-| `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem` | Custom format: sort by memory usage. |
+**Advanced ps Command Variants**
 
-**Exercises: Process Management**
+| Command | Description | Output Focus |
+|---------|-------------|--------------|
+| `ps aux` | All processes, detailed format | User-oriented view |
+| `ps -ef` | All processes, full format | Process hierarchy |
+| `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem` | Custom format by memory | Memory usage analysis |
+| `ps -eo pid,user,comm,etime` | Process runtime | Uptime tracking |
+| `ps -C nginx` | Specific command processes | Filter by command name |
+| `ps --forest -C nginx` | Process tree for command | Hierarchical view |
 
-1.  Find the Process ID (PID) of your shell.
-2.  Use `top` to find the most CPU-intensive process.
-3.  Start a `sleep 300` command in the background (`&`). Find its PID and terminate it.
-4.  Check the status of the SSH service on your machine.
+**Process Control & Job Management**
+
+| Command | Description | Example | Notes |
+|---------|-------------|---------|-------|
+| `kill` | Send signal to process | `kill -TERM 1234` | Graceful termination |
+| `kill -9` | Force kill process | `kill -9 1234` | Immediate termination |
+| `killall` | Kill by process name | `killall firefox` | Kill all instances |
+| `nohup` | Run immune to hangups | `nohup command &` | Persistent background job |
+| `disown` | Remove job from shell | `disown %1` | Detach background job |
+| `jobs` | List active jobs | `jobs -l` | Show background jobs |
+| `fg` | Foreground job | `fg %1` | Bring job to foreground |
+| `bg` | Background job | `bg %1` | Send job to background |
+
+**Signal Types**
+
+| Signal | Number | Description | Use Case |
+|--------|--------|-------------|----------|
+| TERM | 15 | Terminate (default) | Graceful shutdown |
+| KILL | 9 | Force kill | Immediate termination |
+| HUP | 1 | Hangup | Reload configuration |
+| INT | 2 | Interrupt (Ctrl+C) | User interruption |
+| QUIT | 3 | Quit (Ctrl+\) | Core dump |
+| STOP | 19 | Stop process | Pause execution |
+| CONT | 18 | Continue | Resume execution |
+| USR1/USR2 | 10/12 | User-defined | Custom signals |
+
+**System Service Management**
+
+| Command | Description | Example | Notes |
+|---------|-------------|---------|-------|
+| `systemctl` | Primary service control | `systemctl status nginx` | Modern systemd control |
+| `systemctl start` | Start service | `systemctl start apache2` | Begin service |
+| `systemctl stop` | Stop service | `systemctl stop apache2` | End service |
+| `systemctl restart` | Restart service | `systemctl restart ssh` | Stop and start |
+| `systemctl reload` | Reload configuration | `systemctl reload nginx` | Refresh config |
+| `systemctl enable` | Enable at boot | `systemctl enable docker` | Auto-start service |
+| `systemctl disable` | Disable at boot | `systemctl disable bluetooth` | Prevent auto-start |
+| `systemctl mask` | Mask service | `systemctl mask apache2` | Prevent manual start |
+
+**Process Monitoring & Analysis**
+
+| Command | Description | Example | Notes |
+|---------|-------------|---------|-------|
+| `lsof` | List open files | `lsof -i :80` | Files/ports opened by processes |
+| `fuser` | Show process using file | `fuser -v /var/log/syslog` | Process accessing file |
+| `strace` | Trace system calls | `strace -e open command` | Debug system interactions |
+| `ltrace` | Trace library calls | `ltrace command` | Debug library usage |
+| `gdb` | GNU debugger | `gdb -p 1234` | Attach to running process |
+
+**Performance Monitoring**
+
+```bash
+# Monitor process CPU usage over time
+watch -n 1 'ps -eo pid,pcpu,comm --sort=-pcpu | head -10'
+
+# Find processes consuming most memory
+ps -eo pid,pmem,comm --sort=-pmem | head -10
+
+# Monitor specific process
+watch -n 2 'ps -p 1234 -o pid,pcpu,pmem,etime,cmd'
+
+# Track process tree changes
+watch -n 1 'pstree -p'
+```
+
+**Practical Exercises**
+
+1. **Process Discovery:**
+   ```bash
+   # Find all Python processes
+   pgrep -fl python
+   
+   # Show process tree for specific user
+   ps -U username --forest
+   
+   # Find processes using most CPU
+   ps -eo pid,pcpu,comm --sort=-pcpu | head -5
+   ```
+
+2. **Advanced Process Control:**
+   ```bash
+   # Start background job and manage it
+   sleep 1000 &
+   jobs -l
+   fg %1    # Ctrl+Z to suspend
+   bg %1
+   disown %1
+   ```
+
+3. **Service Management:**
+   ```bash
+   # Check service status and logs
+   systemctl is-active nginx
+   systemctl is-enabled nginx
+   journalctl -u nginx -f
+   ```
 
 ---
 
@@ -1050,25 +1279,143 @@ Variables are used to store data, and parameters are used to pass data to script
 
 ---
 
-###  Windows Command Line Equivalents
+### 🔧 Advanced Linux Command Arsenal
 
-For those coming from a Windows background, here is a quick translation guide.
+Here's an extensive collection of powerful Linux commands organized by category. Master these to become a Linux power user.
 
-| Linux Command | Windows `cmd` | Windows `PowerShell` | Description |
-|---|---|---|---|
-| `ls` | `dir` | `Get-ChildItem` (alias `ls`, `gci`) | List directory contents. |
-| `cd` | `cd` | `Set-Location` (alias `cd`, `sl`) | Change directory. |
-| `cp` | `copy` | `Copy-Item` (alias `cp`, `cpi`) | Copy files. |
-| `mv` | `move` / `rename` | `Move-Item` / `Rename-Item` | Move or rename files. |
-| `rm` | `del` / `erase` | `Remove-Item` (alias `rm`, `del`) | Remove files. |
-| `mkdir` | `mkdir` | `New-Item -ItemType Directory` | Create a directory. |
-| `pwd` | `cd` (with no args) | `Get-Location` (alias `pwd`, `gl`) | Print working directory. |
-| `ps` | `tasklist` | `Get-Process` (alias `ps`, `gps`) | List processes. |
-| `kill` | `taskkill` | `Stop-Process` (alias `kill`, `spps`) | Terminate a process. |
-| `ip addr` | `ipconfig` | `Get-NetIPAddress` | Show network configuration. |
-| `cat` | `type` | `Get-Content` (alias `cat`, `gc`) | Display file content. |
-| `grep` | `findstr` | `Select-String` | Search for text in files. |
-| `sudo` | (run as Admin) | `Start-Process -Verb RunAs` | Elevate privileges. |
+#### System Information & Hardware
+
+| Command | Description | Example | Notes |
+|---------|-------------|---------|-------|
+| `uname` | System information | `uname -a` | Kernel, hostname, architecture |
+| `hostnamectl` | Host information | `hostnamectl` | Detailed host information |
+| `lscpu` | CPU information | `lscpu` | Detailed CPU specs |
+| `lsmem` | Memory information | `lsmem` | Memory layout and usage |
+| `lsblk` | Block devices | `lsblk -f` | List storage devices |
+| `lspci` | PCI devices | `lspci -v` | PCI hardware details |
+| `lsusb` | USB devices | `lsusb -v` | USB hardware information |
+| `dmidecode` | Hardware info | `sudo dmidecode -t memory` | BIOS/hardware details |
+| `hwinfo` | Hardware detection | `hwinfo --short` | Comprehensive hardware info |
+| `inxi` | System information | `inxi -Fxz` | Detailed system overview |
+
+#### Advanced Text Processing
+
+| Command | Description | Example | Notes |
+|---------|-------------|---------|-------|
+| `awk` | Pattern scanning | `awk '{print $1}' file.txt` | Extract specific columns |
+| `sed` | Stream editor | `sed 's/old/new/g' file.txt` | Find and replace text |
+| `cut` | Extract columns | `cut -d',' -f1,3 data.csv` | Extract CSV columns |
+| `sort` | Sort text | `sort -nr numbers.txt` | Numeric reverse sort |
+| `uniq` | Remove duplicates | `sort file.txt | uniq -c` | Count unique lines |
+| `tr` | Translate characters | `tr '[:lower:]' '[:upper:]'` | Convert to uppercase |
+| `wc` | Word count | `wc -l file.txt` | Count lines, words, chars |
+| `head` | First lines | `head -n 20 file.txt` | Show first 20 lines |
+| `tail` | Last lines | `tail -f /var/log/syslog` | Follow log files |
+| `column` | Format columns | `column -t -s',' data.csv` | Format CSV as table |
+
+#### Advanced File Operations
+
+| Command | Description | Example | Notes |
+|---------|-------------|---------|-------|
+| `rsync` | Advanced copy/sync | `rsync -avz source/ dest/` | Sync with progress |
+| `dd` | Copy/convert data | `dd if=/dev/sda of=backup.img bs=4M` | Create disk images |
+| `file` | File type detection | `file mysterious_file` | Identify file types |
+| `stat` | File statistics | `stat file.txt` | Detailed file info |
+| `touch` | Create/update files | `touch -t 202301011200 file.txt` | Set specific timestamp |
+| `ln` | Create links | `ln -s /path/to/file symlink` | Create symbolic links |
+| `readlink` | Read link targets | `readlink -f symlink` | Resolve symbolic links |
+| `basename` | Extract filename | `basename /path/to/file.txt` | Get filename only |
+| `dirname` | Extract directory | `dirname /path/to/file.txt` | Get directory path |
+| `realpath` | Absolute path | `realpath ../file.txt` | Convert to absolute path |
+
+#### Process & System Monitoring
+
+| Command | Description | Example | Notes |
+|---------|-------------|---------|-------|
+| `ps` | Process status | `ps aux --forest` | Show process tree |
+| `pstree` | Process tree | `pstree -p` | Visual process hierarchy |
+| `pgrep` | Find processes | `pgrep -f nginx` | Search processes by name |
+| `pkill` | Kill processes | `pkill -f "python script.py"` | Kill by pattern |
+| `nohup` | Run without hangup | `nohup command &` | Background persistent job |
+| `screen` | Terminal multiplexer | `screen -S session_name` | Detachable sessions |
+| `tmux` | Modern multiplexer | `tmux new -s work` | Advanced terminal sessions |
+| `jobs` | List jobs | `jobs -l` | Show background jobs |
+| `fg` | Foreground job | `fg %1` | Bring job to foreground |
+| `bg` | Background job | `bg %1` | Send job to background |
+
+#### Network Commands
+
+| Command | Description | Example | Notes |
+|---------|-------------|---------|-------|
+| `ip` | Network configuration | `ip addr show` | Modern network tool |
+| `ss` | Socket statistics | `ss -tuln` | Replace netstat |
+| `netstat` | Network statistics | `netstat -tuln` | Legacy network tool |
+| `ping` | ICMP ping | `ping -c 4 google.com` | Test connectivity |
+| `traceroute` | Route tracing | `traceroute google.com` | Trace network path |
+| `wget` | Download files | `wget -r http://site.com` | Recursive download |
+| `curl` | Transfer data | `curl -X POST -d "data" url` | Advanced HTTP client |
+| `nc` | Netcat | `nc -l 1234` | Network Swiss Army knife |
+| `nmap` | Network scanner | `nmap -sS target` | Port scanning |
+| `tcpdump` | Packet capture | `tcpdump -i eth0 port 80` | Network packet analysis |
+
+#### Archive & Compression Mastery
+
+| Command | Description | Example | Notes |
+|---------|-------------|---------|-------|
+| `tar` | Archive tool | `tar -czvf archive.tar.gz dir/` | Create compressed archive |
+| `gzip` | Gzip compression | `gzip -9 file.txt` | Maximum compression |
+| `gunzip` | Gzip decompression | `gunzip file.txt.gz` | Decompress gzip files |
+| `zip` | Create ZIP files | `zip -r archive.zip directory/` | Cross-platform archives |
+| `unzip` | Extract ZIP files | `unzip -l archive.zip` | List archive contents |
+| `7z` | 7-Zip tool | `7z a -t7z archive.7z files/` | High compression ratio |
+| `xz` | XZ compression | `xz -e file.txt` | Excellent compression |
+| `bzip2` | Bzip2 compression | `bzip2 -9 file.txt` | Good compression/speed |
+
+#### System Control & Services
+
+| Command | Description | Example | Notes |
+|---------|-------------|---------|-------|
+| `systemctl` | Service management | `systemctl status nginx` | Primary service control |
+| `service` | Legacy service control | `service apache2 restart` | Compatibility wrapper |
+| `journalctl` | System logs | `journalctl -f -u ssh` | Follow service logs |
+| `crontab` | Schedule tasks | `crontab -e` | User task scheduling |
+| `at` | One-time tasks | `echo "command" | at now + 1 hour` | Schedule single execution |
+| `systemd-analyze` | Boot analysis | `systemd-analyze blame` | Boot performance analysis |
+
+#### Security & Permissions Deep Dive
+
+| Command | Description | Example | Notes |
+|---------|-------------|---------|-------|
+| `chattr` | Change attributes | `chattr +i file.txt` | Make file immutable |
+| `lsattr` | List attributes | `lsattr file.txt` | Show file attributes |
+| `setfacl` | Set ACLs | `setfacl -m u:john:rw file.txt` | Advanced permissions |
+| `getfacl` | Get ACLs | `getfacl file.txt` | Show access control lists |
+| `umask` | Default permissions | `umask 022` | Set default file permissions |
+
+#### Performance & Debugging
+
+| Command | Description | Example | Notes |
+|---------|-------------|---------|-------|
+| `strace` | System call trace | `strace -e open command` | Debug system calls |
+| `ltrace` | Library call trace | `ltrace command` | Debug library calls |
+| `lsof` | List open files | `lsof -i :80` | Files opened by processes |
+| `iotop` | I/O monitoring | `iotop -o` | Monitor disk I/O |
+| `iftop` | Network monitoring | `iftop -i eth0` | Monitor network bandwidth |
+| `dstat` | System statistics | `dstat -cdngy` | Comprehensive system stats |
+
+#### Quick Reference for Windows Users
+
+| Linux Command | Windows Equivalent | Description |
+|---------------|-------------------|-------------|
+| `ls` | `dir` | List directory contents |
+| `cd` | `cd` | Change directory |
+| `cp` | `copy` | Copy files |
+| `mv` | `move` | Move/rename files |
+| `rm` | `del` | Delete files |
+| `ps` | `tasklist` | List processes |
+| `kill` | `taskkill` | Terminate processes |
+| `cat` | `type` | Display file content |
+| `grep` | `findstr` | Search text in files |
 
 ---
 
