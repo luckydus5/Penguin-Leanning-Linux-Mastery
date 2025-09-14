@@ -240,6 +240,83 @@ Linux is a free, open-source operating system kernel created by Linus Torvalds i
 - **Live USB**: Try Linux without installation
 - **Full Installation**: Replace existing OS
 
+**Step-by-Step Ubuntu Installation:**
+
+1. **Download Ubuntu ISO**
+   ```bash
+   # Verify download integrity
+   sha256sum ubuntu-22.04.3-desktop-amd64.iso
+   ```
+
+2. **Create Bootable USB**
+   ```bash
+   # Linux method
+   sudo dd if=ubuntu-22.04.3-desktop-amd64.iso of=/dev/sdX bs=4M status=progress
+   
+   # Or use GUI tool like Etcher
+   ```
+
+3. **Boot from USB**
+   - Enter BIOS/UEFI (usually F2, F12, or Delete)
+   - Set USB as first boot device
+   - Save and restart
+
+4. **Installation Process**
+   - Choose "Install Ubuntu"
+   - Select language and keyboard layout
+   - Choose installation type (normal/minimal)
+   - Configure disk partitioning
+   - Create user account
+   - Wait for installation completion
+
+### First Boot Setup
+
+**Initial System Configuration:**
+
+1. **Update System**
+   ```bash
+   sudo apt update && sudo apt upgrade -y
+   ```
+
+2. **Install Essential Software**
+   ```bash
+   # Development tools
+   sudo apt install curl wget git vim build-essential -y
+   
+   # Media codecs
+   sudo apt install ubuntu-restricted-extras -y
+   
+   # Archive tools
+   sudo apt install rar unrar p7zip-full -y
+   ```
+
+3. **Configure Firewall**
+   ```bash
+   sudo ufw enable
+   sudo ufw status
+   ```
+
+4. **Set Up SSH (if needed)**
+   ```bash
+   sudo apt install openssh-server -y
+   sudo systemctl enable ssh
+   sudo systemctl start ssh
+   ```
+
+5. **Configure Git**
+   ```bash
+   git config --global user.name "Your Name"
+   git config --global user.email "your.email@example.com"
+   ```
+
+**Post-Installation Checklist:**
+- [ ] System updated to latest packages
+- [ ] Essential software installed
+- [ ] User account configured
+- [ ] Network connectivity verified
+- [ ] Firewall enabled
+- [ ] Backup strategy planned
+
 ---
 
 ## Foundation Concepts
@@ -304,6 +381,99 @@ username@hostname:~/current/directory$ command
 | `|` | Pipe output | `ls | grep txt` |
 | `>` | Redirect output | `echo "hello" > file.txt` |
 | `>>` | Append output | `echo "world" >> file.txt` |
+
+### Package Managers
+
+Package managers are essential tools for installing, updating, and removing software on Linux systems.
+
+**Debian/Ubuntu (APT)**
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `apt update` | Update package lists | `sudo apt update` |
+| `apt upgrade` | Upgrade installed packages | `sudo apt upgrade` |
+| `apt install` | Install new packages | `sudo apt install firefox` |
+| `apt remove` | Remove packages | `sudo apt remove firefox` |
+| `apt search` | Search for packages | `apt search web browser` |
+| `apt show` | Show package information | `apt show firefox` |
+| `apt list` | List packages | `apt list --installed` |
+
+**Red Hat/CentOS (YUM/DNF)**
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `dnf update` | Update packages | `sudo dnf update` |
+| `dnf install` | Install packages | `sudo dnf install firefox` |
+| `dnf remove` | Remove packages | `sudo dnf remove firefox` |
+| `dnf search` | Search packages | `dnf search browser` |
+| `dnf info` | Package information | `dnf info firefox` |
+
+**Arch Linux (Pacman)**
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `pacman -Syu` | Update system | `sudo pacman -Syu` |
+| `pacman -S` | Install package | `sudo pacman -S firefox` |
+| `pacman -R` | Remove package | `sudo pacman -R firefox` |
+| `pacman -Ss` | Search packages | `pacman -Ss browser` |
+| `pacman -Q` | List installed | `pacman -Q` |
+
+### Environment Variables
+
+Environment variables store configuration information that programs can access.
+
+**Viewing Environment Variables**
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `env` | List all variables | `env` |
+| `printenv` | Show specific variable | `printenv PATH` |
+| `echo $VAR` | Display variable value | `echo $HOME` |
+| `set` | Show all variables (bash) | `set` |
+
+**Common Environment Variables**
+
+| Variable | Purpose | Example Value |
+|----------|---------|---------------|
+| `PATH` | Executable search paths | `/usr/bin:/bin:/usr/sbin` |
+| `HOME` | User home directory | `/home/username` |
+| `USER` | Current username | `john` |
+| `SHELL` | Default shell | `/bin/bash` |
+| `PWD` | Current directory | `/home/john/projects` |
+| `LANG` | System language | `en_US.UTF-8` |
+| `EDITOR` | Default text editor | `vim` |
+
+**Setting Environment Variables**
+
+```bash
+# Temporary (current session only)
+export MY_VAR="hello world"
+echo $MY_VAR
+
+# Permanent (add to ~/.bashrc or ~/.profile)
+echo 'export MY_VAR="hello world"' >> ~/.bashrc
+source ~/.bashrc
+
+# System-wide (add to /etc/environment)
+echo 'MY_VAR="hello world"' | sudo tee -a /etc/environment
+```
+
+**Practical Examples**
+
+```bash
+# Add custom directory to PATH
+export PATH="$PATH:$HOME/bin"
+
+# Set default editor
+export EDITOR=vim
+
+# Java development
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+export PATH="$PATH:$JAVA_HOME/bin"
+
+# Python virtual environment
+export PYTHONPATH="$PYTHONPATH:$HOME/myproject"
+```
 
 ---
 
@@ -388,6 +558,365 @@ The `cp` command is essential for copying files and directories.
 5.  Create a symbolic link from `~/my_project/assets/images` to `~/images_shortcut`.
 6.  Remove the `~/images_shortcut` link.
 7.  Remove the entire `~/my_project` directory and all its contents with a single command.
+
+---
+
+### Process Management
+
+Understanding and managing processes is fundamental to Linux administration.
+
+#### Understanding Processes
+
+**Process Basics:**
+- **Process**: A running instance of a program
+- **PID**: Process ID (unique identifier)
+- **PPID**: Parent Process ID
+- **Thread**: Lightweight process sharing memory space
+
+**Process States:**
+
+| State | Symbol | Description |
+|-------|--------|-------------|
+| **Running** | R | Currently executing |
+| **Sleeping** | S | Waiting for event |
+| **Uninterruptible** | D | Cannot be interrupted |
+| **Zombie** | Z | Terminated but not cleaned up |
+| **Stopped** | T | Stopped by signal |
+
+**Viewing Processes:**
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `ps` | Show running processes | `ps aux` |
+| `top` | Dynamic process viewer | `top` |
+| `htop` | Enhanced process viewer | `htop` |
+| `pgrep` | Find processes by name | `pgrep firefox` |
+| `pidof` | Get PID of process | `pidof firefox` |
+
+**Process Information:**
+
+```bash
+# Detailed process information
+ps -ef                    # Full format listing
+ps aux                    # BSD format with more details
+ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu    # Custom format
+
+# Process tree
+pstree                    # Show process hierarchy
+pstree -p                 # Include PIDs
+```
+
+#### Background/Foreground Jobs
+
+**Job Control:**
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `jobs` | List active jobs | `jobs` |
+| `bg` | Put job in background | `bg %1` |
+| `fg` | Bring job to foreground | `fg %1` |
+| `nohup` | Run command immune to hangups | `nohup ./script.sh &` |
+| `disown` | Remove job from shell | `disown %1` |
+
+**Background Execution:**
+
+```bash
+# Start command in background
+long_running_command &
+
+# Start in background with nohup
+nohup long_running_command > output.log 2>&1 &
+
+# Suspend current job and put in background
+# Press Ctrl+Z, then:
+bg
+
+# List jobs with their status
+jobs -l
+
+# Bring specific job to foreground
+fg %2
+```
+
+#### Signals & Process Control
+
+**Common Signals:**
+
+| Signal | Number | Description | Use Case |
+|--------|--------|-------------|----------|
+| `SIGTERM` | 15 | Graceful termination | Normal shutdown |
+| `SIGKILL` | 9 | Force termination | Kill unresponsive process |
+| `SIGSTOP` | 19 | Pause process | Suspend execution |
+| `SIGCONT` | 18 | Continue process | Resume from pause |
+| `SIGHUP` | 1 | Hangup signal | Reload configuration |
+| `SIGINT` | 2 | Interrupt (Ctrl+C) | User interruption |
+
+**Sending Signals:**
+
+```bash
+# Send signal to process
+kill -TERM 1234           # Graceful termination
+kill -9 1234              # Force kill
+kill -STOP 1234           # Pause process
+kill -CONT 1234           # Resume process
+
+# Kill processes by name
+killall firefox           # Kill all firefox processes
+pkill -f "python script"  # Kill by command pattern
+
+# Send signal to process group
+kill -TERM -1234          # Negative PID = process group
+```
+
+#### Process Monitoring
+
+**Real-time Monitoring:**
+
+```bash
+# Basic monitoring
+top                       # Classic process monitor
+htop                      # Enhanced interactive monitor
+atop                      # Advanced system monitor
+
+# Filtering and sorting in top/htop
+# Press 'k' to kill process
+# Press 'r' to renice process
+# Press 'M' to sort by memory
+# Press 'P' to sort by CPU
+```
+
+**System Resource Usage:**
+
+```bash
+# CPU information
+lscpu                     # CPU architecture info
+cat /proc/cpuinfo         # Detailed CPU info
+
+# Memory usage
+free -h                   # Memory usage (human readable)
+cat /proc/meminfo         # Detailed memory info
+
+# Disk I/O
+iostat 1                  # Disk I/O statistics
+iotop                     # I/O usage by process
+
+# Load average
+uptime                    # System uptime and load
+cat /proc/loadavg         # Load average details
+```
+
+**Process Scheduling:**
+
+```bash
+# Change process priority
+nice -n 10 command        # Start with lower priority
+renice 5 1234            # Change priority of running process
+
+# Process affinity (CPU binding)
+taskset -c 0,1 command    # Run on CPUs 0 and 1
+taskset -cp 0,1 1234      # Set affinity for running process
+```
+
+---
+
+### System Monitoring
+
+Effective system monitoring is crucial for maintaining system health and performance.
+
+#### Resource Monitoring
+
+**CPU Monitoring:**
+
+```bash
+# Real-time CPU usage
+top                       # Classic tool
+htop                      # Interactive version
+vmstat 1                  # Virtual memory statistics
+sar -u 1 10              # CPU utilization (10 samples)
+
+# CPU load analysis
+uptime                    # Load averages
+cat /proc/loadavg         # Raw load data
+mpstat 1                  # Multiprocessor statistics
+```
+
+**Memory Monitoring:**
+
+```bash
+# Memory usage overview
+free -h                   # Human-readable format
+cat /proc/meminfo         # Detailed memory info
+vmstat -s                 # Memory statistics summary
+
+# Memory usage by process
+ps aux --sort=-%mem       # Processes by memory usage
+pmap 1234                 # Memory map of process
+smem -t                   # Advanced memory reporter
+```
+
+**Disk Monitoring:**
+
+```bash
+# Disk space usage
+df -h                     # Filesystem disk space
+du -sh /*                 # Directory sizes
+ncdu /                    # Interactive disk usage
+
+# Disk I/O performance
+iostat -x 1               # Extended I/O statistics
+iotop                     # I/O usage by process
+sar -d 1 10              # Disk activity
+```
+
+#### Log Management
+
+**System Logs Location:**
+
+| Log File | Purpose | Example Content |
+|----------|---------|-----------------|
+| `/var/log/syslog` | General system messages | Kernel, services |
+| `/var/log/auth.log` | Authentication events | Login attempts |
+| `/var/log/kern.log` | Kernel messages | Hardware, drivers |
+| `/var/log/dmesg` | Boot messages | Hardware detection |
+| `/var/log/apache2/` | Web server logs | HTTP requests |
+| `/var/log/mysql/` | Database logs | SQL queries, errors |
+
+**Log Viewing Commands:**
+
+```bash
+# View log files
+tail -f /var/log/syslog   # Follow log in real-time
+head -n 50 /var/log/auth.log    # First 50 lines
+less /var/log/kern.log    # Paginated view
+grep "error" /var/log/syslog    # Search for errors
+
+# Systemd journal
+journalctl                # View all journal entries
+journalctl -f             # Follow journal in real-time
+journalctl -u ssh         # Logs for specific service
+journalctl --since "1 hour ago"    # Recent entries
+journalctl -p err         # Error priority only
+```
+
+**Log Rotation:**
+
+```bash
+# Logrotate configuration
+cat /etc/logrotate.conf   # Main configuration
+ls /etc/logrotate.d/      # Service-specific configs
+
+# Manual log rotation
+logrotate -f /etc/logrotate.d/rsyslog
+
+# Example logrotate config
+/var/log/myapp/*.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate
+}
+```
+
+#### Performance Tools
+
+**System Performance Analysis:**
+
+```bash
+# Comprehensive system info
+lshw                      # Hardware information
+lsblk                     # Block devices
+lsusb                     # USB devices
+lspci                     # PCI devices
+dmidecode                 # Hardware details from BIOS
+
+# Network performance
+netstat -i                # Network interface statistics
+ss -tuln                  # Socket statistics
+iftop                     # Network usage by connection
+nethogs                   # Network usage by process
+```
+
+**Performance Benchmarking:**
+
+```bash
+# CPU benchmark
+sysbench cpu run          # CPU performance test
+
+# Memory benchmark
+sysbench memory run       # Memory performance test
+
+# Disk benchmark
+dd if=/dev/zero of=testfile bs=1G count=1 oflag=direct    # Write test
+hdparm -Tt /dev/sda       # Disk read performance
+
+# Network benchmark
+iperf3 -s                 # Start server
+iperf3 -c server_ip       # Run client test
+```
+
+#### Disk Management
+
+**Disk Information:**
+
+```bash
+# Disk and partition info
+lsblk                     # Tree view of block devices
+fdisk -l                  # Partition tables
+parted -l                 # Advanced partition info
+blkid                     # UUID and filesystem info
+
+# Filesystem usage
+df -h                     # Mounted filesystems
+findmnt                   # Find and display mount points
+mount | column -t         # Currently mounted filesystems
+```
+
+**Disk Partitioning:**
+
+```bash
+# Create partitions (BE CAREFUL!)
+fdisk /dev/sdb            # Interactive partitioning
+parted /dev/sdb           # Advanced partitioning tool
+
+# Filesystem creation
+mkfs.ext4 /dev/sdb1       # Create ext4 filesystem
+mkfs.xfs /dev/sdb1        # Create XFS filesystem
+mkswap /dev/sdb2          # Create swap space
+```
+
+**Mount Operations:**
+
+```bash
+# Manual mounting
+mount /dev/sdb1 /mnt/data # Mount filesystem
+umount /mnt/data          # Unmount filesystem
+
+# Permanent mounting (/etc/fstab)
+echo "/dev/sdb1 /mnt/data ext4 defaults 0 2" >> /etc/fstab
+mount -a                  # Mount all fstab entries
+
+# Loop device mounting
+mount -o loop image.iso /mnt/iso    # Mount ISO file
+```
+
+**File System Maintenance:**
+
+```bash
+# Check filesystem
+fsck /dev/sdb1            # Check and repair filesystem
+e2fsck -f /dev/sdb1       # Force check ext2/3/4
+
+# Resize filesystem
+resize2fs /dev/sdb1       # Resize ext2/3/4 filesystem
+xfs_growfs /mnt/data      # Resize XFS filesystem
+
+# Filesystem tuning
+tune2fs -l /dev/sdb1      # Display filesystem parameters
+tune2fs -c 50 /dev/sdb1   # Set max mount count
+```
 
 ---
 
@@ -685,6 +1214,458 @@ Memorizing these is a rite of passage.
 | 445 | SMB | Server Message Block | File sharing, printing. Common in Windows networks. |
 | 3306 | MySQL | - | Default port for the MySQL database system. |
 | 3389 | RDP | Remote Desktop Protocol | Graphical remote access, primarily for Windows. |
+
+---
+
+## File Management & Compression
+
+Efficient file management and compression are essential skills for Linux administrators and developers.
+
+### Archive & Compression
+
+**Tar (Tape Archive)**
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `tar -cvf` | Create archive | `tar -cvf backup.tar /home/user/` |
+| `tar -xvf` | Extract archive | `tar -xvf backup.tar` |
+| `tar -tvf` | List archive contents | `tar -tvf backup.tar` |
+| `tar -czvf` | Create compressed (gzip) | `tar -czvf backup.tar.gz /home/user/` |
+| `tar -cjvf` | Create compressed (bzip2) | `tar -cjvf backup.tar.bz2 /home/user/` |
+| `tar -xzvf` | Extract gzip archive | `tar -xzvf backup.tar.gz` |
+| `tar -xjvf` | Extract bzip2 archive | `tar -xjvf backup.tar.bz2` |
+
+**Common Compression Tools**
+
+| Tool | Extension | Compression | Speed | Command |
+|------|-----------|-------------|-------|---------|
+| **gzip** | .gz | Good | Fast | `gzip file.txt` |
+| **bzip2** | .bz2 | Better | Slower | `bzip2 file.txt` |
+| **xz** | .xz | Best | Slowest | `xz file.txt` |
+| **zip** | .zip | Good | Fast | `zip archive.zip file1 file2` |
+| **7z** | .7z | Excellent | Medium | `7z a archive.7z file1 file2` |
+
+**Advanced Archive Operations**
+
+```bash
+# Create incremental backup
+tar -cvf full_backup.tar /home/user/
+tar -cvf incremental.tar --newer-mtime="2023-01-01" /home/user/
+
+# Extract specific files from archive
+tar -xvf backup.tar.gz path/to/specific/file
+
+# Create archive with exclusions
+tar -czvf backup.tar.gz --exclude='*.tmp' --exclude='cache' /home/user/
+
+# Split large archives
+split -b 100M large_backup.tar.gz backup_part_
+
+# Combine split archives
+cat backup_part_* > large_backup.tar.gz
+```
+
+### Mounting & Filesystems
+
+**Mount Operations**
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `mount` | Mount filesystem | `mount /dev/sdb1 /mnt/data` |
+| `umount` | Unmount filesystem | `umount /mnt/data` |
+| `mount -a` | Mount all in fstab | `mount -a` |
+| `mount -o` | Mount with options | `mount -o ro,noexec /dev/sdb1 /mnt/data` |
+
+**Common Mount Options**
+
+| Option | Description | Use Case |
+|--------|-------------|----------|
+| `ro` | Read-only | Prevent modifications |
+| `rw` | Read-write | Default for most filesystems |
+| `noexec` | No execute | Security for data partitions |
+| `nosuid` | No setuid | Security for user partitions |
+| `nodev` | No device files | Security for user partitions |
+| `user` | Allow user mounting | Removable media |
+| `auto` | Mount at boot | Permanent filesystems |
+| `noauto` | Don't mount at boot | Manual mount only |
+
+**Filesystem Types**
+
+| Filesystem | Description | Use Case |
+|------------|-------------|----------|
+| **ext4** | Default Linux filesystem | General purpose |
+| **xfs** | High-performance filesystem | Large files, databases |
+| **btrfs** | Advanced filesystem | Snapshots, compression |
+| **ntfs** | Windows filesystem | Windows compatibility |
+| **fat32** | Legacy filesystem | USB drives, compatibility |
+| **iso9660** | CD/DVD filesystem | Optical media |
+
+**Persistent Mounting (/etc/fstab)**
+
+```bash
+# /etc/fstab format:
+# Device    Mount-point    Filesystem    Options    Dump    Pass
+/dev/sdb1   /home/data     ext4          defaults   0       2
+UUID=abc123 /mnt/backup    xfs           noauto     0       0
+//server/share /mnt/cifs   cifs          credentials=/etc/cifs-credentials 0 0
+
+# Get UUID of device
+blkid /dev/sdb1
+
+# Test fstab changes
+mount -a
+```
+
+### Backup Strategies
+
+**Backup Types**
+
+| Type | Description | Storage Requirement | Restore Speed |
+|------|-------------|-------------------|---------------|
+| **Full** | Complete system copy | High | Fast |
+| **Incremental** | Changes since last backup | Low | Slow |
+| **Differential** | Changes since last full | Medium | Medium |
+| **Snapshot** | Point-in-time copy | Low | Very Fast |
+
+**rsync - Advanced File Synchronization**
+
+```bash
+# Basic sync
+rsync -av source/ destination/
+
+# Remote sync
+rsync -av -e ssh source/ user@server:/backup/
+
+# Incremental backup with hard links
+rsync -av --link-dest=/backup/previous /home/user/ /backup/current/
+
+# Bandwidth limiting
+rsync -av --bwlimit=1000 source/ destination/
+
+# Exclude patterns
+rsync -av --exclude='*.tmp' --exclude='cache/' source/ destination/
+```
+
+**Automated Backup Scripts**
+
+```bash
+#!/bin/bash
+# Daily backup script
+
+BACKUP_DIR="/backup/$(date +%Y-%m-%d)"
+SOURCE_DIR="/home/users/"
+LOG_FILE="/var/log/backup.log"
+
+# Create backup directory
+mkdir -p "$BACKUP_DIR"
+
+# Perform backup
+rsync -av --delete "$SOURCE_DIR" "$BACKUP_DIR" >> "$LOG_FILE" 2>&1
+
+# Compress old backups (older than 7 days)
+find /backup -name "*.tar.gz" -mtime +7 -delete
+find /backup -type d -mtime +7 -exec tar -czf {}.tar.gz {} \; -exec rm -rf {} \;
+
+echo "Backup completed at $(date)" >> "$LOG_FILE"
+```
+
+---
+
+## Shell Scripting
+
+Shell scripting enables automation of repetitive tasks and system administration.
+
+### Bash Fundamentals
+
+**Script Structure**
+
+```bash
+#!/bin/bash
+# Script description
+# Author: Your Name
+# Date: 2024-01-01
+
+# Variables
+SCRIPT_NAME="example"
+VERSION="1.0"
+
+# Main script logic
+echo "Hello, World!"
+```
+
+**Script Permissions**
+
+```bash
+# Make script executable
+chmod +x script.sh
+
+# Run script
+./script.sh
+bash script.sh
+```
+
+### Variables & Parameters
+
+**Variable Declaration**
+
+```bash
+# String variables
+name="John Doe"
+email="john@example.com"
+
+# Numeric variables
+age=30
+count=0
+
+# Arrays
+fruits=("apple" "banana" "cherry")
+numbers=(1 2 3 4 5)
+
+# Command substitution
+current_date=$(date)
+file_count=$(ls | wc -l)
+```
+
+**Special Variables**
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `$0` | Script name | `./script.sh` |
+| `$1, $2, ...` | Positional parameters | First argument, second argument |
+| `$#` | Number of arguments | `3` |
+| `$@` | All arguments | `arg1 arg2 arg3` |
+| `$?` | Exit status of last command | `0` (success) or non-zero |
+| `$$` | Process ID | `12345` |
+| `$!` | Last background process ID | `12346` |
+
+**Parameter Processing**
+
+```bash
+#!/bin/bash
+# Script with parameter handling
+
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 <filename> [options]"
+    exit 1
+fi
+
+filename=$1
+options=${2:-"default"}
+
+echo "Processing file: $filename"
+echo "Options: $options"
+```
+
+### Control Structures
+
+**Conditional Statements**
+
+```bash
+# If-else statement
+if [ condition ]; then
+    echo "Condition is true"
+elif [ other_condition ]; then
+    echo "Other condition is true"
+else
+    echo "No conditions met"
+fi
+
+# File tests
+if [ -f "/etc/passwd" ]; then
+    echo "File exists"
+fi
+
+if [ -d "/home/user" ]; then
+    echo "Directory exists"
+fi
+
+# String comparisons
+if [ "$string1" = "$string2" ]; then
+    echo "Strings are equal"
+fi
+
+# Numeric comparisons
+if [ $num1 -gt $num2 ]; then
+    echo "num1 is greater than num2"
+fi
+```
+
+**Loops**
+
+```bash
+# For loop with list
+for item in apple banana cherry; do
+    echo "Fruit: $item"
+done
+
+# For loop with range
+for i in {1..10}; do
+    echo "Number: $i"
+done
+
+# For loop with array
+fruits=("apple" "banana" "cherry")
+for fruit in "${fruits[@]}"; do
+    echo "Processing: $fruit"
+done
+
+# While loop
+counter=1
+while [ $counter -le 5 ]; do
+    echo "Count: $counter"
+    ((counter++))
+done
+
+# Until loop
+until [ $counter -gt 10 ]; do
+    echo "Counter: $counter"
+    ((counter++))
+done
+```
+
+**Case Statement**
+
+```bash
+case $1 in
+    start)
+        echo "Starting service..."
+        ;;
+    stop)
+        echo "Stopping service..."
+        ;;
+    restart)
+        echo "Restarting service..."
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+        ;;
+esac
+```
+
+### Functions & Libraries
+
+**Function Definition**
+
+```bash
+# Basic function
+greet() {
+    echo "Hello, $1!"
+}
+
+# Function with return value
+add_numbers() {
+    local num1=$1
+    local num2=$2
+    local result=$((num1 + num2))
+    echo $result
+}
+
+# Function with local variables
+process_file() {
+    local filename=$1
+    local line_count=$(wc -l < "$filename")
+    
+    echo "File: $filename has $line_count lines"
+}
+
+# Using functions
+greet "World"
+sum=$(add_numbers 5 3)
+echo "Sum: $sum"
+```
+
+**Library Creation**
+
+```bash
+# utils.sh - Library file
+log_message() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> /var/log/script.log
+}
+
+check_root() {
+    if [ "$EUID" -ne 0 ]; then
+        echo "This script must be run as root"
+        exit 1
+    fi
+}
+
+# main_script.sh - Using the library
+source ./utils.sh
+
+check_root
+log_message "Script started"
+# ... rest of script
+log_message "Script completed"
+```
+
+### Cron Jobs & Automation
+
+**Crontab Syntax**
+
+```bash
+# Format: minute hour day month weekday command
+# * * * * * /path/to/command
+
+# Examples:
+0 2 * * *        # Daily at 2:00 AM
+0 */6 * * *      # Every 6 hours
+30 8 * * 1-5     # Weekdays at 8:30 AM
+0 0 1 * *        # First day of every month
+*/15 * * * *     # Every 15 minutes
+```
+
+**Cron Management**
+
+```bash
+# Edit crontab
+crontab -e
+
+# List current crontab
+crontab -l
+
+# Remove crontab
+crontab -r
+
+# Edit another user's crontab (as root)
+crontab -u username -e
+```
+
+**System-wide Cron**
+
+```bash
+# System cron directories
+/etc/cron.hourly/    # Scripts run every hour
+/etc/cron.daily/     # Scripts run daily
+/etc/cron.weekly/    # Scripts run weekly
+/etc/cron.monthly/   # Scripts run monthly
+
+# Add script to daily cron
+sudo cp backup_script.sh /etc/cron.daily/
+sudo chmod +x /etc/cron.daily/backup_script.sh
+```
+
+**Advanced Automation Examples**
+
+```bash
+#!/bin/bash
+# System maintenance script
+
+# Log rotation
+find /var/log -name "*.log" -mtime +30 -delete
+
+# Temporary file cleanup
+find /tmp -type f -mtime +7 -delete
+
+# System update check
+apt list --upgradable > /var/log/available_updates.log
+
+# Disk space monitoring
+df -h | awk '$5 > 80 {print $0}' | mail -s "Disk Space Alert" admin@example.com
+
+# Service health check
+systemctl is-active --quiet apache2 || systemctl restart apache2
+```
 
 ---
 
